@@ -1,9 +1,9 @@
 <?php
 
-namespace PiwikBundle\Command;
+namespace rtPiwikBundle\Command;
 
-use PiwikBundle\Services\LastDayMetrics;
-use PiwikBundle\Services\LastWeekMetrics;
+use rtPiwikBundle\Services\LastDayMetrics;
+use rtPiwikBundle\Services\LastWeekMetrics;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

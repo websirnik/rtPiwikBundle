@@ -6,7 +6,7 @@
  * Time: 14:11
  */
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 class Metric
 {

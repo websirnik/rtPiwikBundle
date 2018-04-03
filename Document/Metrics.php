@@ -1,6 +1,6 @@
 <?php
 
-namespace PiwikBundle\Document;
+namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
@@ -99,10 +99,10 @@ class Metrics
     /**
      * Set lastDayMetric
      *
-     * @param \PiwikBundle\Document\LastDayMetric $lastDayMetric
+     * @param \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
      * @return $this
      */
-    public function setLastDayMetric(\PiwikBundle\Document\LastDayMetric $lastDayMetric)
+    public function setLastDayMetric(\rtPiwikBundle\Document\LastDayMetric $lastDayMetric)
     {
         $this->lastDayMetric = $lastDayMetric;
         return $this;
@@ -111,7 +111,7 @@ class Metrics
     /**
      * Get lastDayMetric
      *
-     * @return \PiwikBundle\Document\LastDayMetric $lastDayMetric
+     * @return \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
      */
     public function getLastDayMetric()
     {
@@ -121,10 +121,10 @@ class Metrics
     /**
      * Set lastWeekMetric
      *
-     * @param \PiwikBundle\Document\LastWeekMetric $lastWeekMetric
+     * @param \rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric
      * @return $this
      */
-    public function setLastWeekMetric(\PiwikBundle\Document\LastWeekMetric $lastWeekMetric)
+    public function setLastWeekMetric(\rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric)
     {
         $this->lastWeekMetric = $lastWeekMetric;
         return $this;
@@ -133,7 +133,7 @@ class Metrics
     /**
      * Get lastWeekMetric
      *
-     * @return \PiwikBundle\Document\LastWeekMetric $lastWeekMetric
+     * @return \rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric
      */
     public function getLastWeekMetric()
     {
@@ -143,10 +143,10 @@ class Metrics
     /**
      * Set totalMetric
      *
-     * @param \PiwikBundle\Document\TotalMetric $totalMetric
+     * @param \rtPiwikBundle\Document\TotalMetric $totalMetric
      * @return $this
      */
-    public function setTotalMetric(\PiwikBundle\Document\TotalMetric $totalMetric)
+    public function setTotalMetric(\rtPiwikBundle\Document\TotalMetric $totalMetric)
     {
         $this->totalMetric = $totalMetric;
         return $this;
@@ -155,7 +155,7 @@ class Metrics
     /**
      * Get totalMetric
      *
-     * @return \PiwikBundle\Document\TotalMetric $totalMetric
+     * @return \rtPiwikBundle\Document\TotalMetric $totalMetric
      */
     public function getTotalMetric()
     {
@@ -209,10 +209,10 @@ class Metrics
     /**
      * Set percentageChangeLastDay
      *
-     * @param \PiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+     * @param \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
      * @return $this
      */
-    public function setPercentageChangeLastDay(\PiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay)
+    public function setPercentageChangeLastDay(\rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay)
     {
         $this->percentageChangeLastDay = $percentageChangeLastDay;
         return $this;
@@ -221,7 +221,7 @@ class Metrics
     /**
      * Get percentageChangeLastDay
      *
-     * @return \PiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+     * @return \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
      */
     public function getPercentageChangeLastDay()
     {
@@ -231,10 +231,10 @@ class Metrics
     /**
      * Set percentageChangeLastWeek
      *
-     * @param \PiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+     * @param \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
      * @return $this
      */
-    public function setPercentageChangeLastWeek(\PiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek)
+    public function setPercentageChangeLastWeek(\rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek)
     {
         $this->percentageChangeLastWeek = $percentageChangeLastWeek;
         return $this;
@@ -243,7 +243,7 @@ class Metrics
     /**
      * Get percentageChangeLastWeek
      *
-     * @return \PiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+     * @return \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
      */
     public function getPercentageChangeLastWeek()
     {

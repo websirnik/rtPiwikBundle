@@ -1,6 +1,6 @@
 <?php
 
-namespace PiwikBundle\Tests\Controller;
+namespace rtPiwikBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

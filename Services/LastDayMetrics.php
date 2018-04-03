@@ -6,12 +6,12 @@
  * Time: 17:34
  */
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 
-use PiwikBundle\Document\LastDayMetric;
-use PiwikBundle\Document\PercentageChangeLastDayMetric;
-use PiwikBundle\Document\TotalMetric;
+use rtPiwikBundle\Document\LastDayMetric;
+use rtPiwikBundle\Document\PercentageChangeLastDayMetric;
+use rtPiwikBundle\Document\TotalMetric;
 
 class LastDayMetrics extends DailyMetrics implements iDailyMetrics
 {

@@ -1,8 +1,8 @@
 services:
     analytics:
-        class: PiwikBundle\Services\Analytics
+        class: rtPiwikBundle\Services\Analytics
     metrics:
-        class: PiwikBundle\Services\Metrics
+        class: rtPiwikBundle\Services\Metrics
 #    piwik.example:
 #        class: PiwikBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

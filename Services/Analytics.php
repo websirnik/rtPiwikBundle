@@ -1,6 +1,6 @@
 <?php
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 class Analytics
 {

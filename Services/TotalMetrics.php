@@ -6,10 +6,10 @@
  * Time: 18:01
  */
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 
-use PiwikBundle\Document\TotalMetric;
+use rtPiwikBundle\Document\TotalMetric;
 
 class TotalMetrics
 {

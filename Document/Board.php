@@ -1,5 +1,5 @@
 <?php
-namespace PiwikBundle\Document;
+namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 

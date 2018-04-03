@@ -6,7 +6,7 @@
  * Time: 17:49
  */
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 
 class DailyMetrics

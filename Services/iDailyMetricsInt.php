@@ -6,7 +6,7 @@
  * Time: 17:51
  */
 
-namespace PiwikBundle\Services;
+namespace rtPiwikBundle\Services;
 
 
 interface iDailyMetrics

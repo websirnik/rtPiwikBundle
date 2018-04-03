@@ -6,7 +6,7 @@
  * Time: 19:22
  */
 
-namespace PiwikBundle\Document;
+namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 

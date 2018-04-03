@@ -1,8 +1,8 @@
 <?php
 
-namespace PiwikBundle\Command;
+namespace rtPiwikBundle\Command;
 
-use PiwikBundle\Services\TotalMetrics;
+use rtPiwikBundle\Services\TotalMetrics;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

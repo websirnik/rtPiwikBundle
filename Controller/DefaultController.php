@@ -1,8 +1,8 @@
 <?php
 
-namespace PiwikBundle\Controller;
+namespace rtPiwikBundle\Controller;
 
-use PiwikBundle\Document\Metrics;
+use rtPiwikBundle\Document\Metrics;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
