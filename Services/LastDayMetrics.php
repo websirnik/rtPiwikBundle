@@ -13,7 +13,7 @@ use rtPiwikBundle\Document\LastDayMetric;
 use rtPiwikBundle\Document\PercentageChangeLastDayMetric;
 use rtPiwikBundle\Document\TotalMetric;
 
-class LastDayMetrics extends DailyMetrics implements iDailyMetrics
+class LastDayMetrics extends DailyMetrics
 {
 
     private $localConn;

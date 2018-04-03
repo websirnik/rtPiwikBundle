@@ -12,7 +12,7 @@ namespace rtPiwikBundle\Services;
 use rtPiwikBundle\Document\LastWeekMetric;
 use rtPiwikBundle\Document\PercentageChangeLastWeekMetric;
 
-class LastWeekMetrics extends DailyMetrics implements iDailyMetrics
+class LastWeekMetrics extends DailyMetrics
 {
     private $localConn;
     private $remoteConn;
