@@ -27,7 +27,7 @@ class TotalMetrics
 
     public function execute()
     {
-        $boardsTotal = $this->remoteConn->createQueryBuilder('PiwikBundle:Board')->getQuery()->execute()->count();
+        $boardsTotal = $this->remoteConn->createQueryBuilder('rtPiwikBundle:Board')->getQuery()->execute()->count();
         $i = 0;
         while ($boardsTotal > $i) {
             $this->getTotalMetricsByRepository($this->remoteConn, $this->localConn, TotalMetrics::BATCH, $i);
@@ -69,7 +69,7 @@ class TotalMetrics
         // universal for total and daily
         if (!is_null($boardCreated) && !is_null($boardSlug)) {
             $metricRepository = $conn
-                ->getRepository('PiwikBundle:Metrics')
+                ->getRepository('rtPiwikBundle:Metrics')
                 ->findOneBy(array('slug' => $boardSlug));
 
             $date = new \DateTime();
