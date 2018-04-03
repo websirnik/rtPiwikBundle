@@ -1,0 +1,40 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: skews
+ * Date: 30.03.2018
+ * Time: 13:58
+ */
+
+namespace PiwikBundle\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+
+/**
+ * @MongoDB\EmbeddedDocument
+ */
+class PercentageChangeLastDayMetric
+{
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $visits;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $pageViews;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $interactions;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $avgTimeSpent;
+
+
+}

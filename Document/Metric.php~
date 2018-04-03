@@ -1,0 +1,39 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: skews
+ * Date: 30.03.2018
+ * Time: 14:11
+ */
+
+namespace PiwikBundle\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+
+/**
+ * @MongoDB\Document
+ */
+class Metric
+{
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    protected $visits;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    protected $pageViews;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    protected $interactions;
+
+    /**
+     * @MongoDB\Field(type="int")
+     */
+    protected $avgTimeSpent;
+
+}
