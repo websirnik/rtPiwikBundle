@@ -21,29 +21,29 @@ class Metrics
     protected $slug;
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="PiwikBundle\Document\LastDayMetric")
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastDayMetric")
      */
     protected $lastDayMetric;
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="PiwikBundle\Document\LastWeekMetric")
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastWeekMetric")
      */
     protected $lastWeekMetric;
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="PiwikBundle\Document\TotalMetric")
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\TotalMetric")
      */
     protected $totalMetric;
 
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="PiwikBundle\Document\PercentageChangeLastDayMetric")
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastDayMetric")
      */
     protected $percentageChangeLastDay;
 
 
     /**
-     * @MongoDB\EmbedOne(targetDocument="PiwikBundle\Document\PercentageChangeLastWeekMetric")
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastWeekMetric")
      */
     protected $percentageChangeLastWeek;
 

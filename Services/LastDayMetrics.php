@@ -18,11 +18,13 @@ class LastDayMetrics extends DailyMetrics implements iDailyMetrics
 
     private $localConn;
     private $remoteConn;
+    private $metricsService;
 
     function __construct($localConn, $remoteConn)
     {
         $this->localConn = $localConn;
         $this->remoteConn = $remoteConn;
+        $this->metricsService = new MetricsService();
     }
 
     /**
@@ -41,7 +43,7 @@ class LastDayMetrics extends DailyMetrics implements iDailyMetrics
 
         foreach ($metricsRepository as $metricRepository) {
             // get data from piwik by each slug TODO could be batch request to piwik ?
-            $lastDayMetricData = $this->getContainer()->get("metrics")->getMetrics(
+            $lastDayMetricData = $this->metricsService->getMetrics(
                 $metricRepository->getSlug(),
                 $dateFrom,
                 $today
@@ -53,7 +55,7 @@ class LastDayMetrics extends DailyMetrics implements iDailyMetrics
 
             // if there is no metric repository
             if (is_null($metricRepository)) {
-                $metricsModel = new Metrics();
+                $metricsModel = new MetricsService();
                 $totalMetric = $this->getTotalMetric($metricRepository, $lastDayMetric);
 
                 $metricsModel->setSlug($metricRepository->getSlug());

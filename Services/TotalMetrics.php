@@ -8,7 +8,7 @@
 
 namespace rtPiwikBundle\Services;
 
-
+use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
 
 class TotalMetrics
@@ -18,11 +18,13 @@ class TotalMetrics
 
     private $localConn;
     private $remoteConn;
+    private $metricsService;
 
     function __construct($localConn, $remoteConn)
     {
         $this->localConn = $localConn;
         $this->remoteConn = $remoteConn;
+        $this->metricsService = new MetricsService();
     }
 
     public function execute()
@@ -104,7 +106,7 @@ class TotalMetrics
      */
     private function upsert($slug, $dateFrom, $dateTo, $metricRepository, Metrics $metricsModel, $conn)
     {
-        $metricData = $this->getContainer()->get("metrics")->getMetrics($slug, $dateFrom, $dateTo);
+        $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo);
         if (is_null($metricRepository)) {
             $totalMetric = new TotalMetric();
 

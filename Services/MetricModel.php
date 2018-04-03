@@ -8,7 +8,7 @@
 
 namespace rtPiwikBundle\Services;
 
-class Metric
+class MetricModel
 {
 
     protected $visits;

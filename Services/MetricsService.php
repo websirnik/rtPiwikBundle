@@ -3,7 +3,7 @@
 namespace rtPiwikBundle\Services;
 
 
-class Metrics
+class MetricsService
 {
     private $metric;
     private $analytics;
@@ -11,7 +11,7 @@ class Metrics
     function __construct()
     {
         $this->analytics = new Analytics();
-        $this->metric = new Metric();
+        $this->metric = new MetricModel();
     }
 
     public function getMetrics($slug, $dateFrom, $dateTo)

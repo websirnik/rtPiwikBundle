@@ -16,11 +16,13 @@ class LastWeekMetrics extends DailyMetrics implements iDailyMetrics
 {
     private $localConn;
     private $remoteConn;
+    private $metricsService;
 
     function __construct($localConn, $remoteConn)
     {
         $this->localConn = $localConn;
         $this->remoteConn = $remoteConn;
+        $this->metricsService = new MetricsService();
     }
 
     /**
@@ -38,7 +40,7 @@ class LastWeekMetrics extends DailyMetrics implements iDailyMetrics
         $dateFrom = $date->setTimestamp($lastWeek)->format('Y-m-d');
 
         foreach ($metricsRepository as $metricRepository) {
-            $lastWeekMetricData = $this->getContainer()->get("metrics")->getMetrics(
+            $lastWeekMetricData = $this->metricsService->getMetrics(
                 $metricRepository->getSlug(),
                 $dateFrom,
                 $today
@@ -49,7 +51,7 @@ class LastWeekMetrics extends DailyMetrics implements iDailyMetrics
             $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metricRepository, $lastWeekMetric);
 
             if (is_null($metricRepository)) {
-                $metricsModel = new Metrics();
+                $metricsModel = new MetricsService();
                 $metricsModel->setSlug($metricRepository->getSlug());
 
                 // create it
