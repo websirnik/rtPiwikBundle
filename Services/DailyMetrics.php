@@ -25,7 +25,7 @@ class DailyMetrics
         $date = new \DateTime();
 
         $boardsRepository = $remoteConn
-            ->getRepository('PiwikBundle:Board')
+            ->getRepository('rtPiwikBundle:Board')
             ->findBy(
                 array('updated' => array('$gt' => $date->setTimestamp($dateFrom))),
                 array('created' => 'desc'),
@@ -39,7 +39,7 @@ class DailyMetrics
         }
 
         $metricsRepository = $localConn
-            ->getRepository('PiwikBundle:Metrics')
+            ->getRepository('rtPiwikBundle:Metrics')
             ->findBy(array('slug' => array('$in' => $slugs)));
 
         return $metricsRepository;

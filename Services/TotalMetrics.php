@@ -47,7 +47,7 @@ class TotalMetrics
     private function getTotalMetricsByRepository($remoteConn, $localConn, $limit = null, $skip = null)
     {
         $boardsRepository = $remoteConn
-            ->getRepository('PiwikBundle:Board')
+            ->getRepository('rtPiwikBundle:Board')
             ->findBy(array(), array('created' => 'desc'), $limit, $skip);
 
         foreach ($boardsRepository as $boardRepository) {

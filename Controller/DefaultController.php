@@ -14,6 +14,6 @@ class DefaultController extends Controller
     public function indexAction()
     {
 
-        return $this->render('PiwikBundle:Default:index.html.twig');
+        return $this->render('rtPiwikBundle:Default:index.html.twig');
     }
 }

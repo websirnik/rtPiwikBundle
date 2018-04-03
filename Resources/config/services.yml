@@ -18,8 +18,8 @@ doctrine_mongodb:
         conn1:
             connection: conn1
             mappings:
-                PiwikBundle: ~
+                rtPiwikBundle: ~
         conn2:
             connection: conn2
             mappings:
-                PiwikBundle: ~
+                rtPiwikBundle: ~
