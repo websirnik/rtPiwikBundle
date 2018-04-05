@@ -22,7 +22,9 @@ class TotalMetrics
 
     /**
      * Get total metrics
+     * @param $board
      * @param \DateTime $date
+     * @param $userIds
      * @return Metrics
      */
     public function get($board, \DateTime $date, $userIds)
@@ -50,10 +52,11 @@ class TotalMetrics
     }
 
     /**
-     * @param Board $board
+     * @param $board
      * @param $dateFrom
      * @param $dateTo
-     * @return Board
+     * @param $userIds
+     * @return mixed
      */
     private function updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds)
     {

@@ -42,9 +42,9 @@ class LastDayMetrics
         }
 
         $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
-        $lastDayMetric = $this->getLastDayMetric($metricsData);
+        $lastDayMetric = $this->getLastDayMetric($board, $metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
-        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metricsData);
+        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($board, $metricsData);
 
         $metrics->setTotalMetric($totalMetric);
         $metrics->setLastDayMetric($lastDayMetric);
@@ -95,13 +95,14 @@ class LastDayMetrics
 
     /**
      * Get metrics data since last day and current day
+     * @param $board
      * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
     private
-    function getPercentageChangeLastDayMetric(MetricModel $lastDayMetric) {
+    function getPercentageChangeLastDayMetric($board, MetricModel $lastDayMetric) {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastDay = $this->board->getMetrics()->getPercentageChangeLastDay();
+        $percentageChangeLastDay = $board->getMetrics()->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
             $percentageChangeLastDay = new PercentageChangeLastDayMetric();
         }
@@ -124,12 +125,12 @@ class LastDayMetrics
 
     /**
      * Get last day metrics data
+     * @param $board
      * @param $lastDayMetricData
      * @return LastDayMetric
      */
-    private
-    function getLastDayMetric(MetricModel $lastDayMetricData) {
-        $lastDayMetric = $this->board->getMetrics()->getLastDayMetric();
+    private function getLastDayMetric($board, MetricModel $lastDayMetricData) {
+        $lastDayMetric = $board->getMetrics()->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();
         }

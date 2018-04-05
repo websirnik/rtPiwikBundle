@@ -44,8 +44,8 @@ class LastWeekMetrics
         }
 
         $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
-        $lastWeekMetric = $this->getLastWeekMetric($metricsData);
-        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metricsData);
+        $lastWeekMetric = $this->getLastWeekMetric($board, $metricsData);
+        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($board, $metricsData);
 
         $metrics->setLastWeekMetric($lastWeekMetric);
         $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
@@ -57,13 +57,14 @@ class LastWeekMetrics
 
     /**
      * Get metrics data since last week and current week
+     * @param $board
      * @param MetricModel $lastWeekMetric
      * @return PercentageChangeLastWeekMetric
      */
-    private function getPercentageChangeLastWeekMetric(MetricModel $lastWeekMetric)
+    private function getPercentageChangeLastWeekMetric($board, MetricModel $lastWeekMetric)
     {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastWeek = $this->board->getMetrics()->getPercentageChangeLastWeek();
+        $percentageChangeLastWeek = $board->getMetrics()->getPercentageChangeLastWeek();
         if (is_null($percentageChangeLastWeek)) {
             $percentageChangeLastWeek = new PercentageChangeLastWeekMetric();
         }
@@ -86,13 +87,14 @@ class LastWeekMetrics
 
     /**
      * Get last week metrics data
+     * @param $board
      * @param MetricModel $lastWeekMetricData
      * @return LastWeekMetric
      */
-    private function getLastWeekMetric(MetricModel $lastWeekMetricData)
+    private function getLastWeekMetric($board, MetricModel $lastWeekMetricData)
     {
         // get lastWeekMetric from current metricRepo TODO could be check inside mode ?
-        $lastWeekMetric = $this->board->getMetrics()->getLastWeekMetric();
+        $lastWeekMetric = $board->getMetrics()->getLastWeekMetric();
         if (is_null($lastWeekMetric)) {
             $lastWeekMetric = new LastWeekMetric();
         }
