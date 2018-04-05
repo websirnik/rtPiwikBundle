@@ -36,7 +36,7 @@ class LastWeekMetrics
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $metrics = $this->board->getMetrics();
+        $metrics = $board->getMetrics();
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
