@@ -15,8 +15,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class LastDayMetric
 {
-
-
     /**
      * @MongoDB\Field(type="int")
      */
@@ -46,6 +44,7 @@ class LastDayMetric
     public function setVisits($visits)
     {
         $this->visits = $visits;
+
         return $this;
     }
 
@@ -68,6 +67,7 @@ class LastDayMetric
     public function setPageViews($pageViews)
     {
         $this->pageViews = $pageViews;
+
         return $this;
     }
 
@@ -90,6 +90,7 @@ class LastDayMetric
     public function setInteractions($interactions)
     {
         $this->interactions = $interactions;
+
         return $this;
     }
 
@@ -112,6 +113,7 @@ class LastDayMetric
     public function setAvgTimeSpent($avgTimeSpent)
     {
         $this->avgTimeSpent = $avgTimeSpent;
+
         return $this;
     }
 

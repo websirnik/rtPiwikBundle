@@ -12,87 +12,70 @@ namespace rtPiwikBundle\Services;
 use rtPiwikBundle\Document\LastDayMetric;
 use rtPiwikBundle\Document\PercentageChangeLastDayMetric;
 use rtPiwikBundle\Document\TotalMetric;
+use rtPiwikBundle\Document\Metrics;
 
 class LastDayMetrics extends DailyMetrics
 {
-
-    private $localConn;
-    private $remoteConn;
     private $metricsService;
 
-    function __construct($localConn, $remoteConn)
+    function __construct()
     {
-        $this->localConn = $localConn;
-        $this->remoteConn = $remoteConn;
         $this->metricsService = new MetricsService();
     }
 
     /**
      * Get all merricst since last day
+     * @param \rtPiwikBundle\Document\Board $board
+     * @param $date
+     * @return Metrics
      */
-    public function execute()
+
+    public function get(\rtPiwikBundle\Document\Board $board, $date)
     {
         $now = new \DateTime();
-        $date = new \DateTime();
-
         $today = $now->format('Y-m-d');
+        $dateFrom = $date->format('Y-m-d');
 
-        $yesterday = $date->getTimestamp() - 60 * 60 * 24;
-        $metricsRepository = $this->getMetricsFromDate($yesterday, $this->localConn, $this->remoteConn);
-        $dateFrom = $date->setTimestamp($yesterday)->format('Y-m-d');
+        $lastDayMetricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today);
 
-        foreach ($metricsRepository as $metricRepository) {
-            // get data from piwik by each slug TODO could be batch request to piwik ?
-            $lastDayMetricData = $this->metricsService->getMetrics(
-                $metricRepository->getSlug(),
-                $dateFrom,
-                $today
+        $lastDayMetric = $this->getLastDayMetric($board, $lastDayMetricData);
+
+        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($board, $lastDayMetricData);
+
+        $metrics = $board->getMetrics();
+        // if there is no metric repository
+        if (is_null($metrics)) {
+            $metrics = new Metrics();
+
+            $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
+            $metrics->setTotalMetric($totalMetric);
+
+            dump(
+                sprintf(
+                    "created:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
+                    $board->getSlug(),
+                    $dateFrom,
+                    $today
+                )
             );
+        } else {
+            $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
 
-            $lastDayMetric = $this->getLastDayMetric($metricRepository, $lastDayMetricData);
+            $metrics->setTotalMetric($totalMetric);
+            $metrics->setLastDayMetric($lastDayMetric);
+            $metrics->setPercentageChangeLastDay($percentageChangeLastDay);
 
-            $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metricRepository, $lastDayMetric);
-
-            // if there is no metric repository
-            if (is_null($metricRepository)) {
-                $metricsModel = new MetricsService();
-                $totalMetric = $this->getTotalMetric($metricRepository, $lastDayMetric);
-
-                $metricsModel->setSlug($metricRepository->getSlug());
-                $metricsModel->setTotalMetric($totalMetric);
-
-                // create it
-                $this->localConn->persist($metricsModel);
-
-                dump(
-                    sprintf(
-                        "created:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                        $metricRepository->getSlug(),
-                        $dateFrom,
-                        $today
-                    )
-                );
-            } else {
-                $totalMetric = $this->getTotalMetric($metricRepository, $lastDayMetric);
-
-                $metricRepository->setUpdatedAt(new \DateTime());
-                $metricRepository->setTotalMetric($totalMetric);
-                $metricRepository->setLastDayMetric($lastDayMetric);
-                $metricRepository->setPercentageChangeLastDay($percentageChangeLastDay);
-
-                dump(
-                    sprintf(
-                        "updated:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                        $metricRepository->getSlug(),
-                        $dateFrom,
-                        $today
-                    )
-                );
-            }
+            dump(
+                sprintf(
+                    "updated:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
+                    $board->getSlug(),
+                    $dateFrom,
+                    $today
+                )
+            );
         }
 
-        $this->localConn->flush();
-        $this->localConn->clear();
+        return $metrics;
     }
 
     /**
@@ -101,22 +84,20 @@ class LastDayMetrics extends DailyMetrics
      * @param $lastDayMetric - piwik metrics data
      * @return TotalMetric
      */
-    private function getTotalMetric($metricRepository, $lastDayMetric)
-    {
-        $totalMetric = new TotalMetric();
+    private function getTotalMetric(
+        \rtPiwikBundle\Document\Metrics $metrics,
+        \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
+    ) {
+        $totalMetric = $metrics->getTotalMetric();
         // if there is no metric repository
-        if (is_null($metricRepository)) {
+        if (is_null($totalMetric)) {
+            $totalMetric = new TotalMetric();
             // set new total metric, because a new
             $totalMetric->setVisits($lastDayMetric->getVisits());
             $totalMetric->setInteractions($lastDayMetric->getInteractions());
             $totalMetric->setAvgTimeSpent($lastDayMetric->getAvgTimeSpent());
             $totalMetric->setPageViews($lastDayMetric->getPageViews());
         } else {
-            // get totalMetric from current metricRepo TODO could be check inside mode ?
-            $totalMetric = $metricRepository->getTotalMetric();
-            if (is_null($totalMetric)) {
-                $totalMetric = new TotalMetric();
-            }
             // set updated total metrics
             $visits = $totalMetric->getVisits() + $lastDayMetric->getVisits();
             $totalMetric->setVisits($visits);
@@ -138,14 +119,16 @@ class LastDayMetrics extends DailyMetrics
 
     /**
      * Get metrics data since last day and current day
-     * @param $metricRepository - metrics collection
-     * @param $lastDayMetric - piwik metrics data
+     * @param \rtPiwikBundle\Document\Board $board
+     * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
-    private function getPercentageChangeLastDayMetric($metricRepository, $lastDayMetric)
-    {
+    private function getPercentageChangeLastDayMetric(
+        \rtPiwikBundle\Document\Board $board,
+        \rtPiwikBundle\Services\MetricModel $lastDayMetric
+    ) {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastDay = $metricRepository->getPercentageChangeLastDay();
+        $percentageChangeLastDay = $board->getMetrics()->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
             $percentageChangeLastDay = new PercentageChangeLastDayMetric();
         }
@@ -168,14 +151,15 @@ class LastDayMetrics extends DailyMetrics
 
     /**
      * Get last day metrics data
-     * @param $metricRepository - metrics collection
+     * @param \rtPiwikBundle\Document\Board $board - metrics collection
      * @param $lastDayMetricData - piwik metrics data
      * @return LastDayMetric
      */
-    private function getLastDayMetric($metricRepository, $lastDayMetricData)
-    {
-        // get lastDayMetric from current metricRepo TODO could be check inside mode ?
-        $lastDayMetric = $metricRepository->getLastDayMetric();
+    private function getLastDayMetric(
+        \rtPiwikBundle\Document\Board $board,
+        \rtPiwikBundle\Services\MetricModel $lastDayMetricData
+    ) {
+        $lastDayMetric = $board->getMetrics()->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();
         }

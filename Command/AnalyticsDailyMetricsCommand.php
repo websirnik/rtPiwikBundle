@@ -26,17 +26,41 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $db = $this->getContainer()->get('doctrine_mongodb');
+        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn1');
 
-        $localConn = $db->getManager('conn1');
-        $remoteConn = $db->getManager('conn2');
+        $this->getLastDayMetrics($conn);
 
-        $lasDayMetrics = new LastDayMetrics($localConn, $remoteConn);
-        $lasDayMetrics->execute();
-
-        $lasWeekMetrics = new LastWeekMetrics($localConn, $remoteConn);
-        $lasWeekMetrics->execute();
+//        $lasWeekMetrics = new LastWeekMetrics($localConn, $remoteConn);
+//        $lasWeekMetrics->execute();
 
         $output->writeln('ok');
     }
+
+
+    public function getLastDayMetrics($conn)
+    {
+        $date = new \DateTime();
+        $ts = $date->getTimestamp() - 60 * 60 * 24;
+        $yesterday = $date->setTimestamp($ts);
+
+        $boardsRepository = $conn
+            ->getRepository('rtPiwikBundle:Board')
+            ->findBy(
+                array('updated' => array('$gt' => $yesterday)),
+                array('created' => 'desc'),
+                null,
+                null
+            );
+
+        foreach ($boardsRepository as $board) {
+            $lasDayMetrics = new LastDayMetrics($board, $yesterday);
+            // get metrics for this board
+            $metrics = $lasDayMetrics->get($board);
+            // update metrics for this board
+            $board->setMetrics($metrics);
+            // TODO update bord
+        }
+    }
+
+
 }

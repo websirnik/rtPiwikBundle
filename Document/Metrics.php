@@ -11,16 +11,6 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class Metrics
 {
     /**
-     * @MongoDB\Id
-     */
-    protected $id;
-
-    /**
-     * @MongoDB\Field(type="string")
-     */
-    protected $slug;
-
-    /**
      * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastDayMetric")
      */
     protected $lastDayMetric;
@@ -62,40 +52,6 @@ class Metrics
         $this->createdAt = new \DateTime();
     }
 
-   
-
-    /**
-     * Get id
-     *
-     * @return id $id
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     * @return $this
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string $slug
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
     /**
      * Set lastDayMetric
      *
@@ -105,6 +61,7 @@ class Metrics
     public function setLastDayMetric(\rtPiwikBundle\Document\LastDayMetric $lastDayMetric)
     {
         $this->lastDayMetric = $lastDayMetric;
+
         return $this;
     }
 
@@ -127,6 +84,7 @@ class Metrics
     public function setLastWeekMetric(\rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric)
     {
         $this->lastWeekMetric = $lastWeekMetric;
+
         return $this;
     }
 
@@ -149,6 +107,7 @@ class Metrics
     public function setTotalMetric(\rtPiwikBundle\Document\TotalMetric $totalMetric)
     {
         $this->totalMetric = $totalMetric;
+
         return $this;
     }
 
@@ -171,6 +130,7 @@ class Metrics
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -193,6 +153,7 @@ class Metrics
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
@@ -212,9 +173,11 @@ class Metrics
      * @param \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
      * @return $this
      */
-    public function setPercentageChangeLastDay(\rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay)
-    {
+    public function setPercentageChangeLastDay(
+        \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+    ) {
         $this->percentageChangeLastDay = $percentageChangeLastDay;
+
         return $this;
     }
 
@@ -234,9 +197,11 @@ class Metrics
      * @param \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
      * @return $this
      */
-    public function setPercentageChangeLastWeek(\rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek)
-    {
+    public function setPercentageChangeLastWeek(
+        \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+    ) {
         $this->percentageChangeLastWeek = $percentageChangeLastWeek;
+
         return $this;
     }
 

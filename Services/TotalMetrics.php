@@ -37,13 +37,13 @@ class TotalMetrics
             $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($created)->format('Y-m-d');
 
-            $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
         }
 
         $dateFrom = $date->setTimestamp($now)->format('Y-m-d');
         $dateTo = $date->setTimestamp($created)->format('Y-m-d');
 
-        $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
 
         return $board->getMetrics();
     }
@@ -52,7 +52,7 @@ class TotalMetrics
      * @param \rtPiwikBundle\Document\Board $board
      * @param $dateFrom
      * @param $dateTo
-     * @return Metrics
+     * @return \rtPiwikBundle\Document\Board
      */
     private function updateMetricsByBoard(\rtPiwikBundle\Document\Board $board, $dateFrom, $dateTo)
     {
@@ -96,8 +96,7 @@ class TotalMetrics
             dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
         }
 
-        return $metrics;
+        $board->setMetrics($metrics);
+        return $board;
     }
-
-
 }
