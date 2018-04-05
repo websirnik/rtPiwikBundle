@@ -4,8 +4,7 @@
   "type": "project",
   "description": "Getting metrics from Piwik",
   "autoload": {
-    "psr-4": { "": "src/" },
-    "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
+    "psr-4": { "rtPiwikBundle": "" }
   },
   "autoload-dev": {
     "psr-4": { "Tests\\": "tests/" }
