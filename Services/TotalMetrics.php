@@ -37,10 +37,10 @@ class TotalMetrics
         $createdTs = $date->modify($date)->getTimestamp();
 
         while ($nowTs > $createdTs) {
-            $created = $createdTs + 60 * 60 * 60 * 12;
+            $createdTs = $createdTs + 60 * 60 * 60 * 12;
 
             $dateFrom = $date->format('Y-m-d');
-            $dateTo = $date->setTimestamp($created)->format('Y-m-d');
+            $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
             $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
         }
