@@ -13,7 +13,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-
         return $this->render('rtPiwikBundle:Default:index.html.twig');
     }
 }

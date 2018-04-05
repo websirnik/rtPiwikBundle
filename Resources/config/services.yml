@@ -1,11 +1,22 @@
 services:
-    analytics:
-        class: rtPiwikBundle\Services\Analytics
-    metrics:
-        class: rtPiwikBundle\Services\Metrics
-#    piwik.example:
-#        class: PiwikBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    analytics_service:
+         class: rtPiwikBundle\Services\Analytics
+    metrics_service:
+         class: rtPiwikBundle\Services\MetricsService
+         arguments:
+            $analytics: analytics_service
+    total_metrics:
+        class: rtPiwikBundle\Services\TotalMetrics
+        arguments:
+            $metricsService: metrics_service
+    last_day_metrics:
+        class: rtPiwikBundle\Services\LastDayMetrics
+        arguments:
+            $metricsService: metrics_service
+    last_week_metrics:
+        class: rtPiwikBundle\Services\LastWeekMetrics
+        arguments:
+            $metricsService: metrics_service
 
 doctrine_mongodb:
     default_database: relayto-app-prod

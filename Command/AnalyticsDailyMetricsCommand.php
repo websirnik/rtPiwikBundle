@@ -12,6 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
 {
+    private $lastWeekMetrics;
+
     protected function configure()
     {
         $this
@@ -27,6 +29,7 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn2');
+        $this->lastWeekMetrics = $this->getContainer()->get('last_Week_metrics');
 
         $this->getLastDayMetrics($conn);
 
@@ -106,9 +109,9 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             );
 
         foreach ($boardsRepository as $board) {
-            $lastWeekMetrics = new LastWeekMetrics($board, $userIds);
+
             // get metrics for this board
-            $metrics = $lastWeekMetrics->get($lastWeek);
+            $metrics = $this->lastWeekMetrics->get($board, $lastWeek, $userIds);
             // update metrics for this board
             dump($metrics);
         }

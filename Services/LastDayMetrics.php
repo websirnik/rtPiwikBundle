@@ -9,7 +9,6 @@
 namespace rtPiwikBundle\Services;
 
 
-use rtPiwikBundle\Document\Board;
 use rtPiwikBundle\Document\LastDayMetric;
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\PercentageChangeLastDayMetric;
@@ -18,12 +17,10 @@ use rtPiwikBundle\Document\TotalMetric;
 class LastDayMetrics
 {
     private $metricsService;
-    private $board;
 
-    function __construct(Board $board, $userIds)
+    function __construct($metricsService)
     {
-        $this->metricsService = new MetricsService($userIds);
-        $this->board = $board;
+        $this->metricsService = $metricsService;
     }
 
     /**
@@ -31,20 +28,20 @@ class LastDayMetrics
      * @param \DateTime $date
      * @return Metrics
      */
-    public function get(\DateTime $date)
+    public function get($board, \DateTime $date, $userIds)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $metrics = $this->board->getMetrics();
+        $metrics = $board->getMetrics();
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-            $this->board->setMetrics($metrics);
+            $board->setMetrics($metrics);
         }
 
-        $metricsData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
+        $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
         $lastDayMetric = $this->getLastDayMetric($metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
         $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metricsData);
@@ -53,7 +50,7 @@ class LastDayMetrics
         $metrics->setLastDayMetric($lastDayMetric);
         $metrics->setPercentageChangeLastDay($percentageChangeLastDay);
 
-        dump(sprintf("daily:last_day slug:%s, dateFrom:%s, dateTo:%s", $this->board->getSlug(), $dateFrom, $today));
+        dump(sprintf("daily:last_day slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $today));
 
         return $metrics;
     }

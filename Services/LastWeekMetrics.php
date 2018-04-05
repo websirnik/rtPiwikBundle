@@ -17,20 +17,20 @@ use rtPiwikBundle\Document\Metrics;
 class LastWeekMetrics
 {
     private $metricsService;
-    private $board;
 
-    function __construct(Board $board, $userIds)
+    function __construct($metricsService)
     {
-        $this->metricsService = new MetricsService($userIds);
-        $this->board = $board;
+        $this->metricsService = $metricsService;
     }
 
     /**
      * Get all metrics since last week
+     * @param $board
      * @param \DateTime $date
+     * @param $userIds
      * @return Metrics
      */
-    public function get(\DateTime $date)
+    public function get($board, \DateTime $date, $userIds)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
@@ -40,17 +40,17 @@ class LastWeekMetrics
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-            $this->board->setMetrics($metrics);
+            $board->setMetrics($metrics);
         }
 
-        $metricsData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
+        $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
         $lastWeekMetric = $this->getLastWeekMetric($metricsData);
         $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metricsData);
 
         $metrics->setLastWeekMetric($lastWeekMetric);
         $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
 
-        dump(sprintf("daily:last_week slug:%s, dateFrom:%s, dateTo:%s", $this->board->getSlug(), $dateFrom, $today));
+        dump(sprintf("daily:last_week slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $today));
 
         return $metrics;
     }

@@ -14,9 +14,8 @@ class Analytics
 
     private $client;
 
-    function __construct($userIds)
+    function __construct()
     {
-        $this->userIds = implode(";userId!=", $userIds);
         $this->client = new \GuzzleHttp\Client(['base_uri' => 'https://rtpiwik.frb.io/index.php']);
     }
 
@@ -27,13 +26,13 @@ class Analytics
         return json_decode($this->client->get("/", ['query' => $query])->getBody(), true);
     }
 
-    public function getMetrics($slug, $date)
+    public function getMetrics($slug, $date, $userIds)
     {
         $query = [
             'date' => $date,
             'method' => "API.get",
             'period' => "day",
-            'segment' => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, $this->userIds),
+            'segment' => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds)),
             "expanded" => 0,
             "flat" => 0,
             "slug" => $slug,
@@ -42,13 +41,13 @@ class Analytics
         return $this->render($query);
     }
 
-    public function getActions($slug, $date)
+    public function getActions($slug, $date,$userIds)
     {
         $query = [
             "date" => $date,
             "method" => "Actions.getPageUrls",
             "period" => "range",
-            "segment" => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, $this->userIds),
+            "segment" => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds)),
             "expanded" => 0,
             "flat" => 0,
             "slug" => $slug,

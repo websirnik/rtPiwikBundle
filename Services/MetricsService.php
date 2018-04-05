@@ -8,17 +8,17 @@ class MetricsService
     private $metric;
     private $analytics;
 
-    function __construct($userIds)
+    function __construct($analytics)
     {
-        $this->analytics = new Analytics($userIds);
+        $this->analytics = $analytics;
         $this->metric = new MetricModel();
     }
 
-    public function getMetrics($slug, $dateFrom, $dateTo)
+    public function getMetrics($slug, $dateFrom, $dateTo, $userIds)
     {
         $date = $dateFrom.','.$dateTo;
 
-        $analyticsMetrics = $this->analytics->getMetrics($slug, $date);
+        $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
         foreach ($analyticsMetrics as $key => $m) {
             if (count($m) > 0 && isset($m["nb_visits"])) {
                 $visits = $this->metric->getVisits() + $m["nb_visits"];
@@ -26,7 +26,7 @@ class MetricsService
             }
         }
 
-        $analyticsActions = $this->analytics->getActions($slug, $date);
+        $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
         $avgTimeSpentCount = 0;
         foreach ($analyticsActions as $key => $action) {
             if (count($action) > 0 && isset($action["sum_time_spent"]) && $action["sum_time_spent"] > 0) {

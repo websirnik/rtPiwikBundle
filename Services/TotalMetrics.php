@@ -10,17 +10,14 @@ namespace rtPiwikBundle\Services;
 
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
-use rtPiwikBundle\Document\Board;
 
 class TotalMetrics
 {
     private $metricsService;
-    private $board;
 
-    function __construct(Board $board, $userIds)
+    function __construct($metricsService)
     {
-        $this->metricsService = new MetricsService($userIds);
-        $this->board = $board;
+        $this->metricsService = $metricsService;
     }
 
     /**
@@ -28,9 +25,8 @@ class TotalMetrics
      * @param \DateTime $date
      * @return Metrics
      */
-    public function get(\DateTime $date)
+    public function get($board, \DateTime $date, $userIds)
     {
-        $board = $this->board;
         $now = new \DateTime();
         $nowTs = $now->getTimestamp();
         $createdTs = $date->getTimestamp();
@@ -42,13 +38,13 @@ class TotalMetrics
             $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
 
-            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds);
         }
 
         $dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
         $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
-        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds);
 
         return $board->getMetrics();
     }
@@ -59,9 +55,9 @@ class TotalMetrics
      * @param $dateTo
      * @return Board
      */
-    private function updateMetricsByBoard(Board $board, $dateFrom, $dateTo)
+    private function updateMetricsByBoard(Board $board, $dateFrom, $dateTo, $userIds)
     {
-        $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo);
+        $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo, $userIds);
 
         $metrics = $board->getMetrics();
         if (is_null($metrics)) {
