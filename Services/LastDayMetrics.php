@@ -37,47 +37,27 @@ class LastDayMetrics
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $lastDayMetricData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
-
-        $lastDayMetric = $this->getLastDayMetric($lastDayMetricData);
-
-        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($lastDayMetricData);
-
         $metrics = $this->board->getMetrics();
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-
-            $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
-            $metrics->setTotalMetric($totalMetric);
-
-            dump(
-                sprintf(
-                    "created:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                    $this->board->getSlug(),
-                    $dateFrom,
-                    $today
-                )
-            );
-        } else {
-            $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
-
-            $metrics->setTotalMetric($totalMetric);
-            $metrics->setLastDayMetric($lastDayMetric);
-            $metrics->setPercentageChangeLastDay($percentageChangeLastDay);
-
-            dump(
-                sprintf(
-                    "updated:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                    $this->board->getSlug(),
-                    $dateFrom,
-                    $today
-                )
-            );
+            $this->board->setMetrics($metrics);
         }
+
+        $metricsData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
+        $lastDayMetric = $this->getLastDayMetric($metricsData);
+        $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
+        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metricsData);
+
+        $metrics->setTotalMetric($totalMetric);
+        $metrics->setLastDayMetric($lastDayMetric);
+        $metrics->setPercentageChangeLastDay($percentageChangeLastDay);
+
+        dump(sprintf("daily:last_day slug:%s, dateFrom:%s, dateTo:%s", $this->board->getSlug(), $dateFrom, $today));
 
         return $metrics;
     }
+
 
     /**
      * Get total metrics since last day
@@ -85,8 +65,8 @@ class LastDayMetrics
      * @param LastDayMetric $lastDayMetric
      * @return TotalMetric
      */
-    private function getTotalMetric(Metrics $metrics, LastDayMetric $lastDayMetric)
-    {
+    private
+    function getTotalMetric(Metrics $metrics, LastDayMetric $lastDayMetric) {
         $totalMetric = $metrics->getTotalMetric();
         // if there is no metric repository
         if (is_null($totalMetric)) {
@@ -121,8 +101,8 @@ class LastDayMetrics
      * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
-    private function getPercentageChangeLastDayMetric(MetricModel $lastDayMetric)
-    {
+    private
+    function getPercentageChangeLastDayMetric(MetricModel $lastDayMetric) {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
         $percentageChangeLastDay = $this->board->getMetrics()->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
@@ -150,8 +130,8 @@ class LastDayMetrics
      * @param $lastDayMetricData
      * @return LastDayMetric
      */
-    private function getLastDayMetric(MetricModel $lastDayMetricData)
-    {
+    private
+    function getLastDayMetric(MetricModel $lastDayMetricData) {
         $lastDayMetric = $this->board->getMetrics()->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();

@@ -36,37 +36,21 @@ class LastWeekMetrics
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $lastWeekMetricData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
-
-        $lastWeekMetric = $this->getLastWeekMetric($lastWeekMetricData);
-
-        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($lastWeekMetricData);
-
         $metrics = $this->board->getMetrics();
+        // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-
-            dump(
-                sprintf(
-                    "created:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                    $this->board->getSlug(),
-                    $dateFrom,
-                    $today
-                )
-            );
-        } else {
-            $metrics->setLastWeekMetric($lastWeekMetric);
-            $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
-
-            dump(
-                sprintf(
-                    "updated:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                    $this->board->getSlug(),
-                    $dateFrom,
-                    $today
-                )
-            );
+            $this->board->setMetrics($metrics);
         }
+
+        $metricsData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
+        $lastWeekMetric = $this->getLastWeekMetric($metricsData);
+        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metricsData);
+
+        $metrics->setLastWeekMetric($lastWeekMetric);
+        $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
+
+        dump(sprintf("daily:last_week slug:%s, dateFrom:%s, dateTo:%s", $this->board->getSlug(), $dateFrom, $today));
 
         return $metrics;
     }
