@@ -4,16 +4,16 @@ services:
     metrics_service:
          class: rtPiwikBundle\Services\MetricsService
          arguments:
-            $analytics: analytics_service
+            $analytics: '@analytics_service'
     total_metrics:
         class: rtPiwikBundle\Services\TotalMetrics
         arguments:
-            $metricsService: metrics_service
+            $metricsService: '@metrics_service'
     last_day_metrics:
         class: rtPiwikBundle\Services\LastDayMetrics
         arguments:
-            $metricsService: metrics_service
+            $metricsService: '@metrics_service'
     last_week_metrics:
         class: rtPiwikBundle\Services\LastWeekMetrics
         arguments:
-            $metricsService: metrics_service
+            $metricsService: '@metrics_service'
