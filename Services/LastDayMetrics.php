@@ -9,10 +9,11 @@
 namespace rtPiwikBundle\Services;
 
 
+use rtPiwikBundle\Document\Board;
 use rtPiwikBundle\Document\LastDayMetric;
+use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\PercentageChangeLastDayMetric;
 use rtPiwikBundle\Document\TotalMetric;
-use rtPiwikBundle\Document\Metrics;
 
 class LastDayMetrics extends DailyMetrics
 {
@@ -24,13 +25,12 @@ class LastDayMetrics extends DailyMetrics
     }
 
     /**
-     * Get all merricst since last day
-     * @param \rtPiwikBundle\Document\Board $board
-     * @param $date
+     * Get all metrics since last day
+     * @param Board $board
+     * @param \DateTime $date
      * @return Metrics
      */
-
-    public function get(\rtPiwikBundle\Document\Board $board, $date)
+    public function get(Board $board, \DateTime $date)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
@@ -80,14 +80,12 @@ class LastDayMetrics extends DailyMetrics
 
     /**
      * Get total metrics since last day
-     * @param $metricRepository - metrics collection
-     * @param $lastDayMetric - piwik metrics data
+     * @param Metrics $metrics
+     * @param LastDayMetric $lastDayMetric
      * @return TotalMetric
      */
-    private function getTotalMetric(
-        \rtPiwikBundle\Document\Metrics $metrics,
-        \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
-    ) {
+    private function getTotalMetric(Metrics $metrics, LastDayMetric $lastDayMetric)
+    {
         $totalMetric = $metrics->getTotalMetric();
         // if there is no metric repository
         if (is_null($totalMetric)) {
@@ -119,14 +117,12 @@ class LastDayMetrics extends DailyMetrics
 
     /**
      * Get metrics data since last day and current day
-     * @param \rtPiwikBundle\Document\Board $board
+     * @param Board $board
      * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
-    private function getPercentageChangeLastDayMetric(
-        \rtPiwikBundle\Document\Board $board,
-        \rtPiwikBundle\Services\MetricModel $lastDayMetric
-    ) {
+    private function getPercentageChangeLastDayMetric(Board $board, MetricModel $lastDayMetric)
+    {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
         $percentageChangeLastDay = $board->getMetrics()->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
@@ -151,14 +147,12 @@ class LastDayMetrics extends DailyMetrics
 
     /**
      * Get last day metrics data
-     * @param \rtPiwikBundle\Document\Board $board - metrics collection
-     * @param $lastDayMetricData - piwik metrics data
+     * @param Board $board
+     * @param $lastDayMetricData
      * @return LastDayMetric
      */
-    private function getLastDayMetric(
-        \rtPiwikBundle\Document\Board $board,
-        \rtPiwikBundle\Services\MetricModel $lastDayMetricData
-    ) {
+    private function getLastDayMetric(Board $board, MetricModel $lastDayMetricData)
+    {
         $lastDayMetric = $board->getMetrics()->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();

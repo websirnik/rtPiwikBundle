@@ -10,6 +10,7 @@ namespace rtPiwikBundle\Services;
 
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
+use rtPiwikBundle\Document\Board;
 
 class TotalMetrics
 {
@@ -22,10 +23,10 @@ class TotalMetrics
 
     /**
      * Get total metrics
-     * @param \rtPiwikBundle\Document\Board $board
+     * @param Board $board
      * @return Metrics
      */
-    public function get(\rtPiwikBundle\Document\Board $board)
+    public function get(Board $board)
     {
         $date = new \DateTime();
         $now = $date->getTimestamp();
@@ -49,12 +50,12 @@ class TotalMetrics
     }
 
     /**
-     * @param \rtPiwikBundle\Document\Board $board
-     * @param $dateFrom
+     * @param Board $board
+     * @param \DateTime $dateFrom
      * @param $dateTo
-     * @return \rtPiwikBundle\Document\Board
+     * @return Board
      */
-    private function updateMetricsByBoard(\rtPiwikBundle\Document\Board $board, $dateFrom, $dateTo)
+    private function updateMetricsByBoard(Board $board, \DateTime $dateFrom, \DateTime $dateTo)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo);
         $metrics = $board->getMetrics();
@@ -97,6 +98,7 @@ class TotalMetrics
         }
 
         $board->setMetrics($metrics);
+
         return $board;
     }
 }

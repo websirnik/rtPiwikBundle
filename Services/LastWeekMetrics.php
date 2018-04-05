@@ -11,91 +11,75 @@ namespace rtPiwikBundle\Services;
 
 use rtPiwikBundle\Document\LastWeekMetric;
 use rtPiwikBundle\Document\PercentageChangeLastWeekMetric;
+use rtPiwikBundle\Document\Board;
+use rtPiwikBundle\Document\Metrics;
 
 class LastWeekMetrics extends DailyMetrics
 {
-    private $localConn;
-    private $remoteConn;
     private $metricsService;
 
-    function __construct($localConn, $remoteConn)
+    function __construct()
     {
-        $this->localConn = $localConn;
-        $this->remoteConn = $remoteConn;
         $this->metricsService = new MetricsService();
     }
 
     /**
      * Get all metrics since last week
+     * @param Board $board
+     * @param \DateTime $date
+     * @return Metrics
      */
-    public function execute()
+    public function get(Board $board, \DateTime $date)
     {
         $now = new \DateTime();
-        $date = new \DateTime();
-
         $today = $now->format('Y-m-d');
+        $dateFrom = $date->format('Y-m-d');
 
-        $lastWeek = $date->getTimestamp() - 60 * 60 * 24 * 6;
-        $metricsRepository = $this->getMetricsFromDate($lastWeek, $this->localConn, $this->remoteConn);
-        $dateFrom = $date->setTimestamp($lastWeek)->format('Y-m-d');
+        $lastWeekMetricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today);
 
-        foreach ($metricsRepository as $metricRepository) {
-            $lastWeekMetricData = $this->metricsService->getMetrics(
-                $metricRepository->getSlug(),
-                $dateFrom,
-                $today
+        $lastWeekMetric = $this->getLastWeekMetric($board, $lastWeekMetricData);
+
+        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($board, $lastWeekMetricData);
+
+        $metrics = $board->getMetrics();
+        if (is_null($metrics)) {
+            $metrics = new Metrics();
+
+            dump(
+                sprintf(
+                    "created:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
+                    $board->getSlug(),
+                    $dateFrom,
+                    $today
+                )
             );
+        } else {
+            $metrics->setLastWeekMetric($lastWeekMetric);
+            $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
 
-            $lastWeekMetric = $this->getLastWeekMetric($metricRepository, $lastWeekMetricData);
-
-            $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metricRepository, $lastWeekMetric);
-
-            if (is_null($metricRepository)) {
-                $metricsModel = new MetricsService();
-                $metricsModel->setSlug($metricRepository->getSlug());
-
-                // create it
-                $this->localConn->persist($metricsModel);
-
-                dump(
-                    sprintf(
-                        "created:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                        $metricRepository->getSlug(),
-                        $dateFrom,
-                        $today
-                    )
-                );
-            } else {
-                $metricRepository->setUpdatedAt(new \DateTime());
-                $metricRepository->setLastWeekMetric($lastWeekMetric);
-                $metricRepository->setPercentageChangeLastWeek($percentageChangeLastWeek);
-
-                dump(
-                    sprintf(
-                        "updated:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                        $metricRepository->getSlug(),
-                        $dateFrom,
-                        $today
-                    )
-                );
-            }
-
+            dump(
+                sprintf(
+                    "updated:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
+                    $board->getSlug(),
+                    $dateFrom,
+                    $today
+                )
+            );
         }
 
-        $this->localConn->flush();
-        $this->localConn->clear();
+        return $metrics;
     }
 
     /**
      * Get metrics data since last week and current week
-     * @param $metricRepository - metrics collection
-     * @param $lastWeekMetric - piwik metrics data
+     * @param Board $board
+     * @param MetricModel $lastWeekMetric
      * @return PercentageChangeLastWeekMetric
      */
-    private function getPercentageChangeLastWeekMetric($metricRepository, $lastWeekMetric)
+    private function getPercentageChangeLastWeekMetric(Board $board, MetricModel $lastWeekMetric)
     {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastWeek = $metricRepository->getPercentageChangeLastWeek();
+        $percentageChangeLastWeek = $board->getMetrics()->getPercentageChangeLastWeek();
         if (is_null($percentageChangeLastWeek)) {
             $percentageChangeLastWeek = new PercentageChangeLastWeekMetric();
         }
@@ -118,14 +102,14 @@ class LastWeekMetrics extends DailyMetrics
 
     /**
      * Get last week metrics data
-     * @param $metricRepository - metrics collection
-     * @param $lastWeekMetricData - piwik metrics data
+     * @param Board $board
+     * @param MetricModel $lastWeekMetricData
      * @return LastWeekMetric
      */
-    private function getLastWeekMetric($metricRepository, $lastWeekMetricData)
+    private function getLastWeekMetric(Board $board, MetricModel $lastWeekMetricData)
     {
         // get lastWeekMetric from current metricRepo TODO could be check inside mode ?
-        $lastWeekMetric = $metricRepository->getLastWeekMetric();
+        $lastWeekMetric = $board->getMetrics()->getLastWeekMetric();
         if (is_null($lastWeekMetric)) {
             $lastWeekMetric = new LastWeekMetric();
         }

@@ -30,8 +30,7 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
 
         $this->getLastDayMetrics($conn);
 
-//        $lasWeekMetrics = new LastWeekMetrics($localConn, $remoteConn);
-//        $lasWeekMetrics->execute();
+        $this->getLastWeekMetrics($conn);
 
         $output->writeln('ok');
     }
@@ -58,7 +57,31 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             $metrics = $lasDayMetrics->get($board);
             // update metrics for this board
             $board->setMetrics($metrics);
-            // TODO update bord
+            // TODO update board
+        }
+    }
+
+    public function getLastWeekMetrics($conn){
+        $date = new \DateTime();
+        $ts = $date->getTimestamp() - 60 * 60 * 24 * 6;
+        $lastWeek = $date->setTimestamp($ts);
+
+        $boardsRepository = $conn
+            ->getRepository('rtPiwikBundle:Board')
+            ->findBy(
+                array('updated' => array('$gt' => $lastWeek)),
+                array('created' => 'desc'),
+                null,
+                null
+            );
+
+        foreach ($boardsRepository as $board) {
+            $lastWeekMetrics = new LastWeekMetrics($board, $lastWeek);
+            // get metrics for this board
+            $metrics = $lastWeekMetrics->get($board);
+            // update metrics for this board
+            $board->setMetrics($metrics);
+            // TODO update board
         }
     }
 
