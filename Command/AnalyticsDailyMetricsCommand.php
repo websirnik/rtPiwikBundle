@@ -26,9 +26,7 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn1');
-
-
+        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn2');
 
         $this->getLastDayMetrics($conn);
 

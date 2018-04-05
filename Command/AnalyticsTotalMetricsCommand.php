@@ -25,7 +25,7 @@ class AnalyticsTotalMetricsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn1');
+        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn2');
 
         $boardsTotal = $conn->createQueryBuilder('rtPiwikBundle:Board')->getQuery()->execute()->count();
         $i = 0;
