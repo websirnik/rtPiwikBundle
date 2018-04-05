@@ -74,8 +74,7 @@ class AnalyticsTotalMetricsCommand extends ContainerAwareCommand
             // get metrics for this board
             $metrics = $totalMetrics->get($board->getCreated());
             // update metrics for this board
-            $board->setMetrics($metrics);
-            // TODO update board
+            dump($metrics);
         }
     }
 }

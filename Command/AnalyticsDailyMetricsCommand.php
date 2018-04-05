@@ -73,8 +73,7 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             // get metrics for this board
             $metrics = $lasDayMetrics->get($yesterday);
             // update metrics for this board
-            $board->setMetrics($metrics);
-            // TODO update board
+            dump($metrics);
         }
     }
 
@@ -113,8 +112,7 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             // get metrics for this board
             $metrics = $lastWeekMetrics->get($lastWeek);
             // update metrics for this board
-            $board->setMetrics($metrics);
-            // TODO update board
+            dump($metrics);
         }
     }
 

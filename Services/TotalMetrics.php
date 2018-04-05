@@ -30,6 +30,7 @@ class TotalMetrics
      */
     public function get(\DateTime $date)
     {
+        $board = $this->board;
         $now = new \DateTime();
         $nowTs = $now->getTimestamp();
 
@@ -41,15 +42,15 @@ class TotalMetrics
             $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($created)->format('Y-m-d');
 
-            $this->board = $this->updateMetricsByBoard($this->board, $dateFrom, $dateTo);
+            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
         }
 
         $dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
         $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
-        $this->board = $this->updateMetricsByBoard($this->board, $dateFrom, $dateTo);
+        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
 
-        return $this->board->getMetrics();
+        return $board->getMetrics();
     }
 
     /**
