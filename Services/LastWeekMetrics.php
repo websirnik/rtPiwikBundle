@@ -14,7 +14,7 @@ use rtPiwikBundle\Document\PercentageChangeLastWeekMetric;
 use rtPiwikBundle\Document\Board;
 use rtPiwikBundle\Document\Metrics;
 
-class LastWeekMetrics extends DailyMetrics
+class LastWeekMetrics
 {
     private $metricsService;
 
