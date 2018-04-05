@@ -17,20 +17,3 @@ services:
         class: rtPiwikBundle\Services\LastWeekMetrics
         arguments:
             $metricsService: metrics_service
-
-doctrine_mongodb:
-    default_database: relayto-app-prod
-    connections:
-        conn1:
-            server: "mongodb://localhost:27017"
-        conn2:
-            server: "mongodb://rtAnalyticsReadOnly2:frhjg42!gkFh@aws-eu-west-1-portal.1.dblayer.com:15376,aws-eu-west-1-portal.0.dblayer.com:15376/relayto-app-prod"
-    document_managers:
-        conn1:
-            connection: conn1
-            mappings:
-                rtPiwikBundle: ~
-        conn2:
-            connection: conn2
-            mappings:
-                rtPiwikBundle: ~
