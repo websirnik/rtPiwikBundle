@@ -55,7 +55,7 @@ class TotalMetrics
      * @param $dateTo
      * @return Board
      */
-    private function updateMetricsByBoard(Board $board, $dateFrom, $dateTo, $userIds)
+    private function updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo, $userIds);
 
