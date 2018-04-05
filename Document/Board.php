@@ -103,7 +103,7 @@ class Board
     /**
      * Get created
      *
-     * @return date $created
+     * @return \DateTime $created
      */
     public function getCreated()
     {

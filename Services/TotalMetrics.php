@@ -33,14 +33,14 @@ class TotalMetrics
         $board = $this->board;
         $now = new \DateTime();
         $nowTs = $now->getTimestamp();
-
-        $createdTs = $date->modify($date)->getTimestamp();
+        $createdTs = $date->getTimestamp();
 
         while ($nowTs > $createdTs) {
             $createdTs = $createdTs + 60 * 60 * 60 * 12;
 
             $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
+
 
             $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
         }
@@ -62,6 +62,7 @@ class TotalMetrics
     private function updateMetricsByBoard(Board $board, $dateFrom, $dateTo)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo);
+
         $metrics = $board->getMetrics();
         if (is_null($metrics)) {
             $metrics = new Metrics();

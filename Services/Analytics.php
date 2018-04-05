@@ -36,6 +36,7 @@ class Analytics
             'segment' => sprintf("pageUrl=@%s;userId!=%s", $slug, $this->userIds),
             "expanded" => 0,
             "flat" => 0,
+            "slug" => $slug,
         ];
 
         return $this->render($query);
@@ -50,6 +51,7 @@ class Analytics
             "segment" => sprintf("pageUrl=@%s;userId!=%s", $slug, $this->userIds),
             "expanded" => 0,
             "flat" => 0,
+            "slug" => $slug,
         ];
 
         $actions = $this->render($query);
@@ -84,6 +86,7 @@ class Analytics
             "period" => "range",
             "segment" => "eventCategory=@".$slug,
             "flat" => 0,
+            "slug" => $slug
         ];
 
         return $this->render($query);
