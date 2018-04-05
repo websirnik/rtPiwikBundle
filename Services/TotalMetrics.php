@@ -13,101 +13,53 @@ use rtPiwikBundle\Document\TotalMetric;
 
 class TotalMetrics
 {
-
-    const BATCH = 100;
-
-    private $localConn;
-    private $remoteConn;
     private $metricsService;
 
-    function __construct($localConn, $remoteConn)
+    function __construct()
     {
-        $this->localConn = $localConn;
-        $this->remoteConn = $remoteConn;
         $this->metricsService = new MetricsService();
-    }
-
-    public function execute()
-    {
-        $boardsTotal = $this->remoteConn->createQueryBuilder('rtPiwikBundle:Board')->getQuery()->execute()->count();
-        $i = 0;
-        while ($boardsTotal > $i) {
-            $this->getTotalMetricsByRepository($this->remoteConn, $this->localConn, TotalMetrics::BATCH, $i);
-            $i += TotalMetrics::BATCH;
-        }
-
-        $this->getTotalMetricsByRepository($this->remoteConn, $this->localConn, $boardsTotal - $i, $i);
-    }
-
-    /**
-     * Get all metrics form repository
-     * @param $remoteConn - connection
-     * @param $localConn - connection
-     * @param null $limit - batch of items
-     * @param null $skip - start from item
-     */
-    private function getTotalMetricsByRepository($remoteConn, $localConn, $limit = null, $skip = null)
-    {
-        $boardsRepository = $remoteConn
-            ->getRepository('rtPiwikBundle:Board')
-            ->findBy(array(), array('created' => 'desc'), $limit, $skip);
-
-        foreach ($boardsRepository as $boardRepository) {
-            $boardSlug = $boardRepository->getSlug();
-            $boardCreated = $boardRepository->getCreated();
-
-            $this->getTotalMetrics($localConn, $boardCreated, $boardSlug);
-        }
     }
 
     /**
      * Get total metrics
-     * @param $conn - connection
-     * @param $boardCreated - document created date
-     * @param $boardSlug - document slug
+     * @param \rtPiwikBundle\Document\Board $board
+     * @return Metrics
      */
-    private function getTotalMetrics($conn, $boardCreated, $boardSlug)
+    public function get(\rtPiwikBundle\Document\Board $board)
     {
-        // universal for total and daily
-        if (!is_null($boardCreated) && !is_null($boardSlug)) {
-            $metricRepository = $conn
-                ->getRepository('rtPiwikBundle:Metrics')
-                ->findOneBy(array('slug' => $boardSlug));
+        $date = new \DateTime();
+        $now = $date->getTimestamp();
+        $created = $date->modify($board->getCreated()->format('Y-m-d'))->getTimestamp();
 
-            $date = new \DateTime();
-            $now = $date->getTimestamp();
-            $created = $date->modify($boardCreated->format('Y-m-d'))->getTimestamp();
+        while ($now > $created) {
+            $created = $created + 60 * 60 * 60 * 12;
 
-            $metricsModel = new Metrics();
-            while ($now > $created) {
-                $created = $created + 60 * 60 * 60 * 12;
-
-                $dateFrom = $date->format('Y-m-d');
-                $dateTo = $date->setTimestamp($created)->format('Y-m-d');
-
-                $this->upsert($boardSlug, $dateFrom, $dateTo, $metricRepository, $metricsModel, $conn);
-            }
-
-            $dateFrom = $date->setTimestamp($now)->format('Y-m-d');
+            $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($created)->format('Y-m-d');
 
-            $this->upsert($boardSlug, $dateFrom, $dateTo, $metricRepository, $metricsModel, $conn);
+            $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
         }
+
+        $dateFrom = $date->setTimestamp($now)->format('Y-m-d');
+        $dateTo = $date->setTimestamp($created)->format('Y-m-d');
+
+        $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+
+        return $board->getMetrics();
     }
 
     /**
-     * Update existing metrics data or insert a new
-     * @param $slug - uniq id
-     * @param $dateFrom - date start
-     * @param $dateTo - date end
-     * @param $metricRepository - metrics collection
-     * @param Metrics $metricsModel - metrics model
-     * @param $conn - connection
+     * @param \rtPiwikBundle\Document\Board $board
+     * @param $dateFrom
+     * @param $dateTo
+     * @return Metrics
      */
-    private function upsert($slug, $dateFrom, $dateTo, $metricRepository, Metrics $metricsModel, $conn)
+    private function updateMetricsByBoard(\rtPiwikBundle\Document\Board $board, $dateFrom, $dateTo)
     {
-        $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo);
-        if (is_null($metricRepository)) {
+        $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo);
+        $metrics = $board->getMetrics();
+        if (is_null($metrics)) {
+            $metrics = new Metrics();
             $totalMetric = new TotalMetric();
 
             $totalMetric->setVisits($metricData->getVisits());
@@ -115,14 +67,11 @@ class TotalMetrics
             $totalMetric->setAvgTimeSpent($metricData->getAvgTimeSpent());
             $totalMetric->setPageViews($metricData->getPageViews());
 
-            $metricsModel->setSlug($slug);
-            $metricsModel->setTotalMetric($totalMetric);
+            $metrics->setTotalMetric($totalMetric);
 
-            $conn->persist($metricsModel);
-
-            dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
+            dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
         } else {
-            $totalMetric = $metricRepository->getTotalMetric();
+            $totalMetric = $metrics->getTotalMetric();
             if (is_null($totalMetric)) {
                 $totalMetric = new TotalMetric();
             }
@@ -141,14 +90,13 @@ class TotalMetrics
             $pageViews = $totalMetric->getPageViews() + $metricData->getPageViews();
             $totalMetric->setPageViews($pageViews);
 
-            $metricRepository->setUpdatedAt(new \DateTime());
-            $metricRepository->setTotalMetric($totalMetric);
+            $metrics->setUpdatedAt(new \DateTime());
+            $metrics->setTotalMetric($totalMetric);
 
-            dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
+            dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
         }
 
-        $conn->flush();
-        $conn->clear();
+        return $metrics;
     }
 
 

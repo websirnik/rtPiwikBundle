@@ -9,11 +9,37 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class Board
 {
-
     /**
      * @MongoDB\Id
      */
     protected $id;
+
+    /**
+     * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\Metrics")
+     */
+    protected $metrics;
+
+    /**
+     * Set metrics
+     *
+     * @param \rtPiwikBundle\Document\Metrics $metrics
+     * @return $this
+     */
+    public function setMetrics(\rtPiwikBundle\Document\Metrics $metrics)
+    {
+        $this->metrics = $metrics;
+        return $this;
+    }
+
+    /**
+     * Get metrics
+     *
+     * @return \rtPiwikBundle\Document\Metrics $metrics
+     */
+    public function getMetrics()
+    {
+        return $this->metrics;
+    }
 
     /**
      * @MongoDB\Field(type="string")

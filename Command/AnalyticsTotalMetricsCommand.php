@@ -25,14 +25,41 @@ class AnalyticsTotalMetricsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $db = $this->getContainer()->get('doctrine_mongodb');
+        $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn1');
 
-        $localConn = $db->getManager('conn1');
-        $remoteConn = $db->getManager('conn2');
+        $boardsTotal = $conn->createQueryBuilder('rtPiwikBundle:Board')->getQuery()->execute()->count();
+        $i = 0;
+        while ($boardsTotal > $i) {
+            $this->getBatchTotalMetrics($conn, 100, $i);
+            $i += 100;
+        }
 
-        $totalMetrics = new TotalMetrics($localConn, $remoteConn);
-        $totalMetrics->execute();
+        $this->getBatchTotalMetrics($conn, $boardsTotal - $i, $i);
+    }
 
-        $output->writeln('ok');
+
+    /**
+     * Get all metrics form repository
+     * @param $conn
+     * @param null $limit - batch of items
+     * @param null $skip - start from item
+     */
+    private function getBatchTotalMetrics($conn, $limit = null, $skip = null)
+    {
+        $boardsRepository = $conn->getRepository('rtPiwikBundle:Board')->findBy(
+            array(),
+            array('created' => 'desc'),
+            $limit,
+            $skip
+        );
+
+        foreach ($boardsRepository as $board) {
+            $totalMetrics = new TotalMetrics;
+            // get metrics for this board
+            $metrics = $totalMetrics->get($board);
+            // update metrics for this board
+            $board->setMetrics($metrics);
+            // TODO update bord
+        }
     }
 }
