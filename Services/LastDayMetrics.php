@@ -18,31 +18,32 @@ use rtPiwikBundle\Document\TotalMetric;
 class LastDayMetrics
 {
     private $metricsService;
+    private $board;
 
-    function __construct()
+    function __construct(Board $board, $userIds)
     {
-        $this->metricsService = new MetricsService();
+        $this->metricsService = new MetricsService($userIds);
+        $this->board = $board;
     }
 
     /**
      * Get all metrics since last day
-     * @param Board $board
      * @param \DateTime $date
      * @return Metrics
      */
-    public function get(Board $board, \DateTime $date)
+    public function get(\DateTime $date)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $lastDayMetricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today);
+        $lastDayMetricData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
 
-        $lastDayMetric = $this->getLastDayMetric($board, $lastDayMetricData);
+        $lastDayMetric = $this->getLastDayMetric($lastDayMetricData);
 
-        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($board, $lastDayMetricData);
+        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($lastDayMetricData);
 
-        $metrics = $board->getMetrics();
+        $metrics = $this->board->getMetrics();
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
@@ -53,7 +54,7 @@ class LastDayMetrics
             dump(
                 sprintf(
                     "created:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                    $board->getSlug(),
+                    $this->board->getSlug(),
                     $dateFrom,
                     $today
                 )
@@ -68,7 +69,7 @@ class LastDayMetrics
             dump(
                 sprintf(
                     "updated:daily:last_day slug:%s, dateFrom:%s, dateTo:%s",
-                    $board->getSlug(),
+                    $this->board->getSlug(),
                     $dateFrom,
                     $today
                 )
@@ -117,14 +118,13 @@ class LastDayMetrics
 
     /**
      * Get metrics data since last day and current day
-     * @param Board $board
      * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
-    private function getPercentageChangeLastDayMetric(Board $board, MetricModel $lastDayMetric)
+    private function getPercentageChangeLastDayMetric(MetricModel $lastDayMetric)
     {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastDay = $board->getMetrics()->getPercentageChangeLastDay();
+        $percentageChangeLastDay = $this->board->getMetrics()->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
             $percentageChangeLastDay = new PercentageChangeLastDayMetric();
         }
@@ -147,13 +147,12 @@ class LastDayMetrics
 
     /**
      * Get last day metrics data
-     * @param Board $board
      * @param $lastDayMetricData
      * @return LastDayMetric
      */
-    private function getLastDayMetric(Board $board, MetricModel $lastDayMetricData)
+    private function getLastDayMetric(MetricModel $lastDayMetricData)
     {
-        $lastDayMetric = $board->getMetrics()->getLastDayMetric();
+        $lastDayMetric = $this->board->getMetrics()->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();
         }

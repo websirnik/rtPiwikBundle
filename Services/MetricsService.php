@@ -8,9 +8,9 @@ class MetricsService
     private $metric;
     private $analytics;
 
-    function __construct()
+    function __construct($userIds)
     {
-        $this->analytics = new Analytics();
+        $this->analytics = new Analytics($userIds);
         $this->metric = new MetricModel();
     }
 
@@ -21,7 +21,8 @@ class MetricsService
         $analyticsMetrics = $this->analytics->getMetrics($slug, $date);
         foreach ($analyticsMetrics as $key => $m) {
             if (count($m) > 0 && isset($m["nb_visits"])) {
-                $this->metric->setVisits($this->metric->getVisits() + $m["nb_visits"]);
+                $visits = $this->metric->getVisits() + $m["nb_visits"];
+                $this->metric->setVisits($visits);
             }
         }
 
@@ -30,18 +31,23 @@ class MetricsService
         foreach ($analyticsActions as $key => $action) {
             if (count($action) > 0 && isset($action["sum_time_spent"]) && $action["sum_time_spent"] > 0) {
                 $avgTimeSpentCount++;
-                $this->metric->setPageViews($this->metric->getPageViews() + $action["nb_hits"]);
-                $this->metric->setAvgTimeSpent($this->metric->getAvgTimeSpent() + $action["sum_time_spent"]);
+                $pageViews = $this->metric->getPageViews() + $action["nb_hits"];
+                $this->metric->setPageViews($pageViews);
+
+                $timeSpent = $this->metric->getAvgTimeSpent() + $action["sum_time_spent"];
+                $this->metric->setAvgTimeSpent($timeSpent);
             }
         }
 
         if ($avgTimeSpentCount > 0) {
-            $this->metric->setAvgTimeSpent(round($this->metric->getAvgTimeSpent() / $avgTimeSpentCount));
+            $avgTimeSpent = round($this->metric->getAvgTimeSpent() / $avgTimeSpentCount);
+            $this->metric->setAvgTimeSpent($avgTimeSpent);
         }
 
         $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
         if (isset($analyticsInteractions[0]["nb_events"])) {
-            $this->metric->setInteractions($analyticsInteractions[0]["nb_events"]);
+            $interactions = $analyticsInteractions[0]["nb_events"];
+            $this->metric->setInteractions($interactions);
         }
 
         return $this->metric;

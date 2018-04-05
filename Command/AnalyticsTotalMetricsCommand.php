@@ -46,6 +46,21 @@ class AnalyticsTotalMetricsCommand extends ContainerAwareCommand
      */
     private function getBatchTotalMetrics($conn, $limit = null, $skip = null)
     {
+        $userIds = [
+            "51dbeae06a0239d21f3b436e",
+            "52529972c301bf6604e7931d",
+            "5697b7c6296fd3cc638b476e",
+            "59a01dfc1d76fc545528aba4",
+            "597e3bf71d76fc393954d4aa",
+            "5a4d12ea1d76fc5fdc0e8c6d",
+            "5a27531f1d76fc42895dff82",
+            "587d4a8e0c87bbca148b482d",
+            "5a3823181d76fc50c975c18b",
+            "566946fbbe562b4f588b4641",
+            "574dcde4a7e80ea4118b7847",
+            "u5a4e38771d76fc61796b4ba3",
+        ];
+
         $boardsRepository = $conn->getRepository('rtPiwikBundle:Board')->findBy(
             array(),
             array('created' => 'desc'),
@@ -54,9 +69,10 @@ class AnalyticsTotalMetricsCommand extends ContainerAwareCommand
         );
 
         foreach ($boardsRepository as $board) {
-            $totalMetrics = new TotalMetrics;
+            $totalMetrics = new TotalMetrics($board, $userIds);
+
             // get metrics for this board
-            $metrics = $totalMetrics->get($board);
+            $metrics = $totalMetrics->get($board->getCreated());
             // update metrics for this board
             $board->setMetrics($metrics);
             // TODO update board

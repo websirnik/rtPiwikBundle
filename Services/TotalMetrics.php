@@ -15,47 +15,50 @@ use rtPiwikBundle\Document\Board;
 class TotalMetrics
 {
     private $metricsService;
+    private $board;
 
-    function __construct()
+    function __construct(Board $board, $userIds)
     {
-        $this->metricsService = new MetricsService();
+        $this->metricsService = new MetricsService($userIds);
+        $this->board = $board;
     }
 
     /**
      * Get total metrics
-     * @param Board $board
+     * @param \DateTime $date
      * @return Metrics
      */
-    public function get(Board $board)
+    public function get(\DateTime $date)
     {
-        $date = new \DateTime();
-        $now = $date->getTimestamp();
-        $created = $date->modify($board->getCreated()->format('Y-m-d'))->getTimestamp();
+        $now = new \DateTime();
+        $nowTs = $now->getTimestamp();
 
-        while ($now > $created) {
-            $created = $created + 60 * 60 * 60 * 12;
+        $createdTs = $date->modify($date)->getTimestamp();
+
+        while ($nowTs > $createdTs) {
+            $created = $createdTs + 60 * 60 * 60 * 12;
 
             $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($created)->format('Y-m-d');
 
-            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+            $this->board = $this->updateMetricsByBoard($this->board, $dateFrom, $dateTo);
         }
 
-        $dateFrom = $date->setTimestamp($now)->format('Y-m-d');
-        $dateTo = $date->setTimestamp($created)->format('Y-m-d');
+        $dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
+        $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
-        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo);
+        $this->board = $this->updateMetricsByBoard($this->board, $dateFrom, $dateTo);
 
-        return $board->getMetrics();
+        return $this->board->getMetrics();
     }
 
     /**
      * @param Board $board
-     * @param \DateTime $dateFrom
+     * @param $dateFrom
      * @param $dateTo
      * @return Board
      */
-    private function updateMetricsByBoard(Board $board, \DateTime $dateFrom, \DateTime $dateTo)
+    private function updateMetricsByBoard(Board $board, $dateFrom, $dateTo)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo);
         $metrics = $board->getMetrics();

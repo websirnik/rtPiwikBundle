@@ -17,38 +17,39 @@ use rtPiwikBundle\Document\Metrics;
 class LastWeekMetrics
 {
     private $metricsService;
+    private $board;
 
-    function __construct()
+    function __construct(Board $board, $userIds)
     {
-        $this->metricsService = new MetricsService();
+        $this->metricsService = new MetricsService($userIds);
+        $this->board = $board;
     }
 
     /**
      * Get all metrics since last week
-     * @param Board $board
      * @param \DateTime $date
      * @return Metrics
      */
-    public function get(Board $board, \DateTime $date)
+    public function get(\DateTime $date)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $lastWeekMetricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today);
+        $lastWeekMetricData = $this->metricsService->getMetrics($this->board->getSlug(), $dateFrom, $today);
 
-        $lastWeekMetric = $this->getLastWeekMetric($board, $lastWeekMetricData);
+        $lastWeekMetric = $this->getLastWeekMetric($lastWeekMetricData);
 
-        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($board, $lastWeekMetricData);
+        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($lastWeekMetricData);
 
-        $metrics = $board->getMetrics();
+        $metrics = $this->board->getMetrics();
         if (is_null($metrics)) {
             $metrics = new Metrics();
 
             dump(
                 sprintf(
                     "created:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                    $board->getSlug(),
+                    $this->board->getSlug(),
                     $dateFrom,
                     $today
                 )
@@ -60,7 +61,7 @@ class LastWeekMetrics
             dump(
                 sprintf(
                     "updated:daily:last_week slug:%s, dateFrom:%s, dateTo:%s",
-                    $board->getSlug(),
+                    $this->board->getSlug(),
                     $dateFrom,
                     $today
                 )
@@ -72,14 +73,13 @@ class LastWeekMetrics
 
     /**
      * Get metrics data since last week and current week
-     * @param Board $board
      * @param MetricModel $lastWeekMetric
      * @return PercentageChangeLastWeekMetric
      */
-    private function getPercentageChangeLastWeekMetric(Board $board, MetricModel $lastWeekMetric)
+    private function getPercentageChangeLastWeekMetric(MetricModel $lastWeekMetric)
     {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastWeek = $board->getMetrics()->getPercentageChangeLastWeek();
+        $percentageChangeLastWeek = $this->board->getMetrics()->getPercentageChangeLastWeek();
         if (is_null($percentageChangeLastWeek)) {
             $percentageChangeLastWeek = new PercentageChangeLastWeekMetric();
         }
@@ -102,14 +102,13 @@ class LastWeekMetrics
 
     /**
      * Get last week metrics data
-     * @param Board $board
      * @param MetricModel $lastWeekMetricData
      * @return LastWeekMetric
      */
-    private function getLastWeekMetric(Board $board, MetricModel $lastWeekMetricData)
+    private function getLastWeekMetric(MetricModel $lastWeekMetricData)
     {
         // get lastWeekMetric from current metricRepo TODO could be check inside mode ?
-        $lastWeekMetric = $board->getMetrics()->getLastWeekMetric();
+        $lastWeekMetric = $this->board->getMetrics()->getLastWeekMetric();
         if (is_null($lastWeekMetric)) {
             $lastWeekMetric = new LastWeekMetric();
         }

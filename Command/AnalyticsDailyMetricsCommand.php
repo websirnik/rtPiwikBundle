@@ -28,6 +28,8 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
     {
         $conn = $this->getContainer()->get('doctrine_mongodb')->getManager('conn1');
 
+
+
         $this->getLastDayMetrics($conn);
 
         $this->getLastWeekMetrics($conn);
@@ -38,6 +40,21 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
 
     public function getLastDayMetrics($conn)
     {
+        $userIds = [
+            "51dbeae06a0239d21f3b436e",
+            "52529972c301bf6604e7931d",
+            "5697b7c6296fd3cc638b476e",
+            "59a01dfc1d76fc545528aba4",
+            "597e3bf71d76fc393954d4aa",
+            "5a4d12ea1d76fc5fdc0e8c6d",
+            "5a27531f1d76fc42895dff82",
+            "587d4a8e0c87bbca148b482d",
+            "5a3823181d76fc50c975c18b",
+            "566946fbbe562b4f588b4641",
+            "574dcde4a7e80ea4118b7847",
+            "u5a4e38771d76fc61796b4ba3",
+        ];
+
         $date = new \DateTime();
         $ts = $date->getTimestamp() - 60 * 60 * 24;
         $yesterday = $date->setTimestamp($ts);
@@ -52,16 +69,32 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             );
 
         foreach ($boardsRepository as $board) {
-            $lasDayMetrics = new LastDayMetrics($board, $yesterday);
+            $lasDayMetrics = new LastDayMetrics($board, $userIds);
             // get metrics for this board
-            $metrics = $lasDayMetrics->get($board);
+            $metrics = $lasDayMetrics->get($yesterday);
             // update metrics for this board
             $board->setMetrics($metrics);
             // TODO update board
         }
     }
 
-    public function getLastWeekMetrics($conn){
+    public function getLastWeekMetrics($conn)
+    {
+        $userIds = [
+            "51dbeae06a0239d21f3b436e",
+            "52529972c301bf6604e7931d",
+            "5697b7c6296fd3cc638b476e",
+            "59a01dfc1d76fc545528aba4",
+            "597e3bf71d76fc393954d4aa",
+            "5a4d12ea1d76fc5fdc0e8c6d",
+            "5a27531f1d76fc42895dff82",
+            "587d4a8e0c87bbca148b482d",
+            "5a3823181d76fc50c975c18b",
+            "566946fbbe562b4f588b4641",
+            "574dcde4a7e80ea4118b7847",
+            "u5a4e38771d76fc61796b4ba3",
+        ];
+
         $date = new \DateTime();
         $ts = $date->getTimestamp() - 60 * 60 * 24 * 6;
         $lastWeek = $date->setTimestamp($ts);
@@ -76,9 +109,9 @@ class AnalyticsDailyMetricsCommand extends ContainerAwareCommand
             );
 
         foreach ($boardsRepository as $board) {
-            $lastWeekMetrics = new LastWeekMetrics($board, $lastWeek);
+            $lastWeekMetrics = new LastWeekMetrics($board, $userIds);
             // get metrics for this board
-            $metrics = $lastWeekMetrics->get($board);
+            $metrics = $lastWeekMetrics->get($lastWeek);
             // update metrics for this board
             $board->setMetrics($metrics);
             // TODO update board
