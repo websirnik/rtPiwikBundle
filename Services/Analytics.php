@@ -33,7 +33,7 @@ class Analytics
             'date' => $date,
             'method' => "API.get",
             'period' => "day",
-            'segment' => sprintf("pageUrl=@%s;userId!=%s", $slug, $this->userIds),
+            'segment' => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, $this->userIds),
             "expanded" => 0,
             "flat" => 0,
             "slug" => $slug,
@@ -48,33 +48,13 @@ class Analytics
             "date" => $date,
             "method" => "Actions.getPageUrls",
             "period" => "range",
-            "segment" => sprintf("pageUrl=@%s;userId!=%s", $slug, $this->userIds),
+            "segment" => sprintf("pageUrl!@edit;pageUrl=@%s;userId!=%s", $slug, $this->userIds),
             "expanded" => 0,
             "flat" => 0,
             "slug" => $slug,
         ];
 
-        $actions = $this->render($query);
-
-        if ($actions > 0 && isset($actions[0]["idsubdatatable"])) {
-            $idsubdatatable = $actions[0]["idsubdatatable"];
-
-            $query = [
-                "date" => $query["date"],
-                "filter_pattern" => "^((?!edit).)*$",
-                "idSubtable" => $idsubdatatable,
-                "method" => $query["method"],
-                "period" => $query["period"],
-                "segment" => $query["segment"],
-                "slug" => $query["slug"],
-                "expanded" => $query["expanded"],
-                "flat" => $query["flat"],
-            ];
-
-            return $this->render($query);
-        }
-
-        return $this->render();
+        return $this->render($query);
     }
 
     public function getInteractions($slug, $date)
