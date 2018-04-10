@@ -12,10 +12,10 @@
   "require": {
     "doctrine/mongodb-odm-bundle": "^3.1",
     "lexik/jwt-authentication-bundle": "^2.4",
-    "eightpoints/guzzle-bundle": "^4.5",
     "symfony/var-dumper": "^3.4",
     "guzzlehttp/guzzle": "^6.3",
-    "doctrine/mongodb-odm": "^1.0"
+    "doctrine/mongodb-odm": "^1.0",
+    "alcaeus/mongo-php-adapter": "^1.1"
   },
   "require-dev": {
     "sensio/generator-bundle": "^3.0",
@@ -39,7 +39,7 @@
   },
   "config": {
     "platform": {
-      "php": "5.5.9"
+      "ext-mongo": "1.6.16"
     }
   },
   "extra": {
