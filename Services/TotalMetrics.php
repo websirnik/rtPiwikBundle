@@ -10,6 +10,7 @@ namespace rtPiwikBundle\Services;
 
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class TotalMetrics
 {
@@ -33,36 +34,39 @@ class TotalMetrics
         $nowTs = $now->getTimestamp();
         $createdTs = $date->getTimestamp();
 
+        $metrics = $board->getMetrics();
+
         while ($nowTs > $createdTs) {
+            // each month
             $createdTs = $createdTs + 60 * 60 * 60 * 12;
 
             $dateFrom = $date->format('Y-m-d');
             $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
-
-            $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds);
+            $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
         }
 
         $dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
         $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
-        $board = $this->updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds);
+        // need to do again because the last batch of data should be updated
+        $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
 
-        return $board->getMetrics();
+        return $metrics;
     }
 
     /**
+     * @param $metrics
      * @param $board
      * @param $dateFrom
      * @param $dateTo
      * @param $userIds
      * @return mixed
      */
-    private function updateMetricsByBoard($board, $dateFrom, $dateTo, $userIds)
+    private function updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo, $userIds);
 
-        $metrics = $board->getMetrics();
         if (is_null($metrics)) {
             $metrics = new Metrics();
             $totalMetric = new TotalMetric();
@@ -101,8 +105,6 @@ class TotalMetrics
             dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
         }
 
-        $board->setMetrics($metrics);
-
-        return $board;
+        return $metrics;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace rtPiwikBundle\Services;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 class Analytics
 {
     private $defaultQuery = [
@@ -19,11 +21,22 @@ class Analytics
         $this->client = new \GuzzleHttp\Client(['base_uri' => 'https://rtpiwik.frb.io/index.php']);
     }
 
-    private function render(array $query = [])
+    private $piwikReqLimit = 10;
+
+    private function render(array $query = [], $requestAttempt = 0)
     {
         $query = array_merge($this->defaultQuery, $query);
+        try {
+            return json_decode($this->client->get("/", ['query' => $query])->getBody(), true);
+        } catch (Exception $e) {
+            if ($requestAttempt < $this->piwikReqLimit) {
+                $requestAttempt++;
+                return $this->render($query, $requestAttempt);
+            } else {
+                return new Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
+            }
+        }
 
-        return json_decode($this->client->get("/", ['query' => $query])->getBody(), true);
     }
 
     public function getMetrics($slug, $date, $userIds)
@@ -41,7 +54,7 @@ class Analytics
         return $this->render($query);
     }
 
-    public function getActions($slug, $date,$userIds)
+    public function getActions($slug, $date, $userIds)
     {
         $query = [
             "date" => $date,
@@ -65,7 +78,7 @@ class Analytics
             "period" => "range",
             "segment" => "eventCategory=@".$slug,
             "flat" => 0,
-            "slug" => $slug
+            "slug" => $slug,
         ];
 
         return $this->render($query);
