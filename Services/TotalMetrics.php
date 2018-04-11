@@ -26,15 +26,21 @@ class TotalMetrics
      * @param $board
      * @param \DateTime $date
      * @param $userIds
+     * @param bool $reCalculate
      * @return Metrics
      */
-    public function get($board, \DateTime $date, $userIds)
+
+    public function get($board, \DateTime $date, $userIds, $reCalculate = false)
     {
         $now = new \DateTime();
         $nowTs = $now->getTimestamp();
         $createdTs = $date->getTimestamp();
 
-        $metrics = $board->getMetrics();
+        if (!$reCalculate) {
+            $metrics = $board->getMetrics();
+        } else {
+            $metrics = new Metrics();
+        }
 
         while ($nowTs > $createdTs) {
             // each month
