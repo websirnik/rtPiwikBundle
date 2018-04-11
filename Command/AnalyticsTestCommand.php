@@ -38,10 +38,12 @@ class AnalyticsTestCommand extends ContainerAwareCommand
         ];
 
         $now = new \DateTime();
-        $ts = $now->getTimestamp() - 60 * 60 * 24;
-        $yesterday = $now->setTimestamp($ts);
+        $yesterday = new \DateTime();
+        $ts = $yesterday->getTimestamp() - 60 * 60 * 24;
+        $yesterday->setTimestamp($ts);
 
-        $this->getContainer()->get('metrics_service')->getSlugs($now->format('Y-m-d'), $yesterday->format('Y-m-d'), $userIds);
+
+        dump($this->getContainer()->get('metrics_service')->getSlugs($yesterday->format('Y-m-d'), $now->format('Y-m-d'), $userIds));
     }
 
 }
