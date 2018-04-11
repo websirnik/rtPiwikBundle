@@ -40,12 +40,11 @@ class LastWeekMetrics
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-            $board->setMetrics($metrics);
         }
 
         $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
-        $lastWeekMetric = $this->getLastWeekMetric($board, $metricsData);
-        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($board, $metricsData);
+        $lastWeekMetric = $this->getLastWeekMetric($metrics, $metricsData);
+        $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metrics, $metricsData);
 
         $metrics->setLastWeekMetric($lastWeekMetric);
         $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
@@ -57,14 +56,14 @@ class LastWeekMetrics
 
     /**
      * Get metrics data since last week and current week
-     * @param $board
+     * @param $metrics
      * @param MetricModel $lastWeekMetric
      * @return PercentageChangeLastWeekMetric
      */
-    private function getPercentageChangeLastWeekMetric($board, MetricModel $lastWeekMetric)
+    private function getPercentageChangeLastWeekMetric($metrics, MetricModel $lastWeekMetric)
     {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastWeek = $board->getMetrics()->getPercentageChangeLastWeek();
+        $percentageChangeLastWeek = $metrics->getPercentageChangeLastWeek();
         if (is_null($percentageChangeLastWeek)) {
             $percentageChangeLastWeek = new PercentageChangeLastWeekMetric();
         }
@@ -87,14 +86,14 @@ class LastWeekMetrics
 
     /**
      * Get last week metrics data
-     * @param $board
+     * @param $metrics
      * @param MetricModel $lastWeekMetricData
      * @return LastWeekMetric
      */
-    private function getLastWeekMetric($board, MetricModel $lastWeekMetricData)
+    private function getLastWeekMetric($metrics, MetricModel $lastWeekMetricData)
     {
         // get lastWeekMetric from current metricRepo TODO could be check inside mode ?
-        $lastWeekMetric = $board->getMetrics()->getLastWeekMetric();
+        $lastWeekMetric = $metrics->getLastWeekMetric();
         if (is_null($lastWeekMetric)) {
             $lastWeekMetric = new LastWeekMetric();
         }

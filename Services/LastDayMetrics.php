@@ -38,13 +38,12 @@ class LastDayMetrics
         // if there is no metric repository
         if (is_null($metrics)) {
             $metrics = new Metrics();
-            $board->setMetrics($metrics);
         }
 
         $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
-        $lastDayMetric = $this->getLastDayMetric($board, $metricsData);
+        $lastDayMetric = $this->getLastDayMetric($metrics, $metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
-        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($board, $metricsData);
+        $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metrics, $metricsData);
 
         $metrics->setTotalMetric($totalMetric);
         $metrics->setLastDayMetric($lastDayMetric);
@@ -95,14 +94,14 @@ class LastDayMetrics
 
     /**
      * Get metrics data since last day and current day
-     * @param $board
+     * @param $metrics
      * @param MetricModel $lastDayMetric
      * @return PercentageChangeLastDayMetric
      */
     private
-    function getPercentageChangeLastDayMetric($board, MetricModel $lastDayMetric) {
+    function getPercentageChangeLastDayMetric($metrics, MetricModel $lastDayMetric) {
         // get percentageChangeLastDay from current metricRepo TODO could be check inside mode ?
-        $percentageChangeLastDay = $board->getMetrics()->getPercentageChangeLastDay();
+        $percentageChangeLastDay = $metrics->getPercentageChangeLastDay();
         if (is_null($percentageChangeLastDay)) {
             $percentageChangeLastDay = new PercentageChangeLastDayMetric();
         }
@@ -125,12 +124,12 @@ class LastDayMetrics
 
     /**
      * Get last day metrics data
-     * @param $board
+     * @param $metrics
      * @param $lastDayMetricData
      * @return LastDayMetric
      */
-    private function getLastDayMetric($board, MetricModel $lastDayMetricData) {
-        $lastDayMetric = $board->getMetrics()->getLastDayMetric();
+    private function getLastDayMetric($metrics, MetricModel $lastDayMetricData) {
+        $lastDayMetric = $metrics->getLastDayMetric();
         if (is_null($lastDayMetric)) {
             $lastDayMetric = new LastDayMetric();
         }
