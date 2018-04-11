@@ -14,6 +14,36 @@ class MetricsService
         $this->metric = new MetricModel();
     }
 
+    public function getSlugs($dateFrom, $dateTo, $userIds)
+    {
+        $slugs = [];
+        $date = $dateFrom.','.$dateTo;
+
+        $analyticsEntryPages = $this->analytics->getEntryPages($date, $userIds);
+        foreach ($analyticsEntryPages as $action) {
+            if (isset($action["subtable"])) {
+                foreach ($action["subtable"] as $subtable) {
+                    $s = $subtable["label"];
+                    if (strpos($s, '?') !== false) {
+                        $slugSplitted = explode("?", $s);
+                        $s = $slugSplitted[0];
+                    }
+
+                    if ($s[0] == "/") {
+                        $slugSplitted = explode("/", $s);
+                        $s = $slugSplitted[1];
+                    }
+
+                    if (!in_array($s, $slugs)) {
+                        array_push($slugs, $s);
+                    }
+                }
+            }
+        }
+
+        return $slugs;
+    }
+
     public function getMetrics($slug, $dateFrom, $dateTo, $userIds)
     {
         $date = $dateFrom.','.$dateTo;

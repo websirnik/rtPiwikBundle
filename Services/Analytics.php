@@ -12,7 +12,6 @@ class Analytics
         'format' => 'JSON',
         'token_auth' => '14fbc812766bffd3e5fc72925312b7b7',
     ];
-    private $userIds;
 
     private $client;
 
@@ -31,12 +30,26 @@ class Analytics
         } catch (Exception $e) {
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
+
                 return $this->render($query, $requestAttempt);
             } else {
                 return new Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
             }
         }
+    }
 
+    public function getEntryPages($date, $userIds)
+    {
+        $query = [
+            "date" => $date,
+            "method" => "Actions.getPageUrls",
+            "period" => "range",
+            "segment" => sprintf("pageUrl!@edit;userId!=%s", implode(";userId!=", $userIds)),
+            "expanded" => 1,
+            "flat" => 0,
+        ];
+
+        return $this->render($query);
     }
 
     public function getMetrics($slug, $date, $userIds)
