@@ -2,7 +2,6 @@
 
 namespace rtPiwikBundle\Services;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Analytics
 {
@@ -27,13 +26,13 @@ class Analytics
         $query = array_merge($this->defaultQuery, $query);
         try {
             return json_decode($this->client->get("/", ['query' => $query])->getBody(), true);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
 
                 return $this->render($query, $requestAttempt);
             } else {
-                return new Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
+                return new \Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
             }
         }
     }
