@@ -29,7 +29,9 @@ class Analytics
         } catch (\Exception $e) {
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
-                sleep($requestAttempt);
+                // sleep each time for request attempt * 30 sec | (30, 60, 90 ...) sec
+                sleep($requestAttempt * 30);
+
                 return $this->render($query, $requestAttempt);
             } else {
                 return new \Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
