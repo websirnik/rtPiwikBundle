@@ -32,7 +32,7 @@ class TotalMetrics
     public function get($board, \DateTime $date, $userIds, $reCalculate = false)
     {
 
-        $dateFrom = $date;
+        $dateFrom =  $date;
         $dateTo = null;
         $yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
 
@@ -50,7 +50,9 @@ class TotalMetrics
 
         while ($dateTo !== $yesterday) {
 
-            $dateTo = (clone $dateFrom)->modify('+1 month');
+            $dateTmp = clone $dateFrom;
+            dump($dateTmp);
+            $dateTo = $dateTmp->modify('+1 month');
 
             if ($dateTo > $yesterday) {
                 $dateTo = $yesterday;
@@ -63,7 +65,7 @@ class TotalMetrics
                 $userIds
             );
 
-            $dateFrom = $dateTo;
+            $dateFrom =  $dateTo;
             $metrics->setLastCalculated($dateTo);
 
         }
