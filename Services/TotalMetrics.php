@@ -32,19 +32,19 @@ class TotalMetrics {
 		$nowTs = $now->getTimestamp();
 		$createdTs = $date->getTimestamp();
 
-		if (!$reCalculate) {
-			$metrics = $board->getMetrics();
+		if (!$reCalculate && $metrics = $board->getMetrics()) {
 			$lastCalculated = $metrics->getLastCalculated();
+
 			if ($lastCalculated) {
 				$lastCalculatedTs = $lastCalculated->getTimestamp();
+
+				if ($lastCalculatedTs > $nowTs - 60 * 60 * 24) {
+					return $metrics;
+				}
 			}
 
 		} else {
 			$metrics = new Metrics();
-		}
-
-		if ($lastCalculatedTs > $nowTs - 60 * 60 * 24) {
-			return $metrics;
 		}
 
 		while ($nowTs > $createdTs) {
