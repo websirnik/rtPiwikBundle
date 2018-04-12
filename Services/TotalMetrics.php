@@ -67,6 +67,10 @@ class TotalMetrics {
 		// need to do again because the last batch of data should be updated
 		$metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
 
+        $lastCalculated = new \DateTime();
+        $lastCalculated->setTimestamp($createdTs);
+        $metrics->setLastCalculated($lastCalculated);
+
 		return $metrics;
 	}
 
