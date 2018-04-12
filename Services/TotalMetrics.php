@@ -63,8 +63,6 @@ class TotalMetrics {
 		// need to do again because the last batch of data should be updated
 		$metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
 
-		$metrics->setLastCalculated(new \DateTime());
-
 		return $metrics;
 	}
 
@@ -116,6 +114,8 @@ class TotalMetrics {
 
 			dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
 		}
+
+        $metrics->setLastCalculated(new \DateTime());
 
 		return $metrics;
 	}
