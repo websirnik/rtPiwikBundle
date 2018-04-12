@@ -36,10 +36,18 @@ class TotalMetrics
         $nowTs = $now->getTimestamp();
         $createdTs = $date->getTimestamp();
 
+
         if (!$reCalculate) {
             $metrics = $board->getMetrics();
         } else {
             $metrics = new Metrics();
+        }
+
+        $lastUpdated = $metrics->getLastUpdated();
+        $lastUpdatedTs = $lastUpdated->getTimestamp();
+
+        if($lastUpdatedTs > $nowTs - 60 * 60 * 24){
+            return $metrics;
         }
 
         while ($nowTs > $createdTs) {
@@ -57,6 +65,8 @@ class TotalMetrics
 
         // need to do again because the last batch of data should be updated
         $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
+
+        $metrics->setLastUpdated(new \DateTime());
 
         return $metrics;
     }

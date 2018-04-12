@@ -47,6 +47,12 @@ class Metrics
      */
     protected $updatedAt;
 
+
+    /**
+     * @MongoDB\Field(type="date")
+     */
+    protected $lastUpdated;
+
     function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -165,6 +171,30 @@ class Metrics
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     * @return $this
+     */
+    public function setLastUpdated($lastUpdated)
+    {
+        $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdated
+     *
+     * @return \DateTime $lastUpdated
+     */
+    public function getLastUpdated()
+    {
+        return $this->lastUpdated;
     }
 
     /**
