@@ -29,7 +29,7 @@ class Analytics
         } catch (\Exception $e) {
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
-
+                sleep($requestAttempt);
                 return $this->render($query, $requestAttempt);
             } else {
                 return new \Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
