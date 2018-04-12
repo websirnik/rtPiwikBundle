@@ -10,7 +10,6 @@ namespace rtPiwikBundle\Services;
 
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class TotalMetrics
 {
@@ -43,10 +42,10 @@ class TotalMetrics
             $metrics = new Metrics();
         }
 
-        $lastUpdated = $metrics->getLastUpdated();
-        $lastUpdatedTs = $lastUpdated->getTimestamp();
+        $lastCalculated = $metrics->getLastCalculated();
+        $lastCalculatedTs = $lastCalculated->getTimestamp();
 
-        if($lastUpdatedTs > $nowTs - 60 * 60 * 24){
+        if($lastCalculatedTs > $nowTs - 60 * 60 * 24){
             return $metrics;
         }
 
@@ -66,20 +65,20 @@ class TotalMetrics
         // need to do again because the last batch of data should be updated
         $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
 
-        $metrics->setLastUpdated(new \DateTime());
+        $metrics->setLastCalculated(new \DateTime());
 
         return $metrics;
     }
 
     /**
-     * @param $metrics
+     * @param Metrics $metrics
      * @param $board
      * @param $dateFrom
      * @param $dateTo
      * @param $userIds
-     * @return mixed
+     * @return Metrics
      */
-    private function updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds)
+    private function updateMetricsByBoard(Metrics $metrics, $board, $dateFrom, $dateTo, $userIds)
     {
         $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo, $userIds);
 

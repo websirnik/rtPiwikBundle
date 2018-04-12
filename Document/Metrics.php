@@ -51,7 +51,7 @@ class Metrics
     /**
      * @MongoDB\Field(type="date")
      */
-    protected $lastUpdated;
+    protected $lastCalculated;
 
     function __construct()
     {
@@ -175,26 +175,26 @@ class Metrics
 
 
     /**
-     * Set lastUpdated
+     * Set lastCalculated
      *
-     * @param \DateTime $lastUpdated
+     * @param \DateTime $lastCalculated
      * @return $this
      */
-    public function setLastUpdated($lastUpdated)
+    public function setLastCalculated($lastCalculated)
     {
-        $this->lastUpdated = $lastUpdated;
+        $this->lastCalculated = $lastCalculated;
 
         return $this;
     }
 
     /**
-     * Get lastUpdated
+     * Get lastCalculated
      *
-     * @return \DateTime $lastUpdated
+     * @return \DateTime $lastCalculated
      */
-    public function getLastUpdated()
+    public function getLastCalculated()
     {
-        return $this->lastUpdated;
+        return $this->lastCalculated;
     }
 
     /**
