@@ -31,54 +31,42 @@ class TotalMetrics
 
     public function get($board, \DateTime $date, $userIds, $reCalculate = false)
     {
-        $now = new \DateTime();
-        $nowTs = $now->getTimestamp();
-        $createdTs = $date->getTimestamp();
-        $limitYesterdayTs = $nowTs - 60 * 60 * 24;
+
+        $dateFrom = $date;
+        $dateTo = null;
+        $yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
+
 
         if (!$reCalculate && $metrics = $board->getMetrics()) {
             $lastCalculated = $metrics->getLastCalculated();
 
-            if ($lastCalculated) {
-                $lastCalculatedTs = $lastCalculated->getTimestamp();
-
-                if ($lastCalculatedTs > $limitYesterdayTs) {
-                    return $metrics;
-                }
+            if ($lastCalculated && $lastCalculated >= $yesterday) {
+                return $metrics;
             }
 
         } else {
             $metrics = new Metrics();
         }
 
-        $lastCalculated = new \DateTime();
+        while ($dateTo !== $yesterday) {
 
-        while ($nowTs > $createdTs) {
-            // each month
-            $createdTs = $createdTs + 60 * 60 * 60 * 12;
+            $dateTo = (clone $dateFrom)->modify('+1 month');
 
-            $dateFrom = $date->format('Y-m-d');
-            $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
-
-            $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
-
-            if ($createdTs > $nowTs) {
-                $lastCalculated->setTimestamp($limitYesterdayTs);
-                $metrics->setLastCalculated($lastCalculated);
-            } else {
-                $lastCalculated->setTimestamp($createdTs);
-                $metrics->setLastCalculated($lastCalculated);
+            if ($dateTo > $yesterday) {
+                $dateTo = $yesterday;
             }
+            $metrics = $this->updateMetricsByBoard(
+                $metrics,
+                $board,
+                $dateFrom->format('Y-m-d'),
+                $dateTo->format('Y-m-d'),
+                $userIds
+            );
+
+            $dateFrom = $dateTo;
+            $metrics->setLastCalculated($dateTo);
+
         }
-
-        $dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
-        $dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
-
-        // need to do again because the last batch of data should be updated
-        $metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
-
-        $lastCalculated->setTimestamp($limitYesterdayTs);
-        $metrics->setLastCalculated($lastCalculated);
 
         return $metrics;
     }
