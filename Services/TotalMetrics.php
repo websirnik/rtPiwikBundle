@@ -55,6 +55,10 @@ class TotalMetrics {
 			$dateTo = $date->setTimestamp($createdTs)->format('Y-m-d');
 
 			$metrics = $this->updateMetricsByBoard($metrics, $board, $dateFrom, $dateTo, $userIds);
+
+            $lastCalculated = new \DateTime();
+            $lastCalculated->setTimestamp($createdTs);
+            $metrics->setLastCalculated($lastCalculated);
 		}
 
 		$dateFrom = $date->setTimestamp($nowTs)->format('Y-m-d');
@@ -114,8 +118,6 @@ class TotalMetrics {
 
 			dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
 		}
-
-        $metrics->setLastCalculated(new \DateTime());
 
 		return $metrics;
 	}
