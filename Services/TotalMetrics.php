@@ -11,121 +11,118 @@ namespace rtPiwikBundle\Services;
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
 
-class TotalMetrics
-{
-    private $metricsService;
+class TotalMetrics {
+	private $metricsService;
 
-    function __construct($metricsService)
-    {
-        $this->metricsService = $metricsService;
-    }
+	function __construct($metricsService) {
+		$this->metricsService = $metricsService;
+	}
 
-    /**
-     * Get total metrics
-     * @param $board
-     * @param $slug
-     * @param \DateTime $date
-     * @param $userIds
-     * @param bool $reCalculate
-     * @return Metrics
-     */
+	/**
+	 * Get total metrics
+	 * @param $board
+	 * @param $slug
+	 * @param \DateTime $date
+	 * @param $userIds
+	 * @param bool $reCalculate
+	 * @return Metrics
+	 */
 
-    public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false)
-    {
+	public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false) {
 
-        $dateFrom = $date;
-        $dateTo = null;
-        $yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
+		$dateFrom = clone $date;
+		$dateTo = null;
+		$yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
 
+		if (!$reCalculate && $metrics = $board->getMetrics()) {
 
-        if (!$reCalculate && $metrics = $board->getMetrics()) {
-            $lastCalculated = $metrics->getLastCalculated();
+			if ($lastCalculated = $metrics->getLastCalculated()) {
+				if ($lastCalculated >= $yesterday) {
+					return $metrics;
+				}
+				$dateFrom = $lastCalculated;
+			}
 
-            if ($lastCalculated && $lastCalculated >= $yesterday) {
-                return $metrics;
-            }
+		} else {
+			$metrics = new Metrics();
+		}
 
-        } else {
-            $metrics = new Metrics();
-        }
+		while ($dateTo !== $yesterday) {
 
-        while ($dateTo !== $yesterday) {
+			$dateTmp = clone $dateFrom;
+			dump($dateTmp);
+			$dateTo = $dateTmp->modify('+1 month');
 
-            $dateTmp = clone $dateFrom;
-            dump($dateTmp);
-            $dateTo = $dateTmp->modify('+1 month');
+			if ($dateTo > $yesterday) {
+				$dateTo = $yesterday;
+			}
+			$metrics = $this->updateMetricsByBoard(
+				$slug,
+				$metrics,
+				$board,
+				$dateFrom->format('Y-m-d'),
+				$dateTo->format('Y-m-d'),
+				$userIds
+			);
 
-            if ($dateTo > $yesterday) {
-                $dateTo = $yesterday;
-            }
-            $metrics = $this->updateMetricsByBoard(
-                $slug,
-                $metrics,
-                $board,
-                $dateFrom->format('Y-m-d'),
-                $dateTo->format('Y-m-d'),
-                $userIds
-            );
+			$dateFrom = $dateTo;
+			$metrics->setLastCalculated($dateTo);
 
-            $dateFrom = $dateTo;
-            $metrics->setLastCalculated($dateTo);
+		}
 
-        }
+		return $metrics;
+	}
 
-        return $metrics;
-    }
+	/**
+	 * @param $slug
+	 * @param Metrics $metrics
+	 * @param $board
+	 * @param $dateFrom
+	 * @param $dateTo
+	 * @param $userIds
+	 * @return Metrics
+	 */
+	private function updateMetricsByBoard($slug, Metrics $metrics, $board, $dateFrom, $dateTo, $userIds) {
+		$metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
 
-    /**
-     * @param $slug
-     * @param Metrics $metrics
-     * @param $board
-     * @param $dateFrom
-     * @param $dateTo
-     * @param $userIds
-     * @return Metrics
-     */
-    private function updateMetricsByBoard($slug, Metrics $metrics, $board, $dateFrom, $dateTo, $userIds)
-    {
-        $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
+		if (is_null($metrics)) {
+			$metrics = new Metrics();
+			$totalMetric = new TotalMetric();
 
-        if (is_null($metrics)) {
-            $metrics = new Metrics();
-            $totalMetric = new TotalMetric();
+			$totalMetric->setVisits($metricData->getVisits());
+			$totalMetric->setInteractions($metricData->getInteractions());
+			$totalMetric->setAvgTimeSpent($metricData->getAvgTimeSpent());
+			$totalMetric->setPageViews($metricData->getPageViews());
 
-            $totalMetric->setVisits($metricData->getVisits());
-            $totalMetric->setInteractions($metricData->getInteractions());
-            $totalMetric->setAvgTimeSpent($metricData->getAvgTimeSpent());
-            $totalMetric->setPageViews($metricData->getPageViews());
+			$metrics->setTotalMetric($totalMetric);
 
-            $metrics->setTotalMetric($totalMetric);
+			dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
+		} else {
+			$totalMetric = $metrics->getTotalMetric();
+			if (is_null($totalMetric)) {
+				$totalMetric = new TotalMetric();
+			}
 
-            dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
-        } else {
-            $totalMetric = $metrics->getTotalMetric();
-            if (is_null($totalMetric)) {
-                $totalMetric = new TotalMetric();
-            }
+			$visits = $totalMetric->getVisits() + $metricData->getVisits();
+			$totalMetric->setVisits($visits);
 
-            $visits = $totalMetric->getVisits() + $metricData->getVisits();
-            $totalMetric->setVisits($visits);
+			$interactions = $totalMetric->getInteractions() + $metricData->getInteractions();
+			$totalMetric->setInteractions($interactions);
 
-            $interactions = $totalMetric->getInteractions() + $metricData->getInteractions();
-            $totalMetric->setInteractions($interactions);
+			if ($metricData->getAvgTimeSpent() > 0) {
+				$avgTimeSpent = round(($totalMetric->getAvgTimeSpent() + $metricData->getAvgTimeSpent()) / 2);
+				$totalMetric->setAvgTimeSpent($avgTimeSpent);
+			}
 
-            if ($metricData->getAvgTimeSpent() > 0) {
-                $avgTimeSpent = round(($totalMetric->getAvgTimeSpent() + $metricData->getAvgTimeSpent()) / 2);
-                $totalMetric->setAvgTimeSpent($avgTimeSpent);
-            }
+			$pageViews = $totalMetric->getPageViews() + $metricData->getPageViews();
+			$totalMetric->setPageViews($pageViews);
 
-            $pageViews = $totalMetric->getPageViews() + $metricData->getPageViews();
-            $totalMetric->setPageViews($pageViews);
+			$metrics->setUpdatedAt(new \DateTime());
+			$metrics->setTotalMetric($totalMetric);
 
-            $metrics->setUpdatedAt(new \DateTime());
-            $metrics->setTotalMetric($totalMetric);
+			dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
+		}
 
-            dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
-        }
-
-        return $metrics;
-    }
+		return $metrics;
+	}
 }
