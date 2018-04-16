@@ -26,11 +26,12 @@ class LastWeekMetrics
     /**
      * Get all metrics since last week
      * @param $board
+     * @param $slug
      * @param \DateTime $date
      * @param $userIds
      * @return Metrics
      */
-    public function get($board, \DateTime $date, $userIds)
+    public function get($board, $slug, \DateTime $date, $userIds)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
@@ -42,14 +43,14 @@ class LastWeekMetrics
             $metrics = new Metrics();
         }
 
-        $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
+        $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $today, $userIds);
         $lastWeekMetric = $this->getLastWeekMetric($metrics, $metricsData);
         $percentageChangeLastWeek = $this->getPercentageChangeLastWeekMetric($metrics, $metricsData);
 
         $metrics->setLastWeekMetric($lastWeekMetric);
         $metrics->setPercentageChangeLastWeek($percentageChangeLastWeek);
 
-        dump(sprintf("daily:last_week slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $today));
+        dump(sprintf("daily:last_week slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $today));
 
         return $metrics;
     }

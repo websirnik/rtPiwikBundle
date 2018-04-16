@@ -23,13 +23,14 @@ class TotalMetrics
     /**
      * Get total metrics
      * @param $board
+     * @param $slug
      * @param \DateTime $date
      * @param $userIds
      * @param bool $reCalculate
      * @return Metrics
      */
 
-    public function get($board, \DateTime $date, $userIds, $reCalculate = false)
+    public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false)
     {
 
         $dateFrom = $date;
@@ -58,6 +59,7 @@ class TotalMetrics
                 $dateTo = $yesterday;
             }
             $metrics = $this->updateMetricsByBoard(
+                $slug,
                 $metrics,
                 $board,
                 $dateFrom->format('Y-m-d'),
@@ -74,6 +76,7 @@ class TotalMetrics
     }
 
     /**
+     * @param $slug
      * @param Metrics $metrics
      * @param $board
      * @param $dateFrom
@@ -81,9 +84,9 @@ class TotalMetrics
      * @param $userIds
      * @return Metrics
      */
-    private function updateMetricsByBoard(Metrics $metrics, $board, $dateFrom, $dateTo, $userIds)
+    private function updateMetricsByBoard($slug, Metrics $metrics, $board, $dateFrom, $dateTo, $userIds)
     {
-        $metricData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $dateTo, $userIds);
+        $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
 
         if (is_null($metrics)) {
             $metrics = new Metrics();
@@ -96,7 +99,7 @@ class TotalMetrics
 
             $metrics->setTotalMetric($totalMetric);
 
-            dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
+            dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
         } else {
             $totalMetric = $metrics->getTotalMetric();
             if (is_null($totalMetric)) {
@@ -120,7 +123,7 @@ class TotalMetrics
             $metrics->setUpdatedAt(new \DateTime());
             $metrics->setTotalMetric($totalMetric);
 
-            dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $dateTo));
+            dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
         }
 
         return $metrics;

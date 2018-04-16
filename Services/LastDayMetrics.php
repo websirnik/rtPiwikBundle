@@ -25,10 +25,13 @@ class LastDayMetrics
 
     /**
      * Get all metrics since last day
+     * @oaram $board
+     * @param $slug
      * @param \DateTime $date
+     * @param $userIds
      * @return Metrics
      */
-    public function get($board, \DateTime $date, $userIds)
+    public function get($board, $slug, \DateTime $date, $userIds)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
@@ -40,7 +43,7 @@ class LastDayMetrics
             $metrics = new Metrics();
         }
 
-        $metricsData = $this->metricsService->getMetrics($board->getSlug(), $dateFrom, $today, $userIds);
+        $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $today, $userIds);
         $lastDayMetric = $this->getLastDayMetric($metrics, $metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $lastDayMetric);
         $percentageChangeLastDay = $this->getPercentageChangeLastDayMetric($metrics, $metricsData);
@@ -49,7 +52,7 @@ class LastDayMetrics
         $metrics->setLastDayMetric($lastDayMetric);
         $metrics->setPercentageChangeLastDay($percentageChangeLastDay);
 
-        dump(sprintf("daily:last_day slug:%s, dateFrom:%s, dateTo:%s", $board->getSlug(), $dateFrom, $today));
+        dump(sprintf("daily:last_day slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $today));
 
         return $metrics;
     }
