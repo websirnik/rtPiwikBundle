@@ -49,6 +49,8 @@ class MetricsService
         $date = $dateFrom.','.$dateTo;
 
         $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
+
+        dump("analyticsMetrics===", $analyticsMetrics);
         foreach ($analyticsMetrics as $key => $m) {
             if (count($m) > 0 && isset($m["nb_visits"])) {
                 $visits = $this->metric->getVisits() + $m["nb_visits"];
@@ -57,24 +59,27 @@ class MetricsService
         }
 
         $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
-        $avgTimeSpentCount = 0;
+
+        dump("analyticsActions===", $analyticsActions);
+        $timeSpent = 0;
         foreach ($analyticsActions as $key => $action) {
             if (count($action) > 0 && isset($action["sum_time_spent"]) && $action["sum_time_spent"] > 0) {
-                $avgTimeSpentCount++;
+
                 $pageViews = $this->metric->getPageViews() + $action["nb_hits"];
                 $this->metric->setPageViews($pageViews);
 
-                $timeSpent = $this->metric->getAvgTimeSpent() + $action["sum_time_spent"];
-                $this->metric->setAvgTimeSpent($timeSpent);
+                $timeSpent += $action["sum_time_spent"];
             }
         }
 
-        if ($avgTimeSpentCount > 0) {
-            $avgTimeSpent = round($this->metric->getAvgTimeSpent() / $avgTimeSpentCount);
+        if ($this->metric->getVisits() > 0) {
+            $avgTimeSpent = round($timeSpent / $this->metric->getVisits());
             $this->metric->setAvgTimeSpent($avgTimeSpent);
         }
 
         $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
+
+        dump("analyticsInteractions===", $analyticsInteractions);
         if (isset($analyticsInteractions[0]["nb_events"])) {
             $interactions = $analyticsInteractions[0]["nb_events"];
             $this->metric->setInteractions($interactions);
