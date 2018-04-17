@@ -47,20 +47,19 @@ class MetricsService
     public function getMetrics($slug, $dateFrom, $dateTo, $userIds)
     {
         $date = $dateFrom.','.$dateTo;
-
+        $visits = 0;
         $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
-
-        dump("analyticsMetrics===", $analyticsMetrics);
         foreach ($analyticsMetrics as $key => $m) {
             if (count($m) > 0 && isset($m["nb_visits"])) {
-                $visits = $this->metric->getVisits() + $m["nb_visits"];
-                $this->metric->setVisits($visits);
+                $visits += $m["nb_visits"];
             }
         }
+        $this->metric->setVisits($visits);
+
 
         $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
 
-        dump("analyticsActions===", $analyticsActions);
+
         $timeSpent = 0;
         foreach ($analyticsActions as $key => $action) {
             if (count($action) > 0 && isset($action["sum_time_spent"]) && $action["sum_time_spent"] > 0) {
@@ -79,7 +78,7 @@ class MetricsService
 
         $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
 
-        dump("analyticsInteractions===", $analyticsInteractions);
+
         if (isset($analyticsInteractions[0]["nb_events"])) {
             $interactions = $analyticsInteractions[0]["nb_events"];
             $this->metric->setInteractions($interactions);
