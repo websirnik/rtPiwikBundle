@@ -50,7 +50,6 @@ class TotalMetrics {
 		while ($dateTo !== $yesterday) {
 
 			$dateTmp = clone $dateFrom;
-			dump($dateTmp);
 			$dateTo = $dateTmp->modify('+1 month');
 
 			if ($dateTo > $yesterday) {

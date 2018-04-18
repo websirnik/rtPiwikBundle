@@ -77,11 +77,12 @@ class MetricsService {
 			$interactions = $analyticsInteractions[0]["nb_events"];
 		}
 
-		$metric->setPageViews($pageViews);
 		$metric->setVisits($visits);
+		$metric->setPageViews($pageViews);
+
 		$metric->setAvgTimeSpent($avgTimeSpent);
 		$metric->setInteractions($interactions);
-
-		return $this->metric;
+		dump($visits . ' views' . $pageViews . ' pageviews ' . $avgTimeSpent . 's ' . $interactions . ' interactions');
+		return $metric;
 	}
 }
