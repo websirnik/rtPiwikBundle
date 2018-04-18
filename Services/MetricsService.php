@@ -68,7 +68,7 @@ class MetricsService {
 		}
 
 		if ($visits > 0) {
-			$avgTimeSpent = round($timeSpent / $this->metric->getVisits());
+			$avgTimeSpent = round($timeSpent / $visits);
 		}
 
 		$analyticsInteractions = $this->analytics->getInteractions($slug, $date);
