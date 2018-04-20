@@ -21,6 +21,14 @@ class Analytics
 
     private $piwikReqLimit = 10;
 
+    /**
+     * render makes requests to piwik service
+     * if received error try again for 10 times
+     * stepm increase in ariphmetics progression with time sleep
+     * @param array $query - query to piwik service
+     * @param int $requestAttempt - amount of attempts with request to server
+     * @return \Exception|mixed - returns exception of data
+     */
     private function render(array $query = [], $requestAttempt = 0)
     {
         $query = array_merge($this->defaultQuery, $query);
@@ -39,6 +47,17 @@ class Analytics
         }
     }
 
+    /**
+     * getEntryPages returns data from piwik service with entry pages
+     * notice: segment should has page url which
+     * not containce edit &
+     * not containce analytics &
+     * containce slug &
+     * all user ids not equels in user's ids
+     * @param $date - date range
+     * @param $userIds - array of user's ids
+     * @return \Exception|mixed - returns exception of data
+     */
     public function getEntryPages($date, $userIds)
     {
         $query = [
@@ -53,6 +72,18 @@ class Analytics
         return $this->render($query);
     }
 
+    /**
+     * getMetrics returns data from piwik service with metrics
+     * notice: segment should has page url which
+     * not containce edit &
+     * not containce analytics &
+     * containce slug &
+     * all user ids not equels in user's ids
+     * @param $slug - doc slug
+     * @param $date - date range
+     * @param $userIds - array of user's ids
+     * @return \Exception|mixed - returns exception of data
+     */
     public function getMetrics($slug, $date, $userIds)
     {
         $query = [
@@ -68,6 +99,18 @@ class Analytics
         return $this->render($query);
     }
 
+    /**
+     * getActions returns data from piwik service with actions
+     * notice: segment should has page url which
+     * not containce edit &
+     * not containce analytics &
+     * containce slug &
+     * all user ids not equels in user's ids
+     * @param $slug - doc slug
+     * @param $date - date range
+     * @param $userIds - array of user's ids
+     * @return \Exception|mixed - returns exception of data
+     */
     public function getActions($slug, $date, $userIds)
     {
         $query = [
@@ -83,6 +126,16 @@ class Analytics
         return $this->render($query);
     }
 
+    /**
+     * getInteractions returns data from piwik service with interactions
+     * notice: segment should has action url which
+     * not containce edit &
+     * not containce analytics &
+     * containce slug
+     * @param $slug - doc slug
+     * @param $date - date range
+     * @return \Exception|mixed - returns exception of data
+     */
     public function getInteractions($slug, $date)
     {
         $query = [

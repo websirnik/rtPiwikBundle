@@ -27,9 +27,7 @@ class TotalMetrics {
 	 * @param bool $reCalculate
 	 * @return Metrics
 	 */
-
 	public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false) {
-
 		$dateFrom = clone $date;
 		$dateTo = null;
 		$yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
@@ -73,50 +71,60 @@ class TotalMetrics {
 	}
 
 	/**
-	 * @param $slug
-	 * @param Metrics $metrics
-	 * @param $board
-	 * @param $dateFrom
-	 * @param $dateTo
-	 * @param $userIds
-	 * @return Metrics
+     * updateMetricsByBoard returns updated or calcutaed total metrics
+	 * @param $slug - slug of the document
+	 * @param Metrics $metrics - model of metrics
+	 * @param $board - object of the document
+	 * @param $dateFrom - date from
+	 * @param $dateTo - date to
+	 * @param $userIds - array of usr's ids
+	 * @return Metrics - object of calculated total metrics
 	 */
 	private function updateMetricsByBoard($slug, Metrics $metrics, $board, $dateFrom, $dateTo, $userIds) {
+	    // get metrics data by slug, date and user's ids
 		$metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
-
+        // if data new (empty)
 		if (is_null($metrics)) {
+		    // created new instances
 			$metrics = new Metrics();
 			$totalMetric = new TotalMetric();
-
+            // collect total metrics
 			$totalMetric->setVisits($metricData->getVisits());
 			$totalMetric->setInteractions($metricData->getInteractions());
 			$totalMetric->setAvgTimeSpent($metricData->getAvgTimeSpent());
 			$totalMetric->setPageViews($metricData->getPageViews());
-
+            // set new total metrics
 			$metrics->setTotalMetric($totalMetric);
 
 			dump(sprintf("created:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
 		} else {
+		    // get total metrics from db
 			$totalMetric = $metrics->getTotalMetric();
 			if (is_null($totalMetric)) {
 				$totalMetric = new TotalMetric();
 			}
-
+            // collect exists visits and new visists
 			$visits = $totalMetric->getVisits() + $metricData->getVisits();
 			$totalMetric->setVisits($visits);
 
+            // collect exists interactions and new interactions
 			$interactions = $totalMetric->getInteractions() + $metricData->getInteractions();
 			$totalMetric->setInteractions($interactions);
 
 			if ($metricData->getAvgTimeSpent() > 0) {
+                // collect exists avg time spent and new  avg time spent
+                // devide on 2 to define average data
 				$avgTimeSpent = round(($totalMetric->getAvgTimeSpent() + $metricData->getAvgTimeSpent()) / 2);
 				$totalMetric->setAvgTimeSpent($avgTimeSpent);
 			}
 
+            // collect exists page views and new page views
 			$pageViews = $totalMetric->getPageViews() + $metricData->getPageViews();
 			$totalMetric->setPageViews($pageViews);
 
+			// set updated to for ignoring case to calculate again the same data
 			$metrics->setUpdatedAt(new \DateTime());
+			// set updated total metrics
 			$metrics->setTotalMetric($totalMetric);
 
 			dump(sprintf("updated:total slug:%s, dateFrom:%s, dateTo:%s", $slug, $dateFrom, $dateTo));
