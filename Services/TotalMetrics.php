@@ -63,6 +63,8 @@ class TotalMetrics {
             );
 
             $dateFrom = $dateTo;
+            // do not counted twice the same data we move to next day from new period
+            $dateFrom->modify('+1 day');
             $metrics->setLastCalculated($dateTo);
 
         }
@@ -121,6 +123,10 @@ class TotalMetrics {
             $sumTimeSpent = $totalMetric->getSumTimeSpent() + $metricData->getSumTimeSpent();
             $totalMetric->setSumTimeSpent($sumTimeSpent);
 
+            // to calculate avg time spent
+            // we should get sum time spent for all period
+            // get visists for all period
+            // and make calucalation of this field
             if($visits > 0) {
                 $avgTimeSpent = round($sumTimeSpent / $visits);
                 $totalMetric->setAvgTimeSpent($avgTimeSpent);
