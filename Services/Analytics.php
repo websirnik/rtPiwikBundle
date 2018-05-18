@@ -16,7 +16,7 @@ class Analytics
 
     function __construct()
     {
-        $this->client = new \GuzzleHttp\Client(['base_uri' => 'https://rtpiwik.frb.io/index.php']);
+        $this->client = new \GuzzleHttp\Client(['base_uri' => 'https://rt-piwik-replica.frb.io/index.php']);
     }
 
     private $piwikReqLimit = 10;
