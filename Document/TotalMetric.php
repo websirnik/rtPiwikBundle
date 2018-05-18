@@ -15,7 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  * @MongoDB\EmbeddedDocument
  */
 class TotalMetric {
-
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer")
@@ -43,6 +42,13 @@ class TotalMetric {
 	 * @MongoDB\Field(type="int")
 	 */
 	protected $avgTimeSpent;
+
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("integer")
+     * @MongoDB\Field(type="int")
+     */
+    protected $sumTimeSpent;
 
 	/**
 	 * Set visits
@@ -132,4 +138,16 @@ class TotalMetric {
 	public function getId() {
 		return $this->id;
 	}
+
+    public function setSumTimeSpent($sumTimeSpent)
+    {
+        $this->sumTimeSpent = $sumTimeSpent;
+
+        return $this;
+    }
+
+    public function getSumTimeSpent()
+    {
+        return $this->sumTimeSpent;
+    }
 }

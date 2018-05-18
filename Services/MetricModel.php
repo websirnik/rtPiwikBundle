@@ -17,14 +17,14 @@ class MetricModel
 
     protected $interactions;
 
-    protected $avgTimeSpent;
+    protected $sumTimeSpent;
 
-    function __construct($visits = 0, $pageViews = 0, $interactions = 0, $avgTimeSpent = 0)
+    function __construct($visits = 0, $pageViews = 0, $interactions = 0, $sumTimeSpent = 0)
     {
         $this->visits = $visits;
         $this->pageViews = $pageViews;
         $this->interactions = $interactions;
-        $this->avgTimeSpent = $avgTimeSpent;
+        $this->sumTimeSpent = $sumTimeSpent;
     }
 
 
@@ -66,16 +66,15 @@ class MetricModel
         return $this->interactions;
     }
 
-    public function setAvgTimeSpent($avgTimeSpent)
+    public function setSumTimeSpent($sumTimeSpent)
     {
-        $this->avgTimeSpent = $avgTimeSpent;
+        $this->sumTimeSpent = $sumTimeSpent;
 
         return $this;
     }
 
-
-    public function getAvgTimeSpent()
+    public function getSumTimeSpent()
     {
-        return $this->avgTimeSpent;
+        return $this->sumTimeSpent;
     }
 }

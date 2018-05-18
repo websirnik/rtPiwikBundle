@@ -64,7 +64,6 @@ class MetricsService {
 		$visits = 0;
 		$timeSpent = 0;
 		$pageViews = 0;
-		$avgTimeSpent = 0;
 		$interactions = 0;
 		// make date range for piwik service
 		$date = $dateFrom . ',' . $dateTo;
@@ -88,12 +87,6 @@ class MetricsService {
 			}
 		}
 
-		if ($visits > 0) {
-		    //for calculate average time spent need summary of time spent divide
-            // on summary of visits(received from metrics)
-			$avgTimeSpent = round($timeSpent / $visits);
-		}
-
         // get data from piwik service for interactions
 		$analyticsInteractions = $this->analytics->getInteractions($slug, $date);
 		if (isset($analyticsInteractions[0]["nb_events"])) {
@@ -103,10 +96,10 @@ class MetricsService {
 		// setted all data for metrics model
 		$metric->setVisits($visits);
 		$metric->setPageViews($pageViews);
-		$metric->setAvgTimeSpent($avgTimeSpent);
 		$metric->setInteractions($interactions);
+        $metric->setSumTimeSpent($timeSpent);
 
-		dump($visits . ' views' . $pageViews . ' pageviews ' . $avgTimeSpent . 's ' . $interactions . ' interactions');
+		dump('views: '.$visits .' pageViews: '. $pageViews .' sumTimeSpent: '. $timeSpent . 's interactions: ' . $interactions);
 		return $metric;
 	}
 }
