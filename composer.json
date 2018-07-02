@@ -1,7 +1,7 @@
 {
   "name": "relayto/rtPiwikBundle",
   "license": "MIT",
-  "type": "project",
+  "type": "symfony-bundle",
   "description": "Getting metrics from Piwik",
   "autoload": {
     "psr-4": {
