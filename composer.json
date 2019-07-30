@@ -1,64 +1,64 @@
 {
-  "name": "relayto/rtPiwikBundle",
-  "license": "MIT",
-  "type": "symfony-bundle",
-  "description": "Getting metrics from Piwik",
-  "autoload": {
-    "psr-4": {
-      "rtPiwikBundle\\": ""
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "require": {
-    "doctrine/mongodb-odm-bundle": "^3.1",
-    "lexik/jwt-authentication-bundle": "^2.4",
-    "symfony/var-dumper": "^3.4|^4.0",
-    "guzzlehttp/guzzle": "^6.3",
-    "doctrine/mongodb-odm": "^1.0",
-    "alcaeus/mongo-php-adapter": "^1.1",
-    "jms/serializer": "^1.11"
-  },
-  "require-dev": {
-    "sensio/generator-bundle": "^3.0",
-    "symfony/phpunit-bridge": "^3.0"
-  },
-  "scripts": {
-    "symfony-scripts": [
-      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-    ],
-    "post-install-cmd": [
-      "@symfony-scripts"
-    ],
-    "post-update-cmd": [
-      "@symfony-scripts"
-    ]
-  },
-  "config": {
-    "platform": {
-      "ext-mongo": "1.6.16"
-    }
-  },
-  "extra": {
-    "symfony-app-dir": "app",
-    "symfony-bin-dir": "bin",
-    "symfony-var-dir": "var",
-    "symfony-web-dir": "web",
-    "symfony-tests-dir": "tests",
-    "symfony-assets-install": "relative",
-    "incenteev-parameters": {
-      "file": "app/config/parameters.yml"
+    "name": "relayto/rtPiwikBundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Getting metrics from Piwik",
+    "autoload": {
+        "psr-4": {
+            "rtPiwikBundle\\": ""
+        }
     },
-    "branch-alias": {
-      "dev-master": "3.1-dev"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "doctrine/mongodb-odm-bundle": "^3.1",
+        "lexik/jwt-authentication-bundle": "^2.4",
+        "symfony/var-dumper": "^3.4|^4.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "doctrine/mongodb-odm": "^1.0",
+        "alcaeus/mongo-php-adapter": "^1.1",
+        "jms/serializer": "^3.0"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge": "^3.0"
+    },
+    "scripts": {
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
+        ],
+        "post-update-cmd": [
+            "@symfony-scripts"
+        ]
+    },
+    "config": {
+        "platform": {
+            "ext-mongo": "1.6.16"
+        }
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "3.1-dev"
+        }
     }
-  }
 }
