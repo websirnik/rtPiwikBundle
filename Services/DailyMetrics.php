@@ -92,7 +92,7 @@ class DailyMetrics
      */
     private function getDailyMetric($metrics, MetricModel $metricsData): DailyMetric
     {
-        $dailyMetric = $metrics->getLastDayMetric();
+        $dailyMetric = $metrics->getDailyMetric();
         if ($dailyMetric === null) {
             $dailyMetric = new DailyMetric();
         }
