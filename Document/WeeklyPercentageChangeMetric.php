@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: skews
- * Date: 29.03.2018
- * Time: 19:22
+ * Date: 30.03.2018
+ * Time: 13:58
  */
 
 namespace rtPiwikBundle\Document;
@@ -14,41 +14,40 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @MongoDB\EmbeddedDocument
  */
-class LastWeekMetric {
+class WeeklyPercentageChangeMetric {
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
+	 * @JMS\Type("float")
+	 * @MongoDB\Field(type="float")
 	 */
 	protected $visits;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
+	 * @JMS\Type("float")
+	 * @MongoDB\Field(type="float")
 	 */
 	protected $pageViews;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
+	 * @JMS\Type("float")
+	 * @MongoDB\Field(type="float")
 	 */
 	protected $interactions;
 
 	/**
-
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
+	 * @JMS\Type("float")
+	 * @MongoDB\Field(type="float")
 	 */
 	protected $avgTimeSpent;
 
 	/**
 	 * Set visits
 	 *
-	 * @param int $visits
+	 * @param float $visits
 	 * @return $this
 	 */
 	public function setVisits($visits) {
@@ -59,7 +58,7 @@ class LastWeekMetric {
 	/**
 	 * Get visits
 	 *
-	 * @return int $visits
+	 * @return float $visits
 	 */
 	public function getVisits() {
 		return $this->visits;
@@ -68,7 +67,7 @@ class LastWeekMetric {
 	/**
 	 * Set pageViews
 	 *
-	 * @param int $pageViews
+	 * @param float $pageViews
 	 * @return $this
 	 */
 	public function setPageViews($pageViews) {
@@ -79,7 +78,7 @@ class LastWeekMetric {
 	/**
 	 * Get pageViews
 	 *
-	 * @return int $pageViews
+	 * @return float $pageViews
 	 */
 	public function getPageViews() {
 		return $this->pageViews;
@@ -88,7 +87,7 @@ class LastWeekMetric {
 	/**
 	 * Set interactions
 	 *
-	 * @param int $interactions
+	 * @param float $interactions
 	 * @return $this
 	 */
 	public function setInteractions($interactions) {
@@ -99,7 +98,7 @@ class LastWeekMetric {
 	/**
 	 * Get interactions
 	 *
-	 * @return int $interactions
+	 * @return float $interactions
 	 */
 	public function getInteractions() {
 		return $this->interactions;
@@ -108,7 +107,7 @@ class LastWeekMetric {
 	/**
 	 * Set avgTimeSpent
 	 *
-	 * @param int $avgTimeSpent
+	 * @param float $avgTimeSpent
 	 * @return $this
 	 */
 	public function setAvgTimeSpent($avgTimeSpent) {
@@ -119,18 +118,9 @@ class LastWeekMetric {
 	/**
 	 * Get avgTimeSpent
 	 *
-	 * @return int $avgTimeSpent
+	 * @return float $avgTimeSpent
 	 */
 	public function getAvgTimeSpent() {
 		return $this->avgTimeSpent;
-	}
-
-	/**
-	 * Get id
-	 *
-	 * @return id $id
-	 */
-	public function getId() {
-		return $this->id;
 	}
 }

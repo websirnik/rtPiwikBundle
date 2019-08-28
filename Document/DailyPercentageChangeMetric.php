@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @MongoDB\EmbeddedDocument
  */
-class PercentageChangeLastDayMetric {
+class DailyPercentageChangeMetric {
 
 	/**
 	 * @JMS\Groups({"metrics"})

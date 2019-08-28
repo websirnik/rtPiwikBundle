@@ -2,6 +2,8 @@
 
 namespace rtPiwikBundle\Services;
 
+use rtPiwikBundle\Document\TotalMetric;
+
 class MetricsService
 {
     private $metric;

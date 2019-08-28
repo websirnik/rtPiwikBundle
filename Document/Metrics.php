@@ -12,17 +12,17 @@ class Metrics {
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\LastDayMetric")
+	 * @JMS\Type("rtPiwikBundle\Document\DailyMetric")
 	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastDayMetric")
 	 */
-	protected $lastDayMetric;
+	protected $dailyMetric;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\LastWeekMetric")
+	 * @JMS\Type("rtPiwikBundle\Document\WeeklyMetric")
 	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastWeekMetric")
 	 */
-	protected $lastWeekMetric;
+	protected $weeklyMetric;
 
 	/**
 	 * @JMS\Groups({"metrics"})
@@ -33,17 +33,17 @@ class Metrics {
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\PercentageChangeLastDayMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastDayMetric")
+	 * @JMS\Type("rtPiwikBundle\Document\DailyPercentageChangeMetric")
+	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\DailyPercentageChangeMetric")
 	 */
-	protected $percentageChangeLastDay;
+	protected $dailyPercentageChange;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\PercentageChangeLastWeekMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastWeekMetric")
+	 * @JMS\Type("rtPiwikBundle\Document\WeeklyPercentageChangeMetric")
+	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\WeeklyPercentageChangeMetric")
 	 */
-	protected $percentageChangeLastWeek;
+	protected $weeklyPercentageChange;
 
 	/**
 	 * @JMS\Groups({"metrics"})
@@ -73,11 +73,11 @@ class Metrics {
 	/**
 	 * Set lastDayMetric
 	 *
-	 * @param \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
+	 * @param \rtPiwikBundle\Document\DailyMetric $dailyMetric
 	 * @return $this
 	 */
-	public function setLastDayMetric(\rtPiwikBundle\Document\LastDayMetric $lastDayMetric) {
-		$this->lastDayMetric = $lastDayMetric;
+	public function setDailyMetric(\rtPiwikBundle\Document\DailyMetric $dailyMetric) {
+		$this->dailyMetric = $dailyMetric;
 
 		return $this;
 	}
@@ -85,20 +85,20 @@ class Metrics {
 	/**
 	 * Get lastDayMetric
 	 *
-	 * @return \rtPiwikBundle\Document\LastDayMetric $lastDayMetric
+	 * @return \rtPiwikBundle\Document\DailyMetric $lastDayMetric
 	 */
-	public function getLastDayMetric() {
-		return $this->lastDayMetric;
+	public function getDailyMetric() {
+		return $this->dailyMetric;
 	}
 
 	/**
 	 * Set lastWeekMetric
 	 *
-	 * @param \rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric
+	 * @param \rtPiwikBundle\Document\WeeklyMetric $weeklyMetric
 	 * @return $this
 	 */
-	public function setLastWeekMetric(\rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric) {
-		$this->lastWeekMetric = $lastWeekMetric;
+	public function setWeeklyMetric(\rtPiwikBundle\Document\WeeklyMetric $weeklyMetric) {
+		$this->weeklyMetric = $weeklyMetric;
 
 		return $this;
 	}
@@ -106,10 +106,10 @@ class Metrics {
 	/**
 	 * Get lastWeekMetric
 	 *
-	 * @return \rtPiwikBundle\Document\LastWeekMetric $lastWeekMetric
+	 * @return \rtPiwikBundle\Document\WeeklyMetric $lastWeekMetric
 	 */
-	public function getLastWeekMetric() {
-		return $this->lastWeekMetric;
+	public function getWeeklyMetric() {
+		return $this->weeklyMetric;
 	}
 
 	/**
@@ -199,13 +199,13 @@ class Metrics {
 	/**
 	 * Set percentageChangeLastDay
 	 *
-	 * @param \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+	 * @param \rtPiwikBundle\Document\DailyPercentageChangeMetric $dailyPercentageChange
 	 * @return $this
 	 */
-	public function setPercentageChangeLastDay(
-		\rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+	public function setDailyPercentageChange(
+		\rtPiwikBundle\Document\DailyPercentageChangeMetric $dailyPercentageChange
 	) {
-		$this->percentageChangeLastDay = $percentageChangeLastDay;
+		$this->dailyPercentageChange = $dailyPercentageChange;
 
 		return $this;
 	}
@@ -213,22 +213,22 @@ class Metrics {
 	/**
 	 * Get percentageChangeLastDay
 	 *
-	 * @return \rtPiwikBundle\Document\PercentageChangeLastDayMetric $percentageChangeLastDay
+	 * @return \rtPiwikBundle\Document\DailyPercentageChangeMetric $percentageChangeLastDay
 	 */
-	public function getPercentageChangeLastDay() {
-		return $this->percentageChangeLastDay;
+	public function getDailyPercentageChange() {
+		return $this->dailyPercentageChange;
 	}
 
 	/**
 	 * Set percentageChangeLastWeek
 	 *
-	 * @param \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+	 * @param \rtPiwikBundle\Document\WeeklyPercentageChangeMetric $weeklyPercentageChange
 	 * @return $this
 	 */
-	public function setPercentageChangeLastWeek(
-		\rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+	public function setWeeklyPercentageChange(
+		\rtPiwikBundle\Document\WeeklyPercentageChangeMetric $weeklyPercentageChange
 	) {
-		$this->percentageChangeLastWeek = $percentageChangeLastWeek;
+		$this->weeklyPercentageChange = $weeklyPercentageChange;
 
 		return $this;
 	}
@@ -236,9 +236,9 @@ class Metrics {
 	/**
 	 * Get percentageChangeLastWeek
 	 *
-	 * @return \rtPiwikBundle\Document\PercentageChangeLastWeekMetric $percentageChangeLastWeek
+	 * @return \rtPiwikBundle\Document\WeeklyPercentageChangeMetric $percentageChangeLastWeek
 	 */
-	public function getPercentageChangeLastWeek() {
-		return $this->percentageChangeLastWeek;
+	public function getWeeklyPercentageChange() {
+		return $this->weeklyPercentageChange;
 	}
 }

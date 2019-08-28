@@ -11,7 +11,7 @@ namespace rtPiwikBundle\Services;
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
 
-class TotalMetrics {
+class TotalMetrics{
     private $metricsService;
 
     function __construct($metricsService) {
@@ -86,7 +86,7 @@ class TotalMetrics {
         // get metrics data by slug, date and user's ids
         $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
         // if data new (empty)
-        if (is_null($metrics)) {
+        if ($metrics === null) {
             // created new instances
             $metrics = new Metrics();
             $totalMetric = new TotalMetric();
@@ -108,7 +108,7 @@ class TotalMetrics {
         } else {
             // get total metrics from db
             $totalMetric = $metrics->getTotalMetric();
-            if (is_null($totalMetric)) {
+            if ($totalMetric === null) {
                 $totalMetric = new TotalMetric();
             }
             // collect exists visits and new visists

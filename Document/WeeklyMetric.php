@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skews
- * Date: 30.03.2018
- * Time: 13:58
- */
-
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
@@ -14,40 +7,48 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @MongoDB\EmbeddedDocument
  */
-class PercentageChangeLastWeekMetric {
+class WeeklyMetric {
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
+	 * @JMS\Type("integer")
+	 * @MongoDB\Field(type="int")
 	 */
 	protected $visits;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
+	 * @JMS\Type("integer")
+	 * @MongoDB\Field(type="int")
 	 */
 	protected $pageViews;
 
 	/**
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
+	 * @JMS\Type("integer")
+	 * @MongoDB\Field(type="int")
 	 */
 	protected $interactions;
 
 	/**
+
 	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
+	 * @JMS\Type("integer")
+	 * @MongoDB\Field(type="int")
 	 */
 	protected $avgTimeSpent;
+
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("integer")
+     * @MongoDB\Field(type="int")
+     */
+    protected $sumTimeSpent;
 
 	/**
 	 * Set visits
 	 *
-	 * @param float $visits
+	 * @param int $visits
 	 * @return $this
 	 */
 	public function setVisits($visits) {
@@ -58,7 +59,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Get visits
 	 *
-	 * @return float $visits
+	 * @return int $visits
 	 */
 	public function getVisits() {
 		return $this->visits;
@@ -67,7 +68,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Set pageViews
 	 *
-	 * @param float $pageViews
+	 * @param int $pageViews
 	 * @return $this
 	 */
 	public function setPageViews($pageViews) {
@@ -78,7 +79,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Get pageViews
 	 *
-	 * @return float $pageViews
+	 * @return int $pageViews
 	 */
 	public function getPageViews() {
 		return $this->pageViews;
@@ -87,7 +88,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Set interactions
 	 *
-	 * @param float $interactions
+	 * @param int $interactions
 	 * @return $this
 	 */
 	public function setInteractions($interactions) {
@@ -98,7 +99,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Get interactions
 	 *
-	 * @return float $interactions
+	 * @return int $interactions
 	 */
 	public function getInteractions() {
 		return $this->interactions;
@@ -107,7 +108,7 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Set avgTimeSpent
 	 *
-	 * @param float $avgTimeSpent
+	 * @param int $avgTimeSpent
 	 * @return $this
 	 */
 	public function setAvgTimeSpent($avgTimeSpent) {
@@ -118,9 +119,34 @@ class PercentageChangeLastWeekMetric {
 	/**
 	 * Get avgTimeSpent
 	 *
-	 * @return float $avgTimeSpent
+	 * @return int $avgTimeSpent
 	 */
 	public function getAvgTimeSpent() {
 		return $this->avgTimeSpent;
 	}
+
+	/**
+	 * Get id
+	 *
+	 * @return id $id
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+    /**
+     * @return mixed
+     */
+    public function getSumTimeSpent()
+    {
+        return $this->sumTimeSpent;
+    }
+
+    /**
+     * @param mixed $sumTimeSpent
+     */
+    public function setSumTimeSpent($sumTimeSpent): void
+    {
+        $this->sumTimeSpent = $sumTimeSpent;
+    }
 }
