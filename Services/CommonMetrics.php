@@ -15,7 +15,7 @@ class CommonMetrics
 
     private $metricsService;
 
-    function __construct($metricsService, $commonMetrics)
+    function __construct($metricsService)
     {
         $this->metricsService = $metricsService;
     }
