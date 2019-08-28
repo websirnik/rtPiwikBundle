@@ -67,17 +67,23 @@ class CommonMetrics
     {
         if ($type === self::DAILY_METRICS) {
             $prctChange = new DailyPercentageChangeMetric();
-            $metricbyType = $metrics->getDailyMetric() || new DailyMetric();
+            $metricByType = $metrics->getDailyMetric();
+            if ($metricByType === null) {
+                $metricByType = new DailyMetric();
+            }
         }
         if ($type === self::WEEKLY_METRICS) {
             $prctChange = new WeeklyPercentageChangeMetric();
-            $metricbyType = $metrics->getWeeklyMetric() || new WeeklyMetric();
+            $metricByType = $metrics->getWeeklyMetric();
+            if ($metricByType === null) {
+                $metricByType = new WeeklyMetric();
+            }
         }
 
-        $visits = $metricbyType->getVisits();
-        $interactions = $metricbyType->getInteractions();
-        $sumTimeSpent = $metricbyType->getSumTimeSpent();
-        $pageViews = $metricbyType->getPageViews();
+        $visits = $metricByType->getVisits() || 0;
+        $interactions = $metricByType->getInteractions() || 0;
+        $sumTimeSpent = $metricByType->getSumTimeSpent() || 0;
+        $pageViews = $metricByType->getPageViews() || 0;
 
         $avgTimeSpent = $visits > 0 ? round($sumTimeSpent / $visits) : 0;
 
@@ -176,6 +182,8 @@ class CommonMetrics
         $diff = $y2 - $y1;
         if ($y1 > 0) {
             $diff /= $y1;
+        } else {
+            return 100;
         }
 
         return $diff * 100;
