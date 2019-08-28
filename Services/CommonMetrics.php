@@ -21,7 +21,7 @@ class CommonMetrics
     }
 
     public const DAILY_METRICS = 1;
-    public const WEEKLY_METRICS = 1;
+    public const WEEKLY_METRICS = 2;
 
     public function get($board, $slug, \DateTime $yesterday, $userIds, $type)
     {
