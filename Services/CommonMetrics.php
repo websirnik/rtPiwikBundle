@@ -67,10 +67,10 @@ class CommonMetrics
             $metricbyType = $metrics->getWeeklyMetric() || new WeeklyMetric();
         }
 
-        $visits = $metricbyType->getVisits() || 0;
-        $interactions = $metricbyType->getInteractions() || 0;
-        $sumTimeSpent = $metricbyType->getSumTimeSpent() || 0;
-        $pageViews = $metricbyType->getPageViews() || 0;
+        $visits = $metricbyType->getVisits();
+        $interactions = $metricbyType->getInteractions();
+        $sumTimeSpent = $metricbyType->getSumTimeSpent();
+        $pageViews = $metricbyType->getPageViews();
 
         $avgTimeSpent = $visits > 0 ? round($sumTimeSpent / $visits) : 0;
 
