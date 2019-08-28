@@ -101,6 +101,10 @@ class DailyMetrics
         $dailyMetric->setInteractions($metricsData->getInteractions());
         $dailyMetric->setPageViews($metricsData->getPageViews());
         $dailyMetric->setSumTimeSpent($metricsData->getSumTimeSpent());
+        if ($dailyMetric->getVisits() > 0) {
+            $avgTimeSpent = round($dailyMetric->getSumTimeSpent() / $dailyMetric->getVisits());
+            $dailyMetric->setAvgTimeSpent($avgTimeSpent);
+        }
 
         return $dailyMetric;
     }

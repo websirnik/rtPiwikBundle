@@ -102,6 +102,10 @@ class WeeklyMetrics
         $weeklyMetric->setInteractions($metricsData->getInteractions());
         $weeklyMetric->setPageViews($metricsData->getPageViews());
         $weeklyMetric->setSumTimeSpent($metricsData->getSumTimeSpent());
+        if ($weeklyMetric->getVisits() > 0) {
+            $avgTimeSpent = round($weeklyMetric->getSumTimeSpent() / $weeklyMetric->getVisits());
+            $weeklyMetric->setAvgTimeSpent($avgTimeSpent);
+        }
 
         return $weeklyMetric;
     }
