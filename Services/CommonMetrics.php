@@ -36,14 +36,21 @@ class CommonMetrics
         }
 
         $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
-        $dailyMetric = $this->getMetricByType($metrics, $metricsData, $type);
-        $totalMetric = $this->getTotalMetric($metrics, $dailyMetric);
+        $metricByType = $this->getMetricByType($metrics, $metricsData, $type);
 
-        $prctDailyChange = $this->getPercentageChangeMetric($metrics, $dailyMetric, $type);
-
+        $totalMetric = $this->getTotalMetric($metrics, $metricByType);
         $metrics->setTotalMetric($totalMetric);
-        $metrics->setDailyMetric($dailyMetric);
-        $metrics->setDailyPercentageChange($prctDailyChange);
+
+        $prctChange = $this->getPercentageChangeMetric($metrics, $metricByType, $type);
+
+        if ($type === self::DAILY_METRICS) {
+            $metrics->setDailyMetric($metricByType);
+            $metrics->setDailyPercentageChange($prctChange);
+        }
+        if ($type === self::WEEKLY_METRICS) {
+            $metrics->setWeeklyMetric($metricByType);
+            $metrics->setWeeklyPercentageChange($prctChange);
+        }
 
         $metrics->setUpdatedAt(new \DateTime());
 
@@ -54,7 +61,7 @@ class CommonMetrics
      * Get metrics data since last day and current day
      * @param $metrics
      * @param $metricsData
-     * @return DailyPercentageChangeMetric
+     * @return
      */
     protected function getPercentageChangeMetric(Metrics $metrics, $metricsData, $type)
     {
