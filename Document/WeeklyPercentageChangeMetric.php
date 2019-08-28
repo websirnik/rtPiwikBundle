@@ -44,6 +44,13 @@ class WeeklyPercentageChangeMetric {
 	 */
 	protected $avgTimeSpent;
 
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("integer")
+     * @MongoDB\Field(type="int")
+     */
+    protected $sumTimeSpent;
+
 	/**
 	 * Set visits
 	 *
@@ -123,4 +130,20 @@ class WeeklyPercentageChangeMetric {
 	public function getAvgTimeSpent() {
 		return $this->avgTimeSpent;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getSumTimeSpent()
+    {
+        return $this->sumTimeSpent;
+    }
+
+    /**
+     * @param mixed $sumTimeSpent
+     */
+    public function setSumTimeSpent($sumTimeSpent): void
+    {
+        $this->sumTimeSpent = $sumTimeSpent;
+    }
 }

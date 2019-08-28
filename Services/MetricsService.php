@@ -2,8 +2,6 @@
 
 namespace rtPiwikBundle\Services;
 
-use rtPiwikBundle\Document\TotalMetric;
-
 class MetricsService
 {
     private $metric;
@@ -62,7 +60,7 @@ class MetricsService
      * @param $userIds - array of user's ids
      * @return MetricModel - returns metrics model
      */
-    public function getMetrics($slug, $dateFrom, $dateTo, $userIds)
+    public function getMetrics($slug, $dateFrom, $dateTo, $userIds): MetricModel
     {
         // create instance of metrics model
         $metric = new MetricModel();

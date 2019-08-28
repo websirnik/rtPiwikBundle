@@ -7,6 +7,10 @@ services:
          class: rtPiwikBundle\Services\MetricsService
          arguments:
             $analytics: '@analytics_service'
+    common_metrics:
+        class: rtPiwikBundle\Services\CommonMetrics
+        arguments:
+            $metricsService: '@metrics_service'
     total_metrics:
         class: rtPiwikBundle\Services\TotalMetrics
         arguments:
@@ -15,7 +19,10 @@ services:
         class: rtPiwikBundle\Services\DailyMetrics
         arguments:
             $metricsService: '@metrics_service'
+            $commonMetrics: '@common_metrics'
     weekly_metrics:
         class: rtPiwikBundle\Services\WeeklyMetrics
         arguments:
             $metricsService: '@metrics_service'
+            $commonMetrics: '@common_metrics'
+
