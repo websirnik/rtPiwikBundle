@@ -6,9 +6,9 @@ namespace rtPiwikBundle\Services;
 class Analytics
 {
     private $defaultQuery = [
-        'module' => 'API',
-        'idSite' => '1',
-        'format' => 'JSON',
+        'module'     => 'API',
+        'idSite'     => '1',
+        'format'     => 'JSON',
         'token_auth' => '14fbc812766bffd3e5fc72925312b7b7',
     ];
 
@@ -61,12 +61,12 @@ class Analytics
     public function getEntryPages($date, $userIds)
     {
         $query = [
-            "date" => $date,
-            "method" => "Actions.getPageUrls",
-            "period" => "range",
-            "segment" => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
+            "date"     => $date,
+            "method"   => "Actions.getPageUrls",
+            "period"   => "range",
+            "segment"  => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
             "expanded" => 1,
-            "flat" => 0,
+            "flat"     => 0,
         ];
 
         return $this->render($query);
@@ -87,13 +87,17 @@ class Analytics
     public function getMetrics($slug, $date, $userIds)
     {
         $query = [
-            'date' => $date,
-            'method' => "API.get",
-            'period' => "day",
-            'segment' => sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds)),
+            'date'     => $date,
+            'method'   => "API.get",
+            'period'   => "day",
+            'segment'  => sprintf(
+                "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
+                $slug,
+                implode(";userId!=", $userIds)
+            ),
             "expanded" => 0,
-            "flat" => 0,
-            "slug" => $slug,
+            "flat"     => 0,
+            "slug"     => $slug,
         ];
 
         return $this->render($query);
@@ -114,13 +118,17 @@ class Analytics
     public function getActions($slug, $date, $userIds)
     {
         $query = [
-            "date" => $date,
-            "method" => "Actions.getPageUrls",
-            "period" => "range",
-            "segment" => sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds)),
+            "date"     => $date,
+            "method"   => "Actions.getPageUrls",
+            "period"   => "range",
+            "segment"  => sprintf(
+                "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
+                $slug,
+                implode(";userId!=", $userIds)
+            ),
             "expanded" => 0,
-            "flat" => 0,
-            "slug" => $slug,
+            "flat"     => 0,
+            "slug"     => $slug,
         ];
 
         return $this->render($query);
@@ -139,15 +147,41 @@ class Analytics
     public function getInteractions($slug, $date)
     {
         $query = [
-            "date" => $date,
+            "date"     => $date,
             "expanded" => 1,
-            "method" => "Events.getCategory",
-            "period" => "range",
-            "segment" => sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s",$slug),
-            "flat" => 0,
-            "slug" => $slug,
+            "method"   => "Events.getCategory",
+            "period"   => "range",
+            "segment"  => sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s", $slug),
+            "flat"     => 0,
+            "slug"     => $slug,
         ];
 
         return $this->render($query);
+    }
+
+    /**
+     * getVisitedDocs returns visited docs
+     * notice: segment should has page url which
+     * not containce edit &
+     * not containce analytics &
+     * containce slug &
+     * all user ids not equels in user's ids
+     * @param $date - date range
+     * @param $userIds - array of user's ids
+     * @return \Exception|mixed - returns exception of data
+     */
+    public function getVisitedDocs($date, $userIds)
+    {
+        $query = [
+            "date"     => $date,
+            "method"   => "Actions.getPageUrls",
+            "period"   => "range",
+            "segment"  => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
+            "expanded" => 1,
+            "flat"     => 0,
+        ];
+
+        return $this->render($query);
+
     }
 }
