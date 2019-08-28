@@ -38,11 +38,12 @@ class CommonMetrics
         $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
         $dailyMetric = $this->getMetricByType($metrics, $metricsData, $type);
         $totalMetric = $this->getTotalMetric($metrics, $dailyMetric);
-        $pctDailyChange = $this->getPercentageChangeMetric($metrics, $dailyMetric, $type);
+
+        $prctDailyChange = $this->getPercentageChangeMetric($metrics, $dailyMetric, $type);
 
         $metrics->setTotalMetric($totalMetric);
         $metrics->setDailyMetric($dailyMetric);
-        $metrics->setDailyPercentageChange($pctDailyChange);
+        $metrics->setDailyPercentageChange($prctDailyChange);
 
         $metrics->setUpdatedAt(new \DateTime());
 
@@ -59,11 +60,11 @@ class CommonMetrics
     {
         if ($type === self::DAILY_METRICS) {
             $prctChange = new DailyPercentageChangeMetric();
-            $metricbyType = $metrics->getDailyMetric();
+            $metricbyType = $metrics->getDailyMetric() || new DailyMetric();
         }
         if ($type === self::WEEKLY_METRICS) {
             $prctChange = new WeeklyPercentageChangeMetric();
-            $metricbyType = $metrics->getWeeklyMetric();
+            $metricbyType = $metrics->getWeeklyMetric() || new WeeklyMetric();
         }
 
         $visits = $metricbyType->getVisits() || 0;
@@ -104,7 +105,6 @@ class CommonMetrics
             }
         }
 
-        // set lastDayMetric from piwik
         $metricByType->setVisits($metricsData->getVisits());
         $metricByType->setInteractions($metricsData->getInteractions());
         $metricByType->setPageViews($metricsData->getPageViews());

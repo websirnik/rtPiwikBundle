@@ -13,14 +13,14 @@ class Metrics {
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("rtPiwikBundle\Document\DailyMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastDayMetric")
+	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\DailyMetric")
 	 */
 	protected $dailyMetric;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("rtPiwikBundle\Document\WeeklyMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastWeekMetric")
+	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\WeeklyMetric")
 	 */
 	protected $weeklyMetric;
 
@@ -71,7 +71,7 @@ class Metrics {
 	}
 
 	/**
-	 * Set lastDayMetric
+	 * Set dailyMetric
 	 *
 	 * @param \rtPiwikBundle\Document\DailyMetric $dailyMetric
 	 * @return $this
@@ -83,16 +83,16 @@ class Metrics {
 	}
 
 	/**
-	 * Get lastDayMetric
+	 * Get dailyMetric
 	 *
-	 * @return \rtPiwikBundle\Document\DailyMetric $lastDayMetric
+	 * @return \rtPiwikBundle\Document\DailyMetric $dailyMetric
 	 */
 	public function getDailyMetric() {
 		return $this->dailyMetric;
 	}
 
 	/**
-	 * Set lastWeekMetric
+	 * Set weeklyMetric
 	 *
 	 * @param \rtPiwikBundle\Document\WeeklyMetric $weeklyMetric
 	 * @return $this
@@ -104,9 +104,9 @@ class Metrics {
 	}
 
 	/**
-	 * Get lastWeekMetric
+	 * Get weeklyMetric
 	 *
-	 * @return \rtPiwikBundle\Document\WeeklyMetric $lastWeekMetric
+	 * @return \rtPiwikBundle\Document\WeeklyMetric$weeklyMetric
 	 */
 	public function getWeeklyMetric() {
 		return $this->weeklyMetric;
@@ -197,7 +197,7 @@ class Metrics {
 	}
 
 	/**
-	 * Set percentageChangeLastDay
+	 * Set dailyPercentageChange
 	 *
 	 * @param \rtPiwikBundle\Document\DailyPercentageChangeMetric $dailyPercentageChange
 	 * @return $this
@@ -211,16 +211,16 @@ class Metrics {
 	}
 
 	/**
-	 * Get percentageChangeLastDay
+	 * Get dailyPercentageChange
 	 *
-	 * @return \rtPiwikBundle\Document\DailyPercentageChangeMetric $percentageChangeLastDay
+	 * @return \rtPiwikBundle\Document\DailyPercentageChangeMetric $dailyPercentageChange
 	 */
 	public function getDailyPercentageChange() {
 		return $this->dailyPercentageChange;
 	}
 
 	/**
-	 * Set percentageChangeLastWeek
+	 * Set weeklyPercentageChange
 	 *
 	 * @param \rtPiwikBundle\Document\WeeklyPercentageChangeMetric $weeklyPercentageChange
 	 * @return $this
@@ -234,9 +234,9 @@ class Metrics {
 	}
 
 	/**
-	 * Get percentageChangeLastWeek
+	 * Get weeklyPercentageChange
 	 *
-	 * @return \rtPiwikBundle\Document\WeeklyPercentageChangeMetric $percentageChangeLastWeek
+	 * @return \rtPiwikBundle\Document\WeeklyPercentageChangeMetric $weeklyPercentageChange
 	 */
 	public function getWeeklyPercentageChange() {
 		return $this->weeklyPercentageChange;
