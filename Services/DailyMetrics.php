@@ -46,8 +46,8 @@ class DailyMetrics
         $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
         $dailyMetric = $this->getDailyMetric($metrics, $metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $dailyMetric);
-        $diff = $dateTo->diff($dateFrom)->format("%a");
-        $pctDailyChange = $this->getDailyPercentageChangeMetric($diff, $metrics, $metricsData);
+        $daysNumber = $now->diff($yesterday)->format("%a");
+        $pctDailyChange = $this->getDailyPercentageChangeMetric($daysNumber, $metrics, $metricsData);
 
         $metrics->setTotalMetric($totalMetric);
         $metrics->setDailyMetric($dailyMetric);

@@ -47,8 +47,8 @@ class WeeklyMetrics
         $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
         $weeklyMetric = $this->getWeeklyMetric($metrics, $metricsData);
         $totalMetric = $this->getTotalMetric($metrics, $weeklyMetric);
-        $diff = $dateTo->diff($dateFrom)->format("%a");
-        $pctWeeklyChange = $this->getWeeklyPercentageChangeMetric($diff, $metrics, $metricsData);
+        $daysNumber = $now->diff($lastWeek)->format("%a");
+        $pctWeeklyChange = $this->getWeeklyPercentageChangeMetric($daysNumber, $metrics, $metricsData);
 
         $metrics->setTotalMetric($totalMetric);
         $metrics->setWeeklyMetric($weeklyMetric);
