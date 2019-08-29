@@ -23,11 +23,11 @@ class CommonMetrics
     public const DAILY_METRICS = 1;
     public const WEEKLY_METRICS = 2;
 
-    public function get($board, $slug, \DateTime $yesterday, $userIds, $type)
+    public function get($board, $slug, \DateTime $date, $userIds, $type)
     {
         $now = new \DateTime();
         $dateTo = $now->format('Y-m-d');
-        $dateFrom = $yesterday->format('Y-m-d');
+        $dateFrom = $date->format('Y-m-d');
 
         $metrics = $board->getMetrics();
         // if there is no metric repository

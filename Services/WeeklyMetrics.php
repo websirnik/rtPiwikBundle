@@ -27,9 +27,9 @@ class WeeklyMetrics
      * @param $userIds
      * @return Metrics
      */
-    public function get($board, $slug, \DateTime $lastWeek, $userIds)
+    public function get($board, $slug, \DateTime $date, $userIds)
     {
-        $metrics = $this->commonMetrics->get($board, $slug, $lastWeek, $userIds, CommonMetrics::WEEKLY_METRICS);
+        $metrics = $this->commonMetrics->get($board, $slug, $date, $userIds, CommonMetrics::WEEKLY_METRICS);
 
         dump(sprintf('weekly metrics slug:%s', $slug));
 
