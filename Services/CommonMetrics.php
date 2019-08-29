@@ -67,17 +67,11 @@ class CommonMetrics
     {
         if ($type === self::DAILY_METRICS) {
             $prctChange = new DailyPercentageChangeMetric();
-            $metricByType = $metrics->getDailyMetric();
-            if ($metricByType === null) {
-                $metricByType = new DailyMetric();
-            }
+            $metricByType = $this->getDailyMetric($metrics);
         }
         if ($type === self::WEEKLY_METRICS) {
             $prctChange = new WeeklyPercentageChangeMetric();
-            $metricByType = $metrics->getWeeklyMetric();
-            if ($metricByType === null) {
-                $metricByType = new WeeklyMetric();
-            }
+            $metricByType = $this->getWeeklyMetric($metrics);
         }
 
         $visits = $metricByType->getVisits() || 0;
@@ -105,17 +99,11 @@ class CommonMetrics
     protected function getMetricByType($metrics, MetricModel $metricsData, $type)
     {
         if ($type === self::DAILY_METRICS) {
-            $metricByType = $metrics->getDailyMetric();
-            if ($metricByType === null) {
-                $metricByType = new DailyMetric();
-            }
+            $metricByType = $this->getDailyMetric($metrics);
         }
 
         if ($type === self::WEEKLY_METRICS) {
-            $metricByType = $metrics->getWeeklyMetric();
-            if ($metricByType === null) {
-                $metricByType = new WeeklyMetric();
-            }
+            $metricByType = $this->getWeeklyMetric($metrics);
         }
 
         $metricByType->setVisits($metricsData->getVisits());
@@ -187,6 +175,26 @@ class CommonMetrics
         }
 
         return $diff * 100;
+    }
+
+    protected function getDailyMetric($metrics)
+    {
+        $metric = $metrics->getDailyMetric();
+        if ($metric === null) {
+            $metric = new DailyMetric();
+        }
+
+        return $metric;
+    }
+
+    protected function getWeeklyMetric($metrics)
+    {
+        $metric = $metrics->getWeeklyMetric();
+        if ($metric === null) {
+            $metric = new WeeklyMetric();
+        }
+
+        return $metric;
     }
 
 }
