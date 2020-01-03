@@ -30,7 +30,7 @@ class TotalMetrics{
     public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false) {
         $dateFrom = clone $date;
         $dateTo = null;
-        $yesterday = (new \DateTime())->setTime(0, 0)->setDate(2019,8,26);
+        $yesterday = (new \DateTime())->setTime(0, 0)->setDate(2020,1,2);
 
         if (!$reCalculate && $metrics = $board->getMetrics()) {
 
