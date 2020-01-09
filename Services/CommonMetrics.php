@@ -12,9 +12,12 @@ use rtPiwikBundle\Document\WeeklyPercentageChangeMetric;
 
 class CommonMetrics
 {
-
     private $metricsService;
 
+    /**
+     * CommonMetrics constructor.
+     * @param MetricsService $metricsService
+     */
     function __construct($metricsService)
     {
         $this->metricsService = $metricsService;
@@ -23,44 +26,54 @@ class CommonMetrics
     public const DAILY_METRICS = 1;
     public const WEEKLY_METRICS = 2;
 
+    /**
+     * @param $board
+     * @param $slug
+     * @param \DateTime $date
+     * @param $userIds
+     * @param $type
+     * @return Metrics
+     */
     public function get($board, $slug, \DateTime $date, $userIds, $type)
     {
         $now = new \DateTime();
         $dateTo = $now->format('Y-m-d');
         $dateFrom = $date->format('Y-m-d');
 
-        $metrics = $board->getMetrics();
+        $docMetrics = $board->getMetrics();
         // if there is no metric repository
-        if ($metrics === null) {
-            $metrics = new Metrics();
+        if ($docMetrics === null) {
+            $docMetrics = new Metrics();
         }
 
-        $metricsData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
-        $metricByType = $this->getMetricByType($metrics, $metricsData, $type);
+        $calculatedMetrics = $this->metricsService->calculateMetrics($slug, $dateFrom, $dateTo, $userIds);
+        $freshMetrics = $this->getMetricByType($docMetrics, $calculatedMetrics, $type);
 
-        $totalMetric = $this->getTotalMetric($metrics, $metricByType);
-        $metrics->setTotalMetric($totalMetric);
+        $totalMetric = $this->getTotalMetric($docMetrics, $freshMetrics);
+        $docMetrics->setTotalMetric($totalMetric);
 
-        $prctChange = $this->getPercentageChangeMetric($metrics, $metricByType, $type);
+        $prctChange = $this->getPercentageChangeMetric($docMetrics, $freshMetrics, $type);
 
         if ($type === self::DAILY_METRICS) {
-            $metrics->setDailyMetric($metricByType);
-            $metrics->setDailyPercentageChange($prctChange);
+            $docMetrics->setDailyMetric($freshMetrics);
+            $docMetrics->setDailyPercentageChange($prctChange);
         }
+
         if ($type === self::WEEKLY_METRICS) {
-            $metrics->setWeeklyMetric($metricByType);
-            $metrics->setWeeklyPercentageChange($prctChange);
+            $docMetrics->setWeeklyMetric($freshMetrics);
+            $docMetrics->setWeeklyPercentageChange($prctChange);
         }
 
-        $metrics->setUpdatedAt(new \DateTime());
+        $docMetrics->setUpdatedAt(new \DateTime());
 
-        return $metrics;
+        return $docMetrics;
     }
 
     /**
      * Get metrics data since last day and current day
-     * @param $metrics
+     * @param Metrics $metrics
      * @param $metricsData
+     * @param int $type
      * @return
      */
     protected function getPercentageChangeMetric(Metrics $metrics, $metricsData, $type)

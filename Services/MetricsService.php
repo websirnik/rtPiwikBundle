@@ -7,6 +7,10 @@ class MetricsService
     private $metric;
     private $analytics;
 
+    /**
+     * MetricsService constructor.
+     * @param Analytics $analytics
+     */
     function __construct($analytics)
     {
         $this->analytics = $analytics;
@@ -37,13 +41,13 @@ class MetricsService
                         $s = $slugSplitted[0];
                     }
 
-                    if ($s[0] == "/") {
+                    if ($s[0] === "/") {
                         $slugSplitted = explode("/", $s);
                         $s = $slugSplitted[1];
                     }
 
-                    if (!in_array($s, $slugs)) {
-                        array_push($slugs, $s);
+                    if (!in_array($s, $slugs, true)) {
+                        $slugs[] = $s;
                     }
                 }
             }
@@ -53,14 +57,14 @@ class MetricsService
     }
 
     /**
-     * getMetrics returns metrics calling piwik service for getting metrics
+     * calculateMetrics returns metrics calling piwik service for getting metrics
      * @param $slug - slug of the doc
      * @param $dateFrom - date start
      * @param $dateTo - date end
      * @param $userIds - array of user's ids
      * @return MetricModel - returns metrics model
      */
-    public function getMetrics($slug, $dateFrom, $dateTo, $userIds): MetricModel
+    public function calculateMetrics($slug, $dateFrom, $dateTo, $userIds): MetricModel
     {
         // create instance of metrics model
         $metric = new MetricModel();
@@ -84,17 +88,17 @@ class MetricsService
         // get data from piwik service for actions
         $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
         foreach ($analyticsActions as $key => $action) {
-            if (count($action) > 0 && isset($action["sum_time_spent"]) && $action["sum_time_spent"] > 0) {
+            if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
                 // collect all page views and time spent
-                $pageViews += $action["nb_hits"];
-                $timeSpent += $action["sum_time_spent"];
+                $pageViews += $action['nb_hits'];
+                $timeSpent += $action['sum_time_spent'];
             }
         }
 
         // get data from piwik service for interactions
         $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
-        if (isset($analyticsInteractions[0]["nb_events"])) {
-            $interactions = $analyticsInteractions[0]["nb_events"];
+        if (count($analyticsInteractions) > 0 && isset($analyticsInteractions[0]['nb_events'])) {
+            $interactions = $analyticsInteractions[0]['nb_events'];
         }
 
         // setted all data for metrics model

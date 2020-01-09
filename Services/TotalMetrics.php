@@ -84,7 +84,7 @@ class TotalMetrics{
      */
     public function updateMetricsByBoard($slug, Metrics $metrics, $board, $dateFrom, $dateTo, $userIds) {
         // get metrics data by slug, date and user's ids
-        $metricData = $this->metricsService->getMetrics($slug, $dateFrom, $dateTo, $userIds);
+        $metricData = $this->metricsService->calculateMetrics($slug, $dateFrom, $dateTo, $userIds);
         // if data new (empty)
         if ($metrics === null) {
             // created new instances
