@@ -2,18 +2,20 @@
 
 namespace rtPiwikBundle\Services;
 
+
+use rtPiwikBundle\Document\WeeklyMetric;
+use rtPiwikBundle\Document\WeeklyPercentageChangeMetric;
 use rtPiwikBundle\Document\Metrics;
+use rtPiwikBundle\Document\TotalMetric;
 
 class WeeklyMetrics
 {
+    private $metricsService;
     private $commonMetrics;
 
-    /**
-     * WeeklyMetrics constructor.
-     * @param CommonMetrics $commonMetrics
-     */
-    public function __construct($commonMetrics)
+    function __construct($metricsService, $commonMetrics)
     {
+        $this->metricsService = $metricsService;
         $this->commonMetrics = $commonMetrics;
     }
 
