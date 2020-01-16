@@ -39,7 +39,7 @@ class Analytics
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
                 // sleep each time for request attempt * 30 sec | (30, 60, 90 ...) sec
-                sleep($requestAttempt * 30);
+                sleep($requestAttempt * 5);
 
                 return $this->render($query, $requestAttempt);
             }
