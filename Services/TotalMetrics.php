@@ -12,6 +12,7 @@ use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
 
 class TotalMetrics{
+    /* @var MetricsService $metricsService */
     private $metricsService;
 
     function __construct($metricsService) {

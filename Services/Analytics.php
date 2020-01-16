@@ -28,6 +28,7 @@ class Analytics
      * @param array $query - query to piwik service
      * @param int $requestAttempt - amount of attempts with request to server
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     private function render(array $query = [], $requestAttempt = 0)
     {
@@ -41,9 +42,9 @@ class Analytics
                 sleep($requestAttempt * 30);
 
                 return $this->render($query, $requestAttempt);
-            } else {
-                return new \Exception("Requests to piwik fails ".$this->piwikReqLimit." times");
             }
+
+            throw new \RuntimeException('Requests to piwik fails '.$this->piwikReqLimit.' times');
         }
     }
 
@@ -57,6 +58,7 @@ class Analytics
      * @param $date - date range
      * @param $userIds - array of user's ids
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     public function getEntryPages($date, $userIds)
     {
@@ -83,6 +85,7 @@ class Analytics
      * @param $date - date range
      * @param $userIds - array of user's ids
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     public function getMetrics($slug, $date, $userIds)
     {
@@ -114,6 +117,7 @@ class Analytics
      * @param $date - date range
      * @param $userIds - array of user's ids
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     public function getActions($slug, $date, $userIds)
     {
@@ -143,6 +147,7 @@ class Analytics
      * @param $slug - doc slug
      * @param $date - date range
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     public function getInteractions($slug, $date)
     {
@@ -169,6 +174,7 @@ class Analytics
      * @param $date - date range
      * @param $userIds - array of user's ids
      * @return \Exception|mixed - returns exception of data
+     * @throws \Exception
      */
     public function getVisitedDocs($date, $userIds)
     {

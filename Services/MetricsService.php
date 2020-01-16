@@ -31,29 +31,35 @@ class MetricsService
         $date = $dateFrom.','.$dateTo;
 
         // get data from piwik service for entry pages
-        $analyticsEntryPages = $this->analytics->getEntryPages($date, $userIds);
-        foreach ($analyticsEntryPages as $action) {
-            if (isset($action["subtable"])) {
-                foreach ($action["subtable"] as $subtable) {
-                    $s = $subtable["label"];
-                    if (strpos($s, '?') !== false) {
-                        $slugSplitted = explode("?", $s);
-                        $s = $slugSplitted[0];
-                    }
+        try {
+            $analyticsEntryPages = $this->analytics->getEntryPages($date, $userIds);
+            foreach ($analyticsEntryPages as $action) {
+                if (isset($action["subtable"])) {
+                    foreach ($action["subtable"] as $subtable) {
+                        $s = $subtable["label"];
+                        if (strpos($s, '?') !== false) {
+                            $slugSplitted = explode("?", $s);
+                            $s = $slugSplitted[0];
+                        }
 
-                    if ($s[0] === "/") {
-                        $slugSplitted = explode("/", $s);
-                        $s = $slugSplitted[1];
-                    }
+                        if ($s[0] === "/") {
+                            $slugSplitted = explode("/", $s);
+                            $s = $slugSplitted[1];
+                        }
 
-                    if (!in_array($s, $slugs, true)) {
-                        $slugs[] = $s;
+                        if (!in_array($s, $slugs, true)) {
+                            $slugs[] = $s;
+                        }
                     }
                 }
             }
-        }
 
-        return $slugs;
+            return $slugs;
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+
+            return [];
+        }
     }
 
     /**
@@ -77,29 +83,45 @@ class MetricsService
         $date = $dateFrom.','.$dateTo;
 
         // get data from piwik service for metrics
-        $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
-        foreach ($analyticsMetrics as $key => $m) {
-            // collect all visits
-            if (count($m) > 0 && isset($m["nb_visits"])) {
-                $visits += $m["nb_visits"];
+        try {
+            $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
+            foreach ($analyticsMetrics as $key => $m) {
+                // collect all visits
+                if (count($m) > 0 && isset($m["nb_visits"])) {
+                    $visits += $m["nb_visits"];
+                }
             }
+        } catch (\Exception $e) {
+            dump($e->getMessage());
         }
+
 
         // get data from piwik service for actions
-        $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
-        foreach ($analyticsActions as $key => $action) {
-            if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
-                // collect all page views and time spent
-                $pageViews += $action['nb_hits'];
-                $timeSpent += $action['sum_time_spent'];
+        try {
+            $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
+
+            foreach ($analyticsActions as $key => $action) {
+                if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
+                    // collect all page views and time spent
+                    $pageViews += $action['nb_hits'];
+                    $timeSpent += $action['sum_time_spent'];
+                }
             }
+        } catch (\Exception $e) {
+            dump($e->getMessage());
         }
 
+
         // get data from piwik service for interactions
-        $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
-        if (count($analyticsInteractions) > 0 && isset($analyticsInteractions[0]['nb_events'])) {
-            $interactions = $analyticsInteractions[0]['nb_events'];
+        try {
+            $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
+            if (count($analyticsInteractions) > 0 && isset($analyticsInteractions[0]['nb_events'])) {
+                $interactions = $analyticsInteractions[0]['nb_events'];
+            }
+        } catch (\Exception $e) {
+            dump($e->getMessage());
         }
+
 
         // setted all data for metrics model
         $metric->setVisits($visits);
@@ -116,23 +138,30 @@ class MetricsService
     {
         $slugs = [];
         $dataRange = $dateFrom.','.$dateTo;
-        $analyticsMetrics = $this->analytics->getVisitedDocs($dataRange, $userIds);
-        foreach ($analyticsMetrics as $key => $m) {
-            if (isset($m['subtable']) && count($m['subtable']) > 0) {
-                foreach ($m['subtable'] as $subKey => $subM) {
-                    if (isset($subM['nb_visits']) && $subM['nb_visits'] > 0) {
-                        $slug = $subM['label'];
-                        if (strpos($slug, '/') === 0) {
-                            $slug = substr($slug, 1);
-                        }
-                        if (!in_array($slug, $slugs, true)) {
-                            $slugs[] = $slug;
+        try {
+            $analyticsMetrics = $this->analytics->getVisitedDocs($dataRange, $userIds);
+
+            foreach ($analyticsMetrics as $key => $m) {
+                if (isset($m['subtable']) && count($m['subtable']) > 0) {
+                    foreach ($m['subtable'] as $subKey => $subM) {
+                        if (isset($subM['nb_visits']) && $subM['nb_visits'] > 0) {
+                            $slug = $subM['label'];
+                            if (strpos($slug, '/') === 0) {
+                                $slug = substr($slug, 1);
+                            }
+                            if (!in_array($slug, $slugs, true)) {
+                                $slugs[] = $slug;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        return $slugs;
+            return $slugs;
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+
+            return [];
+        }
     }
 }
