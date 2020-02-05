@@ -63,12 +63,13 @@ class Analytics
     public function getEntryPages($date, $userIds)
     {
         $query = [
-            "date"     => $date,
-            "method"   => "Actions.getPageUrls",
-            "period"   => "range",
-            "segment"  => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
-            "expanded" => 1,
-            "flat"     => 0,
+            "filter_limit" => -1,
+            "date"         => $date,
+            "method"       => "Actions.getPageUrls",
+            "period"       => "range",
+            "segment"      => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
+            "expanded"     => 1,
+            "flat"         => 0,
         ];
 
         return $this->render($query);
@@ -90,17 +91,18 @@ class Analytics
     public function getMetrics($slug, $date, $userIds)
     {
         $query = [
-            'date'     => $date,
-            'method'   => "API.get",
-            'period'   => "day",
-            'segment'  => sprintf(
+            "filter_limit" => -1,
+            'date'         => $date,
+            'method'       => "API.get",
+            'period'       => "day",
+            'segment'      => sprintf(
                 "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
                 $slug,
                 implode(";userId!=", $userIds)
             ),
-            "expanded" => 0,
-            "flat"     => 0,
-            "slug"     => $slug,
+            "expanded"     => 0,
+            "flat"         => 0,
+            "slug"         => $slug,
         ];
 
         return $this->render($query);
@@ -122,17 +124,18 @@ class Analytics
     public function getActions($slug, $date, $userIds)
     {
         $query = [
-            "date"     => $date,
-            "method"   => "Actions.getPageUrls",
-            "period"   => "range",
-            "segment"  => sprintf(
+            "filter_limit" => -1,
+            "date"         => $date,
+            "method"       => "Actions.getPageUrls",
+            "period"       => "range",
+            "segment"      => sprintf(
                 "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
                 $slug,
                 implode(";userId!=", $userIds)
             ),
-            "expanded" => 0,
-            "flat"     => 0,
-            "slug"     => $slug,
+            "expanded"     => 0,
+            "flat"         => 0,
+            "slug"         => $slug,
         ];
 
         return $this->render($query);
@@ -152,13 +155,14 @@ class Analytics
     public function getInteractions($slug, $date)
     {
         $query = [
-            "date"     => $date,
-            "expanded" => 1,
-            "method"   => "Events.getCategory",
-            "period"   => "range",
-            "segment"  => sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s", $slug),
-            "flat"     => 0,
-            "slug"     => $slug,
+            "filter_limit" => -1,
+            "date"         => $date,
+            "expanded"     => 1,
+            "method"       => "Events.getCategory",
+            "period"       => "range",
+            "segment"      => sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s", $slug),
+            "flat"         => 0,
+            "slug"         => $slug,
         ];
 
         return $this->render($query);
@@ -179,12 +183,13 @@ class Analytics
     public function getVisitedDocs($date, $userIds)
     {
         $query = [
-            "date"     => $date,
-            "method"   => "Actions.getPageUrls",
-            "period"   => "range",
-            "segment"  => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
-            "expanded" => 1,
-            "flat"     => 0,
+            "filter_limit" => -1,
+            "date"         => $date,
+            "method"       => "Actions.getPageUrls",
+            "period"       => "range",
+            "segment"      => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
+            "expanded"     => 1,
+            "flat"         => 0,
         ];
 
         return $this->render($query);
