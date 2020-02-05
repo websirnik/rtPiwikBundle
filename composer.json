@@ -1,5 +1,5 @@
 {
-    "name": "relayto/rtPiwikBundle",
+    "name": "relayto/rt-piwik-bundle",
     "license": "MIT",
     "type": "symfony-bundle",
     "description": "Getting metrics from Piwik",
@@ -14,12 +14,10 @@
         }
     },
     "require": {
-        "doctrine/mongodb-odm-bundle": "^3.1",
+        "doctrine/mongodb-odm-bundle": "^4.0",
         "lexik/jwt-authentication-bundle": "^2.4",
         "symfony/var-dumper": "^3.4|^4.0",
         "guzzlehttp/guzzle": "^6.3",
-        "doctrine/mongodb-odm": "^1.0",
-        "alcaeus/mongo-php-adapter": "^1.1",
         "jms/serializer": "^3.0"
     },
     "require-dev": {
@@ -41,11 +39,6 @@
         "post-update-cmd": [
             "@symfony-scripts"
         ]
-    },
-    "config": {
-        "platform": {
-            "ext-mongo": "1.6.16"
-        }
     },
     "extra": {
         "symfony-app-dir": "app",
