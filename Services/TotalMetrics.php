@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skews
- * Date: 03.04.2018
- * Time: 18:01
- */
+
 
 namespace rtPiwikBundle\Services;
 
@@ -31,7 +26,7 @@ class TotalMetrics{
     public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false) {
         $dateFrom = clone $date;
         $dateTo = null;
-        $yesterday = (new \DateTime())->setTime(0, 0)->setDate(2020,1,2);
+        $yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
 
         if (!$reCalculate && $metrics = $board->getMetrics()) {
 

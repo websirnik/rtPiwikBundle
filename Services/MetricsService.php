@@ -72,6 +72,10 @@ class MetricsService
      */
     public function calculateMetrics($slug, $dateFrom, $dateTo, $userIds): MetricModel
     {
+        dump('start calculating metrics');
+        dump(sprintf("slug:%s ", $slug));
+        dump(sprintf("dateFrom:%s dateTo:%s", $dateFrom, $dateTo));
+        dump(sprintf("userdIds:%s", implode($userIds, ',')));
         // create instance of metrics model
         $metric = new MetricModel();
         // define default values
@@ -84,22 +88,27 @@ class MetricsService
 
         // get data from piwik service for metrics
         try {
+            dump('getting metrics from piwik..');
             $analyticsMetrics = $this->analytics->getMetrics($slug, $date, $userIds);
+            dump('calc visits');
             foreach ($analyticsMetrics as $key => $m) {
                 // collect all visits
                 if (count($m) > 0 && isset($m["nb_visits"])) {
                     $visits += $m["nb_visits"];
                 }
             }
+            dump("visits:", sprintf("%d", $visits));
         } catch (\Exception $e) {
+            dump('getting metrics from piwik fail');
             dump($e->getMessage());
         }
 
 
         // get data from piwik service for actions
         try {
+            dump('getting actions from piwik..');
             $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
-
+            dump('calc actions');
             foreach ($analyticsActions as $key => $action) {
                 if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
                     // collect all page views and time spent
@@ -107,18 +116,25 @@ class MetricsService
                     $timeSpent += $action['sum_time_spent'];
                 }
             }
+            dump("pageViews:", sprintf("%d", $pageViews));
+            dump("timeSpent:", sprintf("%d", $timeSpent));
         } catch (\Exception $e) {
+            dump('getting actions from piwik fail');
             dump($e->getMessage());
         }
 
 
         // get data from piwik service for interactions
         try {
+            dump('getting interactions from piwik..');
             $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
+            dump('calc interactions');
             if (count($analyticsInteractions) > 0 && isset($analyticsInteractions[0]['nb_events'])) {
                 $interactions = $analyticsInteractions[0]['nb_events'];
             }
+            dump("interactions:", sprintf("%d", $interactions));
         } catch (\Exception $e) {
+            dump('getting interactions from piwik fail');
             dump($e->getMessage());
         }
 
@@ -129,7 +145,7 @@ class MetricsService
         $metric->setInteractions($interactions);
         $metric->setSumTimeSpent($timeSpent);
 
-        dump('views: '.$visits.' pageViews: '.$pageViews.' sumTimeSpent: '.$timeSpent.'s interactions: '.$interactions);
+        dump("total:", sprintf("visits:%d pageViews:%d sumTimeSpent:%d's interactions:%d", $visits, $pageViews, $timeSpent, $interactions));
 
         return $metric;
     }

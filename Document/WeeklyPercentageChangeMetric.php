@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skews
- * Date: 30.03.2018
- * Time: 13:58
- */
-
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;

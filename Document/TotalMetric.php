@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: skews
- * Date: 29.03.2018
- * Time: 19:21
- */
 
 namespace rtPiwikBundle\Document;
 
