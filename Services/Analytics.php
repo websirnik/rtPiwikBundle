@@ -181,16 +181,17 @@ class Analytics
      * @return \Exception|mixed - returns exception of data
      * @throws \Exception
      */
-    public function getVisitedDocs($date, $userIds)
+    public function getVisitedDocs($date, $userIds, $offset = 0, $limit = -1)
     {
         $query = [
-            "filter_limit" => -1,
-            "date"         => $date,
-            "method"       => "Actions.getPageUrls",
-            "period"       => "range",
-            "segment"      => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
-            "expanded"     => 1,
-            "flat"         => 0,
+            "filter_offset" => $offset,
+            "filter_limit"  => $limit,
+            "date"          => $date,
+            "method"        => "Live.getLastVisitsDetails",
+            "period"        => "range",
+            "segment"       => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
+            "expanded"      => 1,
+            "flat"          => 0,
         ];
 
         return $this->render($query);

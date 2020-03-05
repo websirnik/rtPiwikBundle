@@ -124,14 +124,20 @@ class MetricsService
             foreach ($analyticsActions as $key => $action) {
                 if (count($action) > 0 && isset($action['nb_hits']) && $action['nb_hits'] > 0) {
                     // collect all page views and time spent
-                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit')  && !$this->includes($action['label'], 'analytics') && $this->getSplittedSlug($action['label'])) {
+                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
+                            $action['label'],
+                            'analytics'
+                        ) && $this->getSplittedSlug($action['label'])) {
                         $pageViews += $action['nb_hits'];
                     }
                 }
 
                 if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
                     // collect all page views and time spent
-                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit')  && !$this->includes($action['label'], 'analytics') && $this->getSplittedSlug($action['label'])) {
+                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
+                            $action['label'],
+                            'analytics'
+                        ) && $this->getSplittedSlug($action['label'])) {
                         $timeSpent += $action['sum_time_spent'];
                     }
                 }
@@ -153,7 +159,7 @@ class MetricsService
             foreach ($analyticsInteractions as $key => $inter) {
                 // collect all visits
                 if (count($inter) > 0 && isset($inter["nb_events"]) && $inter["nb_events"] > 0) {
-                    if (isset($inter['label']) && !$this->includes($inter['label'], 'edit')  && !$this->includes($inter['label'], 'analytics') && $this->includes($inter['label'], $slug)) {
+                    if (isset($inter['label']) && !$this->includes($inter['label'], 'edit') && !$this->includes($inter['label'], 'analytics') && $this->includes($inter['label'], $slug)) {
                         $interactions += $inter["nb_events"];
                     }
                 }
@@ -177,22 +183,50 @@ class MetricsService
         return $metric;
     }
 
+    /**
+     * Converts URL path string to array
+     * From: http://stackoverflow.com/a/9122293/257815
+     * @param  string $path [description]
+     * @return array       [description]
+     */
+    private function getPathArray($path)
+    {
+
+        $array = explode('/', $path);
+
+        //remove empty value from array
+        $array = array_filter($array);
+
+        // Resettings array key as they might start with 1 instead of 0
+        $array = array_values($array);
+
+        return $array;
+    }
+
+    private function getslug($url)
+    {
+        $parsedUrl = parse_url($url);
+
+        $pathArray = $this->getPathArray($parsedUrl['path']);
+
+        return isset($pathArray[1]) ? $pathArray[1] : null;
+    }
+
+
     public function getVisitedDocsMetrics($dateFrom, $dateTo, $userIds): array
     {
         $slugs = [];
         $dataRange = $dateFrom.','.$dateTo;
         try {
+
             $analyticsMetrics = $this->analytics->getVisitedDocs($dataRange, $userIds);
 
-            foreach ($analyticsMetrics as $key => $m) {
-                if (isset($m['subtable']) && count($m['subtable']) > 0) {
-                    foreach ($m['subtable'] as $subKey => $subM) {
-                        if (isset($subM['nb_visits']) && $subM['nb_visits'] > 0) {
-                            $slug = $subM['label'];
-                            if (strpos($slug, '/') === 0) {
-                                $slug = substr($slug, 1);
-                            }
-                            if (!in_array($slug, $slugs, true)) {
+            foreach ($analyticsMetrics as $key => $visit) {
+                if (isset($visit['actionDetails']) && count($visit['actionDetails']) > 0) {
+
+                    foreach ($visit['actionDetails'] as $details) {
+                        if (isset($details['url']) && $slug = $this->getslug($details['url'])) {
+                            if (!in_array($slug, $slugs)) {
                                 $slugs[] = $slug;
                             }
                         }
