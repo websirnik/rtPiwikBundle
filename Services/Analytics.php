@@ -78,8 +78,6 @@ class Analytics
     /**
      * getMetrics returns data from piwik service with metrics
      * notice: segment should has page url which
-     * not containce edit &
-     * not containce analytics &
      * containce slug &
      * all user ids not equels in user's ids
      * @param $slug - doc slug
@@ -129,12 +127,12 @@ class Analytics
             "method"       => "Actions.getPageUrls",
             "period"       => "range",
             "segment"      => sprintf(
-                "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
+                "pageUrl=@%s;userId!=%s",
                 $slug,
                 implode(";userId!=", $userIds)
             ),
             "expanded"     => 0,
-            "flat"         => 0,
+            "flat"         => 1,
             "slug"         => $slug,
         ];
 
@@ -144,25 +142,28 @@ class Analytics
     /**
      * getInteractions returns data from piwik service with interactions
      * notice: segment should has action url which
-     * not containce edit &
-     * not containce analytics &
      * containce slug
      * @param $slug - doc slug
      * @param $date - date range
+     * @param $userIds - array of user's ids
      * @return \Exception|mixed - returns exception of data
      * @throws \Exception
      */
-    public function getInteractions($slug, $date)
+    public function getInteractions($slug, $date, $userIds)
     {
         $query = [
-            "filter_limit" => -1,
+            "flat"         => 1,
             "date"         => $date,
             "expanded"     => 1,
             "method"       => "Events.getCategory",
             "period"       => "range",
-            "segment"      => sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s", $slug),
-            "flat"         => 0,
+            "segment"      => sprintf(
+                "actionUrl=@%s;userId!=%s",
+                $slug,
+                implode(";userId!=", $userIds)
+            ),
             "slug"         => $slug,
+            "filter_limit" => -1,
         ];
 
         return $this->render($query);

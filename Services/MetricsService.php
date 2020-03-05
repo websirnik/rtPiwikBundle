@@ -62,6 +62,18 @@ class MetricsService
         }
     }
 
+    private function getSplittedSlug($label): bool
+    {
+        $splitted = explode('/', $label);
+
+        return isset($splitted[2]);
+    }
+
+    private function includes($str, $searchString): bool
+    {
+        return strpos($str, $searchString) !== false;
+    }
+
     /**
      * calculateMetrics returns metrics calling piwik service for getting metrics
      * @param $slug - slug of the doc
@@ -110,10 +122,18 @@ class MetricsService
             $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
             dump('calc actions');
             foreach ($analyticsActions as $key => $action) {
+                if (count($action) > 0 && isset($action['nb_hits']) && $action['nb_hits'] > 0) {
+                    // collect all page views and time spent
+                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit')  && !$this->includes($action['label'], 'analytics') && $this->getSplittedSlug($action['label'])) {
+                        $pageViews += $action['nb_hits'];
+                    }
+                }
+
                 if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
                     // collect all page views and time spent
-                    $pageViews += $action['nb_hits'];
-                    $timeSpent += $action['sum_time_spent'];
+                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit')  && !$this->includes($action['label'], 'analytics') && $this->getSplittedSlug($action['label'])) {
+                        $timeSpent += $action['sum_time_spent'];
+                    }
                 }
             }
             dump("pageViews:", sprintf("%d", $pageViews));
@@ -127,11 +147,18 @@ class MetricsService
         // get data from piwik service for interactions
         try {
             dump('getting interactions from piwik..');
-            $analyticsInteractions = $this->analytics->getInteractions($slug, $date);
+            $analyticsInteractions = $this->analytics->getInteractions($slug, $date, $userIds);
             dump('calc interactions');
-            if (count($analyticsInteractions) > 0 && isset($analyticsInteractions[0]['nb_events'])) {
-                $interactions = $analyticsInteractions[0]['nb_events'];
+
+            foreach ($analyticsInteractions as $key => $inter) {
+                // collect all visits
+                if (count($inter) > 0 && isset($inter["nb_events"]) && $inter["nb_events"] > 0) {
+                    if (isset($inter['label']) && !$this->includes($inter['label'], 'edit')  && !$this->includes($inter['label'], 'analytics') && $this->includes($inter['label'], $slug)) {
+                        $interactions += $inter["nb_events"];
+                    }
+                }
             }
+
             dump("interactions:", sprintf("%d", $interactions));
         } catch (\Exception $e) {
             dump('getting interactions from piwik fail');
