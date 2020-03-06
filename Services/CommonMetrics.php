@@ -87,18 +87,18 @@ class CommonMetrics
             $metricByType = $this->getWeeklyMetric($metrics);
         }
 
-        $visits = $metricByType->getVisits() || 0;
-        $interactions = $metricByType->getInteractions() || 0;
-        $sumTimeSpent = $metricByType->getSumTimeSpent() || 0;
-        $pageViews = $metricByType->getPageViews() || 0;
+        $visits = is_numeric($metricByType->getVisits()) ? $metricByType->getVisits() : 0;
+        $interactions = is_numeric($metricByType->getInteractions()) ? $metricByType->getInteractions() : 0;
+        $sumTimeSpent = is_numeric($metricByType->getSumTimeSpent()) ? $metricByType->getSumTimeSpent() : 0;
+        $pageViews = is_numeric($metricByType->getPageViews()) ? $metricByType->getPageViews() : 0;
 
         $avgTimeSpent = $visits > 0 ? round($sumTimeSpent / $visits) : 0;
 
-        $prctChange->setVisits($this->getPrctChange($visits, $metricsData->getVisits()));
-        $prctChange->setInteractions($this->getPrctChange($interactions, $metricsData->getInteractions()));
-        $prctChange->setPageViews($this->getPrctChange($pageViews, $metricsData->getPageViews()));
-        $prctChange->setSumTimeSpent($this->getPrctChange($avgTimeSpent, $metricsData->getAvgTimeSpent()));
-        $prctChange->setAvgTimeSpent($this->getPrctChange($avgTimeSpent, $metricsData->getAvgTimeSpent()));
+        $prctChange->setVisits($this->calcPrctDiff($visits, $metricsData->getVisits()));
+        $prctChange->setInteractions($this->calcPrctDiff($interactions, $metricsData->getInteractions()));
+        $prctChange->setPageViews($this->calcPrctDiff($pageViews, $metricsData->getPageViews()));
+        $prctChange->setSumTimeSpent($this->calcPrctDiff($avgTimeSpent, $metricsData->getAvgTimeSpent()));
+        $prctChange->setAvgTimeSpent($this->calcPrctDiff($avgTimeSpent, $metricsData->getAvgTimeSpent()));
 
         return $prctChange;
     }
@@ -178,16 +178,13 @@ class CommonMetrics
         return $totalMetric;
     }
 
-    protected function getPrctChange($y1, $y2)
+    protected function calcPrctDiff($y1, $y2)
     {
-        $diff = $y2 - $y1;
-        if ($y1 > 0) {
-            $diff /= $y1;
-        } else {
-            return 100;
+        if ($y1 == 0 && $y2 == 0) {
+            return 0;
         }
 
-        return $diff * 100;
+        return 100 * (($y1 - $y2) / (($y1 + $y2) / 2));
     }
 
     protected function getDailyMetric($metrics)
