@@ -49,8 +49,10 @@ class CommonMetrics
         $calculatedMetrics = $this->metricsService->calculateMetrics($slug, $dateFrom, $dateTo, $userIds);
         $freshMetrics = $this->getMetricByType($docMetrics, $calculatedMetrics, $type);
 
-//        $totalMetric = $this->getTotalMetric($docMetrics, $freshMetrics);
-//        $docMetrics->setTotalMetric($totalMetric);
+        if ($type === self::DAILY_METRICS) {
+            $totalMetric = $this->getTotalMetric($docMetrics, $freshMetrics);
+            $docMetrics->setTotalMetric($totalMetric);
+        }
 
         $prctChange = $this->getPercentageChangeMetric($docMetrics, $freshMetrics, $type);
 
