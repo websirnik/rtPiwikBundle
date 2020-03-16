@@ -180,7 +180,7 @@ class CommonMetrics
         return $totalMetric;
     }
 
-    protected function calcPrctDiff($y1, $y2)
+    public function calcPrctDiff($y1, $y2)
     {
         if ($y1 == 0 && $y2 == 0) {
             return 0;
