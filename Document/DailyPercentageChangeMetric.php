@@ -48,7 +48,7 @@ class DailyPercentageChangeMetric {
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
+     * @MongoDB\Field(type="float")
      */
     protected $experienceViewed;
 
