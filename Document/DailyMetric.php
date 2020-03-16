@@ -45,6 +45,13 @@ class DailyMetric
     protected $sumTimeSpent;
 
     /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("integer")
+     * @MongoDB\Field(type="int")
+     */
+    protected $experienceViewed;
+
+    /**
      * Set visits
      *
      * @param int $visits
@@ -160,5 +167,21 @@ class DailyMetric
     public function setSumTimeSpent($sumTimeSpent): void
     {
         $this->sumTimeSpent = $sumTimeSpent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExperienceViewed()
+    {
+        return $this->experienceViewed;
+    }
+
+    /**
+     * @param mixed $experienceViewed
+     */
+    public function setExperienceViewed($experienceViewed): void
+    {
+        $this->experienceViewed = $experienceViewed;
     }
 }
