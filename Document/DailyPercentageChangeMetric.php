@@ -15,42 +15,42 @@ class DailyPercentageChangeMetric {
 	 * @JMS\Type("float")
 	 * @MongoDB\Field(type="float")
 	 */
-	protected $visits;
+	protected $visits = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("float")
 	 * @MongoDB\Field(type="float")
 	 */
-	protected $pageViews;
+	protected $pageViews = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("float")
 	 * @MongoDB\Field(type="float")
 	 */
-	protected $interactions;
+	protected $interactions = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("float")
 	 * @MongoDB\Field(type="float")
 	 */
-	protected $avgTimeSpent;
+	protected $avgTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="int")
      */
-    protected $sumTimeSpent;
+    protected $sumTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="float")
      */
-    protected $experienceViewed;
+    protected $experienceViewed = 0;
 
 	/**
 	 * Set visits

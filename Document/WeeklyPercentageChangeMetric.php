@@ -1,4 +1,5 @@
 <?php
+
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
@@ -7,129 +8,142 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @MongoDB\EmbeddedDocument
  */
-class WeeklyPercentageChangeMetric {
+class WeeklyPercentageChangeMetric
+{
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
-	 */
-	protected $visits;
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("float")
+     * @MongoDB\Field(type="float")
+     */
+    protected $visits = 0;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
-	 */
-	protected $pageViews;
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("float")
+     * @MongoDB\Field(type="float")
+     */
+    protected $pageViews = 0;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
-	 */
-	protected $interactions;
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("float")
+     * @MongoDB\Field(type="float")
+     */
+    protected $interactions = 0;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("float")
-	 * @MongoDB\Field(type="float")
-	 */
-	protected $avgTimeSpent;
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("float")
+     * @MongoDB\Field(type="float")
+     */
+    protected $avgTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="int")
      */
-    protected $sumTimeSpent;
+    protected $sumTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="float")
      */
-    protected $experienceViewed;
+    protected $experienceViewed = 0;
 
-	/**
-	 * Set visits
-	 *
-	 * @param float $visits
-	 * @return $this
-	 */
-	public function setVisits($visits) {
-		$this->visits = $visits;
-		return $this;
-	}
+    /**
+     * Set visits
+     *
+     * @param float $visits
+     * @return $this
+     */
+    public function setVisits($visits)
+    {
+        $this->visits = $visits;
 
-	/**
-	 * Get visits
-	 *
-	 * @return float $visits
-	 */
-	public function getVisits() {
-		return $this->visits;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set pageViews
-	 *
-	 * @param float $pageViews
-	 * @return $this
-	 */
-	public function setPageViews($pageViews) {
-		$this->pageViews = $pageViews;
-		return $this;
-	}
+    /**
+     * Get visits
+     *
+     * @return float $visits
+     */
+    public function getVisits()
+    {
+        return $this->visits;
+    }
 
-	/**
-	 * Get pageViews
-	 *
-	 * @return float $pageViews
-	 */
-	public function getPageViews() {
-		return $this->pageViews;
-	}
+    /**
+     * Set pageViews
+     *
+     * @param float $pageViews
+     * @return $this
+     */
+    public function setPageViews($pageViews)
+    {
+        $this->pageViews = $pageViews;
 
-	/**
-	 * Set interactions
-	 *
-	 * @param float $interactions
-	 * @return $this
-	 */
-	public function setInteractions($interactions) {
-		$this->interactions = $interactions;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get interactions
-	 *
-	 * @return float $interactions
-	 */
-	public function getInteractions() {
-		return $this->interactions;
-	}
+    /**
+     * Get pageViews
+     *
+     * @return float $pageViews
+     */
+    public function getPageViews()
+    {
+        return $this->pageViews;
+    }
 
-	/**
-	 * Set avgTimeSpent
-	 *
-	 * @param float $avgTimeSpent
-	 * @return $this
-	 */
-	public function setAvgTimeSpent($avgTimeSpent) {
-		$this->avgTimeSpent = $avgTimeSpent;
-		return $this;
-	}
+    /**
+     * Set interactions
+     *
+     * @param float $interactions
+     * @return $this
+     */
+    public function setInteractions($interactions)
+    {
+        $this->interactions = $interactions;
 
-	/**
-	 * Get avgTimeSpent
-	 *
-	 * @return float $avgTimeSpent
-	 */
-	public function getAvgTimeSpent() {
-		return $this->avgTimeSpent;
-	}
+        return $this;
+    }
+
+    /**
+     * Get interactions
+     *
+     * @return float $interactions
+     */
+    public function getInteractions()
+    {
+        return $this->interactions;
+    }
+
+    /**
+     * Set avgTimeSpent
+     *
+     * @param float $avgTimeSpent
+     * @return $this
+     */
+    public function setAvgTimeSpent($avgTimeSpent)
+    {
+        $this->avgTimeSpent = $avgTimeSpent;
+
+        return $this;
+    }
+
+    /**
+     * Get avgTimeSpent
+     *
+     * @return float $avgTimeSpent
+     */
+    public function getAvgTimeSpent()
+    {
+        return $this->avgTimeSpent;
+    }
 
     /**
      * @return mixed

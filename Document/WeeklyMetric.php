@@ -14,21 +14,21 @@ class WeeklyMetric {
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $visits;
+	protected $visits = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $pageViews;
+	protected $pageViews = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $interactions;
+	protected $interactions = 0;
 
 	/**
 
@@ -36,21 +36,21 @@ class WeeklyMetric {
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $avgTimeSpent;
+	protected $avgTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="int")
      */
-    protected $sumTimeSpent;
+    protected $sumTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="float")
      */
-    protected $experienceViewed;
+    protected $experienceViewed = 0;
 
 	/**
 	 * Set visits
