@@ -43,7 +43,7 @@ class CommonMetrics implements CommonMetricsInt
     /**
      * @param $board
      * @param $slug
-     * @param \DateTime $dateFrom
+     * @param $dateFrom
      * @param $dateTo
      * @param $userIds
      * @param $type
