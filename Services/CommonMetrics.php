@@ -25,7 +25,8 @@ class CommonMetrics implements CommonMetricsInt
     public const DAILY_METRICS = 1;
     public const WEEKLY_METRICS = 2;
 
-    public function createMetricsClient($baseUri){
+    public function createMetricsClient($baseUri)
+    {
         $this->metricsService->setMetricsClient($baseUri);
     }
 
@@ -37,7 +38,7 @@ class CommonMetrics implements CommonMetricsInt
      */
     public function getVisitedDocsMetrics($dateFrom, $dateTo, $userIds): array
     {
-        return $this->metricsService ->getVisitedDocsMetrics($dateFrom, $dateTo, $userIds);
+        return $this->metricsService->getVisitedDocsMetrics($dateFrom, $dateTo, $userIds);
     }
 
     /**
@@ -65,10 +66,10 @@ class CommonMetrics implements CommonMetricsInt
             $docMetrics->setTotalMetric($totalMetric);
         }
 
-        if($docMetrics->getTotalMetric()){
+        if ($docMetrics->getTotalMetric()) {
             $experienceViewed = 0;
-            if ($docMetrics->getTotalMetric()->getVisits() > 0 && $board->getNumPages() > 0) {
-                $experienceViewed = (($docMetrics->getTotalMetric()->getPageViews() / $docMetrics->getTotalMetric()->getVisits()) * 100) /  $board->getNumPages();
+            if ($docMetrics->getTotalMetric()->getVisits() > 0 && $board->getBoardResources() && $board->getBoardResources() > 0) {
+                $experienceViewed = $docMetrics->getTotalMetric()->getPageViews() / $docMetrics->getTotalMetric()->getVisits() * 100 / count($board->getBoardResources());
             }
             $docMetrics->getTotalMetric()->setExperienceViewed($experienceViewed);
         }
@@ -80,8 +81,8 @@ class CommonMetrics implements CommonMetricsInt
             $docMetrics->setDailyPercentageChange($prctChange);
 
             $experienceViewed = 0;
-            if ($docMetrics->getDailyMetric()->getVisits() > 0 && $board->getNumPages() > 0) {
-                $experienceViewed = (($docMetrics->getDailyMetric()->getPageViews() / $docMetrics->getDailyMetric()->getVisits()) * 100) / $board->getNumPages();
+            if ($docMetrics->getDailyMetric()->getVisits() > 0 && $board->getBoardResources() && $board->getBoardResources() > 0) {
+                $experienceViewed = $docMetrics->getDailyMetric()->getPageViews() / $docMetrics->getDailyMetric()->getVisits() * 100 / count($board->getBoardResources());
             }
 
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getDailyPercentageChange()->getExperienceViewed());
@@ -95,8 +96,8 @@ class CommonMetrics implements CommonMetricsInt
             $docMetrics->setWeeklyPercentageChange($prctChange);
 
             $experienceViewed = 0;
-            if ($docMetrics->getWeeklyMetric()->getVisits() > 0 && $board->getNumPages()) {
-                $experienceViewed = (($docMetrics->getWeeklyMetric()->getPageViews() / $docMetrics->getWeeklyMetric()->getVisits()) * 100) / $board->getNumPages();
+            if ($docMetrics->getWeeklyMetric()->getVisits() > 0 && $board->getBoardResources() && $board->getBoardResources() > 0) {
+                $experienceViewed = $docMetrics->getWeeklyMetric()->getPageViews() / $docMetrics->getWeeklyMetric()->getVisits() * 100 / count($board->getBoardResources());
             }
 
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getWeeklyPercentageChange()->getExperienceViewed());
