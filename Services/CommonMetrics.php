@@ -65,6 +65,14 @@ class CommonMetrics implements CommonMetricsInt
             $docMetrics->setTotalMetric($totalMetric);
         }
 
+        if($docMetrics->getTotalMetric()){
+            $experienceViewed = 0;
+            if ($docMetrics->getTotalMetric()->getVisits() > 0 && $board->getNumPages() > 0) {
+                $experienceViewed = (($docMetrics->getTotalMetric()->getPageViews() / $docMetrics->getTotalMetric()->getVisits()) * 100) /  $board->getNumPages();
+            }
+            $docMetrics->getTotalMetric()->setExperienceViewed($experienceViewed);
+        }
+
         $prctChange = $this->getPercentageChangeMetric($docMetrics, $freshMetrics, $type);
 
         if ($type === self::DAILY_METRICS) {

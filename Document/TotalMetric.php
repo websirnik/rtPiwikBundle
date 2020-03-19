@@ -14,35 +14,42 @@ class TotalMetric {
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $visits;
+	protected $visits = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $pageViews;
+	protected $pageViews = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer")
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $interactions;
+	protected $interactions = 0;
 
 	/**
 	 * @JMS\Groups({"metrics"})
 	 * @JMS\Type("integer") *
 	 * @MongoDB\Field(type="int")
 	 */
-	protected $avgTimeSpent;
+	protected $avgTimeSpent = 0;
 
     /**
      * @JMS\Groups({"metrics"})
      * @JMS\Type("integer")
      * @MongoDB\Field(type="int")
      */
-    protected $sumTimeSpent;
+    protected $sumTimeSpent = 0;
+
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("integer")
+     * @MongoDB\Field(type="float")
+     */
+    protected $experienceViewed = 0;
 
 	/**
 	 * Set visits
@@ -143,5 +150,21 @@ class TotalMetric {
     public function getSumTimeSpent()
     {
         return $this->sumTimeSpent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExperienceViewed()
+    {
+        return $this->experienceViewed;
+    }
+
+    /**
+     * @param mixed $experienceViewed
+     */
+    public function setExperienceViewed($experienceViewed): void
+    {
+        $this->experienceViewed = $experienceViewed;
     }
 }
