@@ -2,7 +2,6 @@
 
 namespace rtPiwikBundle\Services;
 
-
 use rtPiwikBundle\Document\DailyMetric;
 use rtPiwikBundle\Document\DailyPercentageChangeMetric;
 use rtPiwikBundle\Document\Metrics;
@@ -10,7 +9,7 @@ use rtPiwikBundle\Document\TotalMetric;
 use rtPiwikBundle\Document\WeeklyMetric;
 use rtPiwikBundle\Document\WeeklyPercentageChangeMetric;
 
-class CommonMetrics
+class CommonMetrics implements CommonMetricsInt
 {
     private $metricsService;
 
@@ -25,6 +24,14 @@ class CommonMetrics
 
     public const DAILY_METRICS = 1;
     public const WEEKLY_METRICS = 2;
+
+    public function createMetricsClient($baseUri){
+        $this->metricsService->setMetricsClient($baseUri);
+    }
+
+    public function getVisitedDocsMetrics($dateFrom, $dateTo, $userIds){
+        $this->metricsService ->getVisitedDocsMetrics($dateFrom, $dateTo, $userIds);
+    }
 
     /**
      * @param $board

@@ -15,14 +15,3 @@ services:
         class: rtPiwikBundle\Services\TotalMetrics
         arguments:
             $metricsService: '@metrics_service'
-    daily_metrics:
-        class: rtPiwikBundle\Services\DailyMetrics
-        arguments:
-            $metricsService: '@metrics_service'
-            $commonMetrics: '@common_metrics'
-    weekly_metrics:
-        class: rtPiwikBundle\Services\WeeklyMetrics
-        arguments:
-            $metricsService: '@metrics_service'
-            $commonMetrics: '@common_metrics'
-

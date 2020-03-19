@@ -6,12 +6,16 @@ namespace rtPiwikBundle\Services;
 use rtPiwikBundle\Document\Metrics;
 use rtPiwikBundle\Document\TotalMetric;
 
-class TotalMetrics{
+class TotalMetrics implements TotalMetricInt {
     /* @var MetricsService $metricsService */
     private $metricsService;
 
     function __construct($metricsService) {
         $this->metricsService = $metricsService;
+    }
+
+    public function createMetricsClient($baseUri){
+        $this->metricsService->setMetricsClient($baseUri);
     }
 
     /**

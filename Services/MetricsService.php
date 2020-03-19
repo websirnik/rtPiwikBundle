@@ -18,6 +18,14 @@ class MetricsService
     }
 
     /**
+     * @param $baseUri
+     */
+    public function setMetricsClient($baseUri): void
+    {
+        $this->analytics->setClient($baseUri);
+    }
+
+    /**
      * getSlugs returns array of all slugs
      * @param $dateFrom - date start
      * @param $dateTo - date end

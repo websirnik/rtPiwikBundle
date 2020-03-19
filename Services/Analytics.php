@@ -3,8 +3,11 @@
 namespace rtPiwikBundle\Services;
 
 
-class Analytics
+class Analytics implements AnalyticsInt
 {
+    public const DB_PIWIK_MASTER = 'https://rtpiwik.frb.io/index.php';
+    public const DB_PIWIK_MASTER_REPLICA = 'https://rt-piwik-replica.frb.io/index.php';
+
     private $defaultQuery = [
         'module'     => 'API',
         'idSite'     => '1',
@@ -14,9 +17,12 @@ class Analytics
 
     private $client;
 
-    function __construct()
-    {
-        $this->client = new \GuzzleHttp\Client(['base_uri' => 'https://rt-piwik-replica.frb.io/index.php']);
+    public function setClient($baseUri){
+        $this->client = new \GuzzleHttp\Client(['base_uri' => $baseUri]);
+    }
+
+    public function getClient(){
+        return $this->client;
     }
 
     private $piwikReqLimit = 10;
@@ -34,7 +40,7 @@ class Analytics
     {
         $query = array_merge($this->defaultQuery, $query);
         try {
-            return json_decode($this->client->get("/", ['query' => $query])->getBody(), true);
+            return json_decode($this->getClient()->get("/", ['query' => $query])->getBody(), true);
         } catch (\Exception $e) {
             if ($requestAttempt < $this->piwikReqLimit) {
                 $requestAttempt++;
