@@ -71,8 +71,8 @@ class TotalMetrics implements TotalMetricInt {
 
         if($metrics->getTotalMetric()){
             $experienceViewed = 0;
-            if ($metrics->getTotalMetric()->getVisits() > 0 && $board->getNumPages() > 0) {
-                $experienceViewed = (($metrics->getTotalMetric()->getPageViews() / $metrics->getTotalMetric()->getVisits()) * 100) /  $board->getNumPages();
+            if ($metrics->getTotalMetric()->getVisits() > 0 && $board->getBoardResources() && count($board->getBoardResources()) > 0) {
+                $experienceViewed = (($metrics->getTotalMetric()->getPageViews() / $metrics->getTotalMetric()->getVisits()) * 100) /  count($board->getBoardResources());
             }
             $metrics->getTotalMetric()->setExperienceViewed($experienceViewed);
         }
