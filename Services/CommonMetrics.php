@@ -29,8 +29,15 @@ class CommonMetrics implements CommonMetricsInt
         $this->metricsService->setMetricsClient($baseUri);
     }
 
-    public function getVisitedDocsMetrics($dateFrom, $dateTo, $userIds){
-        $this->metricsService ->getVisitedDocsMetrics($dateFrom, $dateTo, $userIds);
+    /**
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $userIds
+     * @return array
+     */
+    public function getVisitedDocsMetrics($dateFrom, $dateTo, $userIds): array
+    {
+        return $this->metricsService ->getVisitedDocsMetrics($dateFrom, $dateTo, $userIds);
     }
 
     /**
