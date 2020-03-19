@@ -95,7 +95,6 @@ class MetricsService
         dump('start calculating metrics');
         dump(sprintf("slug:%s ", $slug));
         dump(sprintf("dateFrom:%s dateTo:%s", $dateFrom, $dateTo));
-        dump(sprintf("userdIds:%s", implode($userIds, ',')));
         // create instance of metrics model
         $metric = new MetricModel();
         // define default values
