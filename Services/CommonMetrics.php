@@ -43,17 +43,14 @@ class CommonMetrics implements CommonMetricsInt
     /**
      * @param $board
      * @param $slug
-     * @param \DateTime $date
+     * @param \DateTime $dateFrom
+     * @param $dateTo
      * @param $userIds
      * @param $type
      * @return Metrics
      */
-    public function get($board, $slug, \DateTime $date, $userIds, $type)
+    public function get($board, $slug, $dateFrom, $dateTo, $userIds, $type)
     {
-        $now = new \DateTime();
-        $dateTo = $now->format('Y-m-d');
-        $dateFrom = $date->format('Y-m-d');
-
         $docMetrics = $board->getMetrics();
         // if there is no metric repository
         if ($docMetrics === null) {
@@ -73,11 +70,30 @@ class CommonMetrics implements CommonMetricsInt
         if ($type === self::DAILY_METRICS) {
             $docMetrics->setDailyMetric($freshMetrics);
             $docMetrics->setDailyPercentageChange($prctChange);
+
+            $experienceViewed = 0;
+            if ($docMetrics->getDailyMetric()->getVisits() > 0 && $board->getNumPages() > 0) {
+                $experienceViewed = (($docMetrics->getDailyMetric()->getPageViews() / $docMetrics->getDailyMetric()->getVisits()) * 100) / $board->getNumPages();
+            }
+
+            $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getDailyPercentageChange()->getExperienceViewed());
+            $docMetrics->getDailyMetric()->setExperienceViewed($experienceViewed);
+            $docMetrics->getDailyPercentageChange()->setExperienceViewed($diff);
         }
+
 
         if ($type === self::WEEKLY_METRICS) {
             $docMetrics->setWeeklyMetric($freshMetrics);
             $docMetrics->setWeeklyPercentageChange($prctChange);
+
+            $experienceViewed = 0;
+            if ($docMetrics->getWeeklyMetric()->getVisits() > 0 && $board->getNumPages()) {
+                $experienceViewed = (($docMetrics->getWeeklyMetric()->getPageViews() / $docMetrics->getWeeklyMetric()->getVisits()) * 100) / $board->getNumPages();
+            }
+
+            $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getWeeklyPercentageChange()->getExperienceViewed());
+            $docMetrics->getWeeklyMetric()->setExperienceViewed($experienceViewed);
+            $docMetrics->getWeeklyPercentageChange()->setExperienceViewed($diff);
         }
 
         $docMetrics->setUpdatedAt(new \DateTime());
