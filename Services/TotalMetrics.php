@@ -30,7 +30,7 @@ class TotalMetrics implements TotalMetricInt {
     public function get($board, $slug, \DateTime $date, $userIds, $reCalculate = false) {
         $dateFrom = clone $date;
         $dateTo = null;
-        $yesterday = (new \DateTime())->setTime(0, 0)->modify('-1 day');
+        $yesterday = (new \DateTime())->setTime(0, 0)->modify('-2 day');
 
         if (!$reCalculate && $metrics = $board->getMetrics()) {
 
