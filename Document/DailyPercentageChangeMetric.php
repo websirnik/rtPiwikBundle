@@ -52,6 +52,13 @@ class DailyPercentageChangeMetric {
      */
     protected $experienceViewed = 0;
 
+    /**
+     * @JMS\Groups({"metrics"})
+     * @JMS\Type("DateTime")
+     * @MongoDB\Field(type="date")
+     */
+    protected $updatedAt;
+
 	/**
 	 * Set visits
 	 *
@@ -162,5 +169,21 @@ class DailyPercentageChangeMetric {
     public function setExperienceViewed($experienceViewed): void
     {
         $this->experienceViewed = $experienceViewed;
+    }
+
+    /**
+     * @return \DateTime $updatedAt
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param mixed $updatedAt
+     */
+    public function setUpdatedAt($updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }
