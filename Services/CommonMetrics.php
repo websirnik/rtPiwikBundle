@@ -52,7 +52,7 @@ class CommonMetrics implements CommonMetricsInt
      */
     public function get($board, $slug, $dateFrom, $dateTo, $userIds, $type)
     {
-        $numPages = $board->getBoardResources() ?: 0;
+        $numPages = count($board->getBoardResources()) ?: 0;
         $oldMetrics = $board->getMetrics();
         // if there is no metric repository
         if ($oldMetrics === null) {
@@ -201,7 +201,7 @@ class CommonMetrics implements CommonMetricsInt
             $oldTotalMetric->setPageViews($pageViews);
         }
 
-        $experienceViewed = $this->calcExperienceViewed($numPages, $oldMetrics->getTotalMetric()->getVisits(), $oldMetrics->getTotalMetric()->getPageViews());
+        $experienceViewed = $this->calcExperienceViewed($numPages, $oldTotalMetric->getVisits(), $oldTotalMetric->getPageViews());
         $oldTotalMetric->setExperienceViewed($experienceViewed);
 
         return $oldTotalMetric;
@@ -211,7 +211,7 @@ class CommonMetrics implements CommonMetricsInt
     {
         $experienceViewed = 0;
         if ($numPages && $visits) {
-            $experienceViewed = $pagesViews / $visits * 100 / count($numPages);
+            $experienceViewed = $pagesViews / $visits * 100 / $numPages;
         }
 
         return $experienceViewed > 100 ? 100 : $experienceViewed;
