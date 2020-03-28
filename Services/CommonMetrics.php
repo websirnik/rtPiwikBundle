@@ -121,7 +121,7 @@ class CommonMetrics implements CommonMetricsInt
         $prctChange->setPageViews($this->calcPrctDiff($pageViews, $newMetrics->getPageViews()));
         $prctChange->setSumTimeSpent($this->calcPrctDiff($sumTimeSpent, $newMetrics->getSumTimeSpent()));
         $prctChange->setAvgTimeSpent($this->calcPrctDiff($avgTimeSpent, $newMetrics->getAvgTimeSpent()));
-        $prctChange->setExperienceViewed($this->calcPrctDiff($oldMetrics->getExperienceViewed(), $newMetrics->getExperienceViewed()));
+        $prctChange->setExperienceViewed($this->calcPrctDiff($metricByType->getExperienceViewed(), $newMetrics->getExperienceViewed()));
 
         return $prctChange;
     }
