@@ -123,38 +123,41 @@ class MetricsService
         }
 
 
-        // get data from piwik service for actions
-        try {
-            dump('getting actions from piwik..');
-            $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
-            dump('calc actions');
-            foreach ($analyticsActions as $key => $action) {
-                if (count($action) > 0 && isset($action['nb_hits']) && $action['nb_hits'] > 0) {
-                    // collect all page views and time spent
-                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
-                            $action['label'],
-                            'analytics'
-                        ) && $this->getSplittedSlug($action['label'])) {
-                        $pageViews += $action['nb_hits'];
+        if($visits > 0 ){
+            // get data from piwik service for actions
+            try {
+                dump('getting actions from piwik..');
+                $analyticsActions = $this->analytics->getActions($slug, $date, $userIds);
+                dump('calc actions');
+                foreach ($analyticsActions as $key => $action) {
+                    if (count($action) > 0 && isset($action['nb_hits']) && $action['nb_hits'] > 0) {
+                        // collect all page views and time spent
+                        if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
+                                $action['label'],
+                                'analytics'
+                            ) && $this->getSplittedSlug($action['label'])) {
+                            $pageViews += $action['nb_hits'];
+                        }
                     }
-                }
 
-                if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
-                    // collect all page views and time spent
-                    if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
-                            $action['label'],
-                            'analytics'
-                        ) && $this->getSplittedSlug($action['label'])) {
-                        $timeSpent += $action['sum_time_spent'];
+                    if (count($action) > 0 && isset($action['sum_time_spent']) && $action['sum_time_spent'] > 0) {
+                        // collect all page views and time spent
+                        if (isset($action['label']) && $this->includes($action['label'], $slug) && !$this->includes($action['label'], 'edit') && !$this->includes(
+                                $action['label'],
+                                'analytics'
+                            ) && $this->getSplittedSlug($action['label'])) {
+                            $timeSpent += $action['sum_time_spent'];
+                        }
                     }
                 }
+                dump("pageViews:", sprintf("%d", $pageViews));
+                dump("timeSpent:", sprintf("%d", $timeSpent));
+            } catch (\Exception $e) {
+                dump('getting actions from piwik fail');
+                dump($e->getMessage());
             }
-            dump("pageViews:", sprintf("%d", $pageViews));
-            dump("timeSpent:", sprintf("%d", $timeSpent));
-        } catch (\Exception $e) {
-            dump('getting actions from piwik fail');
-            dump($e->getMessage());
         }
+
 
 
         // get data from piwik service for interactions
