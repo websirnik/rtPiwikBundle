@@ -72,7 +72,7 @@ class CommonMetrics implements CommonMetricsInt
             if ($docMetrics->getTotalMetric()->getVisits() > 0 && $board->getBoardResources() && count($board->getBoardResources()) > 0) {
                 $experienceViewed = $docMetrics->getTotalMetric()->getPageViews() / $docMetrics->getTotalMetric()->getVisits() * 100 / count($board->getBoardResources());
             }
-            $docMetrics->getTotalMetric()->setExperienceViewed($experienceViewed);
+            $docMetrics->getTotalMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
         }
 
         $prctChange = $this->getPercentageChangeMetric($docMetrics, $freshMetrics, $type);
@@ -87,7 +87,7 @@ class CommonMetrics implements CommonMetricsInt
             }
 
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getDailyPercentageChange()->getExperienceViewed());
-            $docMetrics->getDailyMetric()->setExperienceViewed($experienceViewed);
+            $docMetrics->getDailyMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
             $docMetrics->getDailyPercentageChange()->setExperienceViewed($diff);
             $docMetrics->getDailyMetric()->setUpdatedAt(new \DateTime());
             $docMetrics->getDailyPercentageChange()->setUpdatedAt(new \DateTime());
@@ -104,7 +104,7 @@ class CommonMetrics implements CommonMetricsInt
             }
 
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getWeeklyPercentageChange()->getExperienceViewed());
-            $docMetrics->getWeeklyMetric()->setExperienceViewed($experienceViewed);
+            $docMetrics->getWeeklyMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
             $docMetrics->getWeeklyPercentageChange()->setExperienceViewed($diff);
             $docMetrics->getWeeklyMetric()->setUpdatedAt(new \DateTime());
             $docMetrics->getWeeklyPercentageChange()->setUpdatedAt(new \DateTime());
@@ -225,11 +225,11 @@ class CommonMetrics implements CommonMetricsInt
 
     public function calcPrctDiff($y1, $y2)
     {
-        if ($y1 == 0 && $y2 == 0) {
+        if ($y1 === 0) {
             return 0;
         }
 
-        return 100 * (($y1 - $y2) / (($y1 + $y2) / 2));
+        return (($y2 - $y1) / $y1) * 100;
     }
 
     protected function getDailyMetric($metrics)
