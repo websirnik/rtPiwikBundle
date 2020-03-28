@@ -123,7 +123,7 @@ class MetricsService
         }
 
 
-        if($visits > 0 ){
+        if ($visits > 0) {
             // get data from piwik service for actions
             try {
                 dump('getting actions from piwik..');
@@ -156,29 +156,28 @@ class MetricsService
                 dump('getting actions from piwik fail');
                 dump($e->getMessage());
             }
-        }
 
 
+            // get data from piwik service for interactions
+            try {
+                dump('getting interactions from piwik..');
+                $analyticsInteractions = $this->analytics->getInteractions($slug, $date, $userIds);
+                dump('calc interactions');
 
-        // get data from piwik service for interactions
-        try {
-            dump('getting interactions from piwik..');
-            $analyticsInteractions = $this->analytics->getInteractions($slug, $date, $userIds);
-            dump('calc interactions');
-
-            foreach ($analyticsInteractions as $key => $inter) {
-                // collect all visits
-                if (count($inter) > 0 && isset($inter["nb_events"]) && $inter["nb_events"] > 0) {
-                    if (isset($inter['label']) && !$this->includes($inter['label'], 'edit') && !$this->includes($inter['label'], 'analytics') && $this->includes($inter['label'], $slug)) {
-                        $interactions += $inter["nb_events"];
+                foreach ($analyticsInteractions as $key => $inter) {
+                    // collect all visits
+                    if (count($inter) > 0 && isset($inter["nb_events"]) && $inter["nb_events"] > 0) {
+                        if (isset($inter['label']) && !$this->includes($inter['label'], 'edit') && !$this->includes($inter['label'], 'analytics') && $this->includes($inter['label'], $slug)) {
+                            $interactions += $inter["nb_events"];
+                        }
                     }
                 }
-            }
 
-            dump("interactions:", sprintf("%d", $interactions));
-        } catch (\Exception $e) {
-            dump('getting interactions from piwik fail');
-            dump($e->getMessage());
+                dump("interactions:", sprintf("%d", $interactions));
+            } catch (\Exception $e) {
+                dump('getting interactions from piwik fail');
+                dump($e->getMessage());
+            }
         }
 
 
