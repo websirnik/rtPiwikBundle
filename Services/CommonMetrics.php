@@ -52,84 +52,61 @@ class CommonMetrics implements CommonMetricsInt
      */
     public function get($board, $slug, $dateFrom, $dateTo, $userIds, $type)
     {
-        $docMetrics = $board->getMetrics();
+        $numPages = $board->getBoardResources() ?: 0;
+        $oldMetrics = $board->getMetrics();
         // if there is no metric repository
-        if ($docMetrics === null) {
-            $docMetrics = new Metrics();
+        if ($oldMetrics === null) {
+            $oldMetrics = new Metrics();
         }
 
         $calculatedMetrics = $this->metricsService->calculateMetrics($slug, $dateFrom, $dateTo, $userIds);
-        $freshMetrics = $this->getMetricByType($docMetrics, $calculatedMetrics, $type);
+        $newMetrics = $this->getMetricByType($oldMetrics, $calculatedMetrics, $type, $numPages);
 
         if ($type === self::DAILY_METRICS) {
-            $totalMetric = $this->getTotalMetric($docMetrics, $freshMetrics);
+            $totalMetric = $this->getTotalMetric($oldMetrics, $newMetrics, $numPages);
             $totalMetric->setUpdatedAt(new \DateTime());
-            $docMetrics->setTotalMetric($totalMetric);
+            $oldMetrics->setTotalMetric($totalMetric);
         }
 
-        if ($docMetrics->getTotalMetric()) {
-            $experienceViewed = 0;
-            if ($docMetrics->getTotalMetric()->getVisits() > 0 && $board->getBoardResources() && count($board->getBoardResources()) > 0) {
-                $experienceViewed = $docMetrics->getTotalMetric()->getPageViews() / $docMetrics->getTotalMetric()->getVisits() * 100 / count($board->getBoardResources());
-            }
-            $docMetrics->getTotalMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
-        }
-
-        $prctChange = $this->getPercentageChangeMetric($docMetrics, $freshMetrics, $type);
+        $prctChange = $this->getPercentageChangeMetric($oldMetrics, $newMetrics, $type);
 
         if ($type === self::DAILY_METRICS) {
-            $docMetrics->setDailyMetric($freshMetrics);
-            $docMetrics->setDailyPercentageChange($prctChange);
+            $oldMetrics->setDailyMetric($newMetrics);
+            $oldMetrics->setDailyPercentageChange($prctChange);
 
-            $experienceViewed = 0;
-            if ($docMetrics->getDailyMetric()->getVisits() > 0 && $board->getBoardResources() && count($board->getBoardResources()) > 0) {
-                $experienceViewed = $docMetrics->getDailyMetric()->getPageViews() / $docMetrics->getDailyMetric()->getVisits() * 100 / count($board->getBoardResources());
-            }
-
-            $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getDailyPercentageChange()->getExperienceViewed());
-            $docMetrics->getDailyMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
-            $docMetrics->getDailyPercentageChange()->setExperienceViewed($diff);
-            $docMetrics->getDailyMetric()->setUpdatedAt(new \DateTime());
-            $docMetrics->getDailyPercentageChange()->setUpdatedAt(new \DateTime());
+            $oldMetrics->getDailyMetric()->setUpdatedAt(new \DateTime());
+            $oldMetrics->getDailyPercentageChange()->setUpdatedAt(new \DateTime());
         }
 
 
         if ($type === self::WEEKLY_METRICS) {
-            $docMetrics->setWeeklyMetric($freshMetrics);
-            $docMetrics->setWeeklyPercentageChange($prctChange);
+            $oldMetrics->setWeeklyMetric($newMetrics);
+            $oldMetrics->setWeeklyPercentageChange($prctChange);
 
-            $experienceViewed = 0;
-            if ($docMetrics->getWeeklyMetric()->getVisits() > 0 && $board->getBoardResources() && count($board->getBoardResources()) > 0) {
-                $experienceViewed = $docMetrics->getWeeklyMetric()->getPageViews() / $docMetrics->getWeeklyMetric()->getVisits() * 100 / count($board->getBoardResources());
-            }
-
-            $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getWeeklyPercentageChange()->getExperienceViewed());
-            $docMetrics->getWeeklyMetric()->setExperienceViewed($experienceViewed > 100 ? 100 : $experienceViewed);
-            $docMetrics->getWeeklyPercentageChange()->setExperienceViewed($diff);
-            $docMetrics->getWeeklyMetric()->setUpdatedAt(new \DateTime());
-            $docMetrics->getWeeklyPercentageChange()->setUpdatedAt(new \DateTime());
+            $oldMetrics->getWeeklyMetric()->setUpdatedAt(new \DateTime());
+            $oldMetrics->getWeeklyPercentageChange()->setUpdatedAt(new \DateTime());
         }
 
 
-        return $docMetrics;
+        return $oldMetrics;
     }
 
     /**
      * Get metrics data since last day and current day
-     * @param Metrics $metrics
-     * @param $metricsData
+     * @param Metrics $oldMetrics
+     * @param $newMetrics
      * @param int $type
      * @return
      */
-    protected function getPercentageChangeMetric(Metrics $metrics, $metricsData, $type)
+    protected function getPercentageChangeMetric(Metrics $oldMetrics, $newMetrics, $type)
     {
         if ($type === self::DAILY_METRICS) {
             $prctChange = new DailyPercentageChangeMetric();
-            $metricByType = $this->getDailyMetric($metrics);
+            $metricByType = $this->getDailyMetric($oldMetrics);
         }
         if ($type === self::WEEKLY_METRICS) {
             $prctChange = new WeeklyPercentageChangeMetric();
-            $metricByType = $this->getWeeklyMetric($metrics);
+            $metricByType = $this->getWeeklyMetric($oldMetrics);
         }
 
         $visits = is_numeric($metricByType->getVisits()) ? $metricByType->getVisits() : 0;
@@ -139,29 +116,30 @@ class CommonMetrics implements CommonMetricsInt
 
         $avgTimeSpent = $visits > 0 ? round($sumTimeSpent / $visits) : 0;
 
-        $prctChange->setVisits($this->calcPrctDiff($visits, $metricsData->getVisits()));
-        $prctChange->setInteractions($this->calcPrctDiff($interactions, $metricsData->getInteractions()));
-        $prctChange->setPageViews($this->calcPrctDiff($pageViews, $metricsData->getPageViews()));
-        $prctChange->setSumTimeSpent($this->calcPrctDiff($avgTimeSpent, $metricsData->getAvgTimeSpent()));
-        $prctChange->setAvgTimeSpent($this->calcPrctDiff($avgTimeSpent, $metricsData->getAvgTimeSpent()));
+        $prctChange->setVisits($this->calcPrctDiff($visits, $newMetrics->getVisits()));
+        $prctChange->setInteractions($this->calcPrctDiff($interactions, $newMetrics->getInteractions()));
+        $prctChange->setPageViews($this->calcPrctDiff($pageViews, $newMetrics->getPageViews()));
+        $prctChange->setSumTimeSpent($this->calcPrctDiff($sumTimeSpent, $newMetrics->getSumTimeSpent()));
+        $prctChange->setAvgTimeSpent($this->calcPrctDiff($avgTimeSpent, $newMetrics->getAvgTimeSpent()));
+        $prctChange->setExperienceViewed($this->calcPrctDiff($oldMetrics->getExperienceViewed(), $newMetrics->getExperienceViewed()));
 
         return $prctChange;
     }
 
     /**
      * Get last day metrics data
-     * @param $metrics
+     * @param $oldMetrics
      * @param MetricModel $metricsData
      * @return
      */
-    protected function getMetricByType($metrics, MetricModel $metricsData, $type)
+    protected function getMetricByType($oldMetrics, MetricModel $metricsData, $type, $numPages = 0)
     {
         if ($type === self::DAILY_METRICS) {
-            $metricByType = $this->getDailyMetric($metrics);
+            $metricByType = $this->getDailyMetric($oldMetrics);
         }
 
         if ($type === self::WEEKLY_METRICS) {
-            $metricByType = $this->getWeeklyMetric($metrics);
+            $metricByType = $this->getWeeklyMetric($oldMetrics);
         }
 
         $metricByType->setVisits($metricsData->getVisits());
@@ -173,54 +151,70 @@ class CommonMetrics implements CommonMetricsInt
             $metricByType->setAvgTimeSpent($avgTimeSpent);
         }
 
+        $experienceViewed = $this->calcExperienceViewed($numPages, $metricByType->getVisits(), $metricByType->getPageViews());
+        $metricByType->setExperienceViewed($experienceViewed);
+
         return $metricByType;
     }
 
     /**
      * Get total metrics since last day
-     * @param Metrics $metrics
-     * @param $metric
+     * @param Metrics $oldMetrics
+     * @param $newMetrics
      * @return TotalMetric
      */
-    protected function getTotalMetric(Metrics $metrics, $metric)
+    protected function getTotalMetric(Metrics $oldMetrics, $newMetrics, $numPages = 0)
     {
-        $totalMetric = $metrics->getTotalMetric();
+        $oldTotalMetric = $oldMetrics->getTotalMetric();
         // if there is no metric repository
-        if ($totalMetric === null) {
-            $totalMetric = new TotalMetric();
+        if ($oldTotalMetric === null) {
+            $oldTotalMetric = new TotalMetric();
             // set new total metric, because a new
-            $totalMetric->setVisits($metric->getVisits());
-            $totalMetric->setInteractions($metric->getInteractions());
+            $oldTotalMetric->setVisits($newMetrics->getVisits());
+            $oldTotalMetric->setInteractions($newMetrics->getInteractions());
 
-            if ($metric->getVisits() > 0) {
-                $avgTimeSpent = round($metric->getSumTimeSpent() / $metric->getVisits());
-                $totalMetric->setAvgTimeSpent($avgTimeSpent);
+            if ($newMetrics->getVisits() > 0) {
+                $avgTimeSpent = round($newMetrics->getSumTimeSpent() / $newMetrics->getVisits());
+                $oldTotalMetric->setAvgTimeSpent($avgTimeSpent);
             }
 
-            $totalMetric->setPageViews($metric->getPageViews());
-            $totalMetric->setSumTimeSpent($metric->getSumTimeSpent());
+            $oldTotalMetric->setPageViews($newMetrics->getPageViews());
+            $oldTotalMetric->setSumTimeSpent($newMetrics->getSumTimeSpent());
         } else {
             // get total
             // set total metrics
-            $visits = $totalMetric->getVisits() + $metric->getVisits();
-            $totalMetric->setVisits($visits);
+            $visits = $oldTotalMetric->getVisits() + $newMetrics->getVisits();
+            $oldTotalMetric->setVisits($visits);
 
-            $interactions = $totalMetric->getInteractions() + $metric->getInteractions();
-            $totalMetric->setInteractions($interactions);
+            $interactions = $oldTotalMetric->getInteractions() + $newMetrics->getInteractions();
+            $oldTotalMetric->setInteractions($interactions);
 
-            $sumTimeSpent = $totalMetric->getSumTimeSpent() + $metric->getSumTimeSpent();
-            $totalMetric->setSumTimeSpent($sumTimeSpent);
+            $sumTimeSpent = $oldTotalMetric->getSumTimeSpent() + $newMetrics->getSumTimeSpent();
+            $oldTotalMetric->setSumTimeSpent($sumTimeSpent);
 
             if ($visits > 0) {
                 $avgTimeSpent = round($sumTimeSpent / $visits);
-                $totalMetric->setAvgTimeSpent($avgTimeSpent);
+                $oldTotalMetric->setAvgTimeSpent($avgTimeSpent);
             }
 
-            $pageViews = $totalMetric->getPageViews() + $metric->getPageViews();
-            $totalMetric->setPageViews($pageViews);
+            $pageViews = $oldTotalMetric->getPageViews() + $newMetrics->getPageViews();
+            $oldTotalMetric->setPageViews($pageViews);
         }
 
-        return $totalMetric;
+        $experienceViewed = $this->calcExperienceViewed($numPages, $oldMetrics->getTotalMetric()->getVisits(), $oldMetrics->getTotalMetric()->getPageViews());
+        $oldTotalMetric->setExperienceViewed($experienceViewed);
+
+        return $oldTotalMetric;
+    }
+
+    private function calcExperienceViewed($numPages, $visits, $pagesViews)
+    {
+        $experienceViewed = 0;
+        if ($numPages && $visits) {
+            $experienceViewed = $pagesViews / $visits * 100 / count($numPages);
+        }
+
+        return $experienceViewed > 100 ? 100 : $experienceViewed;
     }
 
     public function calcPrctDiff($y1, $y2)
