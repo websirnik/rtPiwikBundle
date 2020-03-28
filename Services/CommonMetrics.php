@@ -63,6 +63,7 @@ class CommonMetrics implements CommonMetricsInt
 
         if ($type === self::DAILY_METRICS) {
             $totalMetric = $this->getTotalMetric($docMetrics, $freshMetrics);
+            $totalMetric->setUpdatedAt(new \DateTime());
             $docMetrics->setTotalMetric($totalMetric);
         }
 
@@ -88,6 +89,8 @@ class CommonMetrics implements CommonMetricsInt
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getDailyPercentageChange()->getExperienceViewed());
             $docMetrics->getDailyMetric()->setExperienceViewed($experienceViewed);
             $docMetrics->getDailyPercentageChange()->setExperienceViewed($diff);
+            $docMetrics->getDailyMetric()->setUpdatedAt(new \DateTime());
+            $docMetrics->getDailyPercentageChange()->setUpdatedAt(new \DateTime());
         }
 
 
@@ -103,9 +106,10 @@ class CommonMetrics implements CommonMetricsInt
             $diff = $this->calcPrctDiff($experienceViewed, $docMetrics->getWeeklyPercentageChange()->getExperienceViewed());
             $docMetrics->getWeeklyMetric()->setExperienceViewed($experienceViewed);
             $docMetrics->getWeeklyPercentageChange()->setExperienceViewed($diff);
+            $docMetrics->getWeeklyMetric()->setUpdatedAt(new \DateTime());
+            $docMetrics->getWeeklyPercentageChange()->setUpdatedAt(new \DateTime());
         }
 
-        $docMetrics->setUpdatedAt(new \DateTime());
 
         return $docMetrics;
     }
