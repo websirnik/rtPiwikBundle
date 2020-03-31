@@ -219,8 +219,8 @@ class CommonMetrics implements CommonMetricsInt
 
     public function calcPrctDiff($y1, $y2)
     {
-        if(!isset($y1)){
-            $y1 = 0;
+        if (!$y1 || $y1 === 0) {
+            return 0;
         }
         if ($y1 === 0) {
             return 0;
