@@ -9,19 +9,21 @@ class Analytics implements AnalyticsInt
     public const DB_PIWIK_MASTER_REPLICA = 'https://rt-piwik-replica.frb.io/index.php';
 
     private $defaultQuery = [
-        'module'     => 'API',
-        'idSite'     => '1',
-        'format'     => 'JSON',
+        'module' => 'API',
+        'idSite' => '1',
+        'format' => 'JSON',
         'token_auth' => '14fbc812766bffd3e5fc72925312b7b7',
     ];
 
     private $client;
 
-    public function setClient($baseUri){
+    public function setClient($baseUri)
+    {
         $this->client = new \GuzzleHttp\Client(['base_uri' => $baseUri]);
     }
 
-    public function getClient(){
+    public function getClient()
+    {
         return $this->client;
     }
 
@@ -50,7 +52,7 @@ class Analytics implements AnalyticsInt
                 return $this->render($query, $requestAttempt);
             }
 
-            throw new \RuntimeException('Requests to piwik fails '.$this->piwikReqLimit.' times');
+            throw new \RuntimeException('Requests to piwik fails ' . $this->piwikReqLimit . ' times');
         }
     }
 
@@ -68,14 +70,18 @@ class Analytics implements AnalyticsInt
      */
     public function getEntryPages($date, $userIds)
     {
+        $segment = sprintf("pageUrl!@edit;pageUrl!@analytics");
+        if (count($userIds) > 0) {
+            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
+        }
         $query = [
             "filter_limit" => -1,
-            "date"         => $date,
-            "method"       => "Actions.getPageUrls",
-            "period"       => "range",
-            "segment"      => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
-            "expanded"     => 1,
-            "flat"         => 0,
+            "date" => $date,
+            "method" => "Actions.getPageUrls",
+            "period" => "range",
+            "segment" => $segment,
+            "expanded" => 1,
+            "flat" => 0,
         ];
 
         return $this->render($query);
@@ -94,19 +100,19 @@ class Analytics implements AnalyticsInt
      */
     public function getMetrics($slug, $date, $userIds)
     {
+        $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s", $slug);
+        if (count($userIds) > 0) {
+            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
+        }
         $query = [
             "filter_limit" => -1,
-            'date'         => $date,
-            'method'       => "API.get",
-            'period'       => "day",
-            'segment'      => sprintf(
-                "pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s",
-                $slug,
-                implode(";userId!=", $userIds)
-            ),
-            "expanded"     => 0,
-            "flat"         => 0,
-            "slug"         => $slug,
+            'date' => $date,
+            'method' => "API.get",
+            'period' => "day",
+            'segment' => $segment,
+            "expanded" => 0,
+            "flat" => 0,
+            "slug" => $slug,
         ];
 
         return $this->render($query);
@@ -127,19 +133,19 @@ class Analytics implements AnalyticsInt
      */
     public function getActions($slug, $date, $userIds)
     {
+        $segment = sprintf("pageUrl=@%s", $slug);
+        if (count($userIds) > 0) {
+            $segment = sprintf("pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
+        }
         $query = [
             "filter_limit" => -1,
-            "date"         => $date,
-            "method"       => "Actions.getPageUrls",
-            "period"       => "range",
-            "segment"      => sprintf(
-                "pageUrl=@%s;userId!=%s",
-                $slug,
-                implode(";userId!=", $userIds)
-            ),
-            "expanded"     => 0,
-            "flat"         => 1,
-            "slug"         => $slug,
+            "date" => $date,
+            "method" => "Actions.getPageUrls",
+            "period" => "range",
+            "segment" => $segment,
+            "expanded" => 0,
+            "flat" => 1,
+            "slug" => $slug,
         ];
 
         return $this->render($query);
@@ -157,18 +163,18 @@ class Analytics implements AnalyticsInt
      */
     public function getInteractions($slug, $date, $userIds)
     {
+        $segment = sprintf("actionUrl=@%s", $slug);
+        if (count($userIds) > 0) {
+            $segment = sprintf("actionUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
+        }
         $query = [
-            "flat"         => 1,
-            "date"         => $date,
-            "expanded"     => 1,
-            "method"       => "Events.getCategory",
-            "period"       => "range",
-            "segment"      => sprintf(
-                "actionUrl=@%s;userId!=%s",
-                $slug,
-                implode(";userId!=", $userIds)
-            ),
-            "slug"         => $slug,
+            "flat" => 1,
+            "date" => $date,
+            "expanded" => 1,
+            "method" => "Events.getCategory",
+            "period" => "range",
+            "segment" => $segment,
+            "slug" => $slug,
             "filter_limit" => -1,
         ];
 
@@ -189,18 +195,20 @@ class Analytics implements AnalyticsInt
      */
     public function getVisitedDocs($date, $userIds, $offset = 0, $limit = -1)
     {
+        $segment = "pageUrl!@edit;pageUrl!@analytics";
+        if (count($userIds) > 0) {
+            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
+        }
         $query = [
             "filter_offset" => $offset,
-            "filter_limit"  => $limit,
-            "date"          => $date,
-            "method"        => "Live.getLastVisitsDetails",
-            "period"        => "range",
-            "segment"       => sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds)),
-            "expanded"      => 1,
-            "flat"          => 0,
+            "filter_limit" => $limit,
+            "date" => $date,
+            "method" => "Live.getLastVisitsDetails",
+            "period" => "range",
+            "segment" => $segment,
+            "expanded" => 1,
+            "flat" => 0,
         ];
-
         return $this->render($query);
-
     }
 }
