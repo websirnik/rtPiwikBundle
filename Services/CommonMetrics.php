@@ -60,7 +60,7 @@ class CommonMetrics implements CommonMetricsInt
         }
 
         $calculatedMetrics = $this->metricsService->calculateMetrics($slug, $dateFrom, $dateTo, $userIds);
-        $newMetrics = $this->getMetricByType($oldMetrics, $calculatedMetrics, $type, $numPages);
+        $newMetrics = $this->getMetricByType($calculatedMetrics, $type, $numPages);
 
         if ($type === self::DAILY_METRICS) {
             $totalMetric = $this->getTotalMetric($oldMetrics, $newMetrics, $numPages);
@@ -128,18 +128,17 @@ class CommonMetrics implements CommonMetricsInt
 
     /**
      * Get last day metrics data
-     * @param $oldMetrics
      * @param MetricModel $metricsData
      * @return
      */
-    protected function getMetricByType($oldMetrics, MetricModel $metricsData, $type, $numPages = 0)
+    protected function getMetricByType(MetricModel $metricsData, $type, $numPages = 0)
     {
         if ($type === self::DAILY_METRICS) {
-            $metricByType = $this->getDailyMetric($oldMetrics);
+            $metricByType = new DailyMetric();
         }
 
         if ($type === self::WEEKLY_METRICS) {
-            $metricByType = $this->getWeeklyMetric($oldMetrics);
+            $metricByType = new WeeklyMetric();
         }
 
         $metricByType->setVisits($metricsData->getVisits());
