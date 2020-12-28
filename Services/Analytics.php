@@ -70,9 +70,9 @@ class Analytics implements AnalyticsInt
      */
     public function getEntryPages($date, $userIds)
     {
-        $segment = sprintf("pageUrl!@edit;pageUrl!@analytics");
+        $segment = sprintf("actionUrl!@edit;actionUrl!@analytics");
         if (count($userIds) > 0) {
-            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
+            $segment = sprintf("actionUrl!@edit;actionUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
         }
         $query = [
             "filter_limit" => -1,
@@ -100,9 +100,9 @@ class Analytics implements AnalyticsInt
      */
     public function getMetrics($slug, $date, $userIds)
     {
-        $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s", $slug);
+        $segment = sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s", $slug);
         if (count($userIds) > 0) {
-            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
+            $segment = sprintf("actionUrl!@edit;actionUrl!@analytics;actionUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
         }
         $query = [
             "filter_limit" => -1,
@@ -133,9 +133,9 @@ class Analytics implements AnalyticsInt
      */
     public function getActions($slug, $date, $userIds)
     {
-        $segment = sprintf("pageUrl=@%s", $slug);
+        $segment = sprintf("actionUrl=@%s", $slug);
         if (count($userIds) > 0) {
-            $segment = sprintf("pageUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
+            $segment = sprintf("actionUrl=@%s;userId!=%s", $slug, implode(";userId!=", $userIds));
         }
         $query = [
             "filter_limit" => -1,
@@ -195,9 +195,9 @@ class Analytics implements AnalyticsInt
      */
     public function getVisitedDocs($date, $userIds, $offset = 0, $limit = -1)
     {
-        $segment = "pageUrl!@edit;pageUrl!@analytics";
+        $segment = "actionUrl!@edit;actionUrl!@analytics";
         if (count($userIds) > 0) {
-            $segment = sprintf("pageUrl!@edit;pageUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
+            $segment = sprintf("actionUrl!@edit;actionUrl!@analytics;userId!=%s", implode(";userId!=", $userIds));
         }
         $query = [
             "filter_offset" => $offset,
