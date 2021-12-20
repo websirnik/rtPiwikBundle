@@ -14,11 +14,10 @@
     }
   },
   "require": {
-    "doctrine/mongodb-odm-bundle": "^4.3",
-    "lexik/jwt-authentication-bundle": "~2.6.0",
-    "symfony/var-dumper": "^5.2",
     "guzzlehttp/guzzle": "^6.0",
-    "jms/serializer": "^3.12"
+    "jms/serializer": "^3.12",
+    "doctrine/mongodb-odm-bundle": "^4.4",
+    "symfony/var-dumper": "^5.4"
   },
   "scripts": {
     "symfony-scripts": [
