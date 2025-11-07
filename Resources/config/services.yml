@@ -1,19 +1,33 @@
 services:
-    analytics_service:
-         class: rtPiwikBundle\Services\Analytics
-    metrics_service:
-         class: rtPiwikBundle\Services\MetricsService
-         arguments:
-            $analytics: '@analytics_service'
-    total_metrics:
-        class: rtPiwikBundle\Services\TotalMetrics
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    rtPiwikBundle\:
+        resource: '../../{Command,Controller,Services}/'
+
+    rtPiwikBundle\Services\Analytics: ~
+
+    rtPiwikBundle\Services\MetricsService:
         arguments:
-            $metricsService: '@metrics_service'
-    last_day_metrics:
-        class: rtPiwikBundle\Services\LastDayMetrics
+            $analytics: '@rtPiwikBundle\Services\Analytics'
+
+    rtPiwikBundle\Services\TotalMetrics:
         arguments:
-            $metricsService: '@metrics_service'
-    last_week_metrics:
-        class: rtPiwikBundle\Services\LastWeekMetrics
+            $metricsService: '@rtPiwikBundle\Services\MetricsService'
+
+    rtPiwikBundle\Services\LastDayMetrics:
         arguments:
-            $metricsService: '@metrics_service'
+            $metricsService: '@rtPiwikBundle\Services\MetricsService'
+
+    rtPiwikBundle\Services\LastWeekMetrics:
+        arguments:
+            $metricsService: '@rtPiwikBundle\Services\MetricsService'
+
+    # Backwards compatibility aliases
+    analytics_service: '@rtPiwikBundle\Services\Analytics'
+    metrics_service: '@rtPiwikBundle\Services\MetricsService'
+    total_metrics: '@rtPiwikBundle\Services\TotalMetrics'
+    last_day_metrics: '@rtPiwikBundle\Services\LastDayMetrics'
+    last_week_metrics: '@rtPiwikBundle\Services\LastWeekMetrics'

@@ -2,25 +2,35 @@
 
 namespace rtPiwikBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use rtPiwikBundle\Services\MetricsService;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AnalyticsTestCommand extends ContainerAwareCommand
+#[AsCommand(
+    name: 'analytics-test',
+    description: '...'
+)]
+class AnalyticsTestCommand extends Command
 {
-    protected function configure()
+    public function __construct(
+        private MetricsService $metricsService
+    ) {
+        parent::__construct();
+    }
+
+    protected function configure(): void
     {
         $this
-            ->setName('analytics-test')
-            ->setDescription('...')
             ->addArgument('argument', InputArgument::OPTIONAL, 'Argument description')
             ->addOption('option', null, InputOption::VALUE_NONE, 'Option description')
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $userIds = [
             "51dbeae06a0239d21f3b436e",
@@ -42,8 +52,9 @@ class AnalyticsTestCommand extends ContainerAwareCommand
         $ts = $yesterday->getTimestamp() - 60 * 60 * 24;
         $yesterday->setTimestamp($ts);
 
+        dump($this->metricsService->getSlugs($yesterday->format('Y-m-d'), $now->format('Y-m-d'), $userIds));
 
-        dump($this->getContainer()->get('metrics_service')->getSlugs($yesterday->format('Y-m-d'), $now->format('Y-m-d'), $userIds));
+        return Command::SUCCESS;
     }
 
 }

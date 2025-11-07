@@ -14,30 +14,19 @@
         }
     },
     "require": {
-        "doctrine/mongodb-odm-bundle": "~4.4.0",
-        "lexik/jwt-authentication-bundle": "~2.14.0",
+        "php": ">=8.0",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/console": "^6.0",
+        "symfony/http-kernel": "^6.0",
+        "symfony/routing": "^6.0",
+        "doctrine/mongodb-odm-bundle": "^5.0",
+        "lexik/jwt-authentication-bundle": "^3.0",
         "guzzlehttp/guzzle": "^7.0",
         "jms/serializer": "^3.17"
     },
     "require-dev": {
-        "symfony/var-dumper": "^3.4|^4.0|^5.4",
-        "symfony/phpunit-bridge": "^3.0"
-    },
-    "scripts": {
-        "symfony-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
-        "post-install-cmd": [
-            "@symfony-scripts"
-        ],
-        "post-update-cmd": [
-            "@symfony-scripts"
-        ]
+        "symfony/var-dumper": "^6.0",
+        "symfony/phpunit-bridge": "^6.0"
     },
     "extra": {
         "symfony-app-dir": "app",
