@@ -3,67 +3,50 @@
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use JMS\Serializer\Annotation as JMS;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Type;
 
-/**
- * @MongoDB\EmbeddedDocument
- */
+#[MongoDB\EmbeddedDocument]
 class Metrics {
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\LastDayMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastDayMetric")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('rtPiwikBundle\Document\LastDayMetric')]
+	#[MongoDB\EmbedOne(targetDocument: LastDayMetric::class)]
 	protected $lastDayMetric;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\LastWeekMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\LastWeekMetric")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('rtPiwikBundle\Document\LastWeekMetric')]
+	#[MongoDB\EmbedOne(targetDocument: LastWeekMetric::class)]
 	protected $lastWeekMetric;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\TotalMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\TotalMetric")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('rtPiwikBundle\Document\TotalMetric')]
+	#[MongoDB\EmbedOne(targetDocument: TotalMetric::class)]
 	protected $totalMetric;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\PercentageChangeLastDayMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastDayMetric")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('rtPiwikBundle\Document\PercentageChangeLastDayMetric')]
+	#[MongoDB\EmbedOne(targetDocument: PercentageChangeLastDayMetric::class)]
 	protected $percentageChangeLastDay;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("rtPiwikBundle\Document\PercentageChangeLastWeekMetric")
-	 * @MongoDB\EmbedOne(targetDocument="rtPiwikBundle\Document\PercentageChangeLastWeekMetric")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('rtPiwikBundle\Document\PercentageChangeLastWeekMetric')]
+	#[MongoDB\EmbedOne(targetDocument: PercentageChangeLastWeekMetric::class)]
 	protected $percentageChangeLastWeek;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("DateTime")
-	 * @MongoDB\Field(type="date")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('DateTime')]
+	#[MongoDB\Field(type: 'date')]
 	protected $createdAt;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("DateTime")
-	 * @MongoDB\Field(type="date")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('DateTime')]
+	#[MongoDB\Field(type: 'date')]
 	protected $updatedAt;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("DateTime")
-	 * @MongoDB\Field(type="date")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('DateTime')]
+	#[MongoDB\Field(type: 'date')]
 	protected $lastCalculated;
 
 	function __construct() {

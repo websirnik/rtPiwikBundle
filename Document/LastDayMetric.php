@@ -9,38 +9,29 @@
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use JMS\Serializer\Annotation as JMS;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Type;
 
-/**
- * @MongoDB\EmbeddedDocument
- */
+#[MongoDB\EmbeddedDocument]
 class LastDayMetric {
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('integer')]
+	#[MongoDB\Field(type: 'int')]
 	protected $visits;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('integer')]
+	#[MongoDB\Field(type: 'int')]
 	protected $pageViews;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('integer')]
+	#[MongoDB\Field(type: 'int')]
 	protected $interactions;
 
-	/**
-	 * @JMS\Groups({"metrics"})
-	 * @JMS\Type("integer")
-	 * @MongoDB\Field(type="int")
-	 */
+	#[Groups(['metrics'])]
+	#[Type('integer')]
+	#[MongoDB\Field(type: 'int')]
 	protected $avgTimeSpent;
 
 	/**
