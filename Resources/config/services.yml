@@ -1,17 +1,41 @@
 services:
     _defaults:
         public: true
+        autowire: true
+        autoconfigure: true
+
+    rtPiwikBundle\Services\Analytics:
+        alias: analytics_service
+
     analytics_service:
-         class: rtPiwikBundle\Services\Analytics
+        class: rtPiwikBundle\Services\Analytics
+
+    rtPiwikBundle\Services\MetricsService:
+        alias: metrics_service
+
     metrics_service:
-         class: rtPiwikBundle\Services\MetricsService
-         arguments:
+        class: rtPiwikBundle\Services\MetricsService
+        arguments:
             $analytics: '@analytics_service'
+
+    rtPiwikBundle\Services\CommonMetrics:
+        alias: common_metrics
+
     common_metrics:
         class: rtPiwikBundle\Services\CommonMetrics
         arguments:
             $metricsService: '@metrics_service'
+
+    rtPiwikBundle\Services\TotalMetrics:
+        alias: total_metrics
+
     total_metrics:
         class: rtPiwikBundle\Services\TotalMetrics
         arguments:
             $metricsService: '@metrics_service'
+
+    rtPiwikBundle\Command\AnalyticsTestCommand:
+        arguments:
+            $metricsService: '@metrics_service'
+        tags:
+            - { name: console.command }
