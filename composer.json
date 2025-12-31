@@ -1,31 +1,26 @@
 {
-  "name": "relayto/rt-piwik-bundle",
-  "license": "MIT",
-  "type": "symfony-bundle",
-  "description": "Getting metrics from Piwik",
-  "autoload": {
-    "psr-4": {
-      "rtPiwikBundle\\": ""
+    "name": "relayto/rt-piwik-bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Getting metrics from Piwik",
+    "autoload": {
+        "psr-4": {
+            "rtPiwikBundle\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8.3",
+        "guzzlehttp/guzzle": "^7.0",
+        "jms/serializer": "^3.17",
+        "doctrine/mongodb-odm-bundle": "^5.0",
+        "symfony/var-dumper": "^6.4",
+        "symfony/framework-bundle": "^6.4",
+        "symfony/console": "^6.4",
+        "symfony/routing": "^6.4"
     }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
-    }
-  },
-  "require": {
-    "php": ">=8.1",
-    "guzzlehttp/guzzle": "^7.0",
-    "jms/serializer": "^3.17",
-    "doctrine/mongodb-odm-bundle": "^4.4|^5.0",
-    "symfony/var-dumper": "^5.4|^6.0|^7.0",
-    "symfony/framework-bundle": "^5.4|^6.0|^7.0",
-    "symfony/console": "^5.4|^6.0|^7.0",
-    "symfony/routing": "^5.4|^6.0|^7.0"
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "3.1-dev"
-    }
-  }
 }
