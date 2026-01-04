@@ -1,61 +1,46 @@
 <?php
+
 namespace rtPiwikBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @MongoDB\EmbeddedDocument
- */
+#[MongoDB\EmbeddedDocument]
 class DailyMetric
 {
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'int')]
     protected $visits = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'int')]
     protected $pageViews = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'int')]
     protected $interactions = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'int')]
     protected $avgTimeSpent = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="int")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'int')]
     protected $sumTimeSpent = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("integer")
-     * @MongoDB\Field(type="float")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('integer')]
+    #[MongoDB\Field(type: 'float')]
     protected $experienceViewed = 0;
 
-    /**
-     * @JMS\Groups({"metrics"})
-     * @JMS\Type("DateTime")
-     * @MongoDB\Field(type="date")
-     */
+    #[JMS\Groups(['metrics'])]
+    #[JMS\Type('DateTime')]
+    #[MongoDB\Field(type: 'date')]
     protected $updatedAt;
 
     /**
